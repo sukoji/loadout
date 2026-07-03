@@ -40,7 +40,8 @@ Detect what the repo is. Be fast and evidence-based — do not ask the user thin
   vue, svelte, express, nestjs, prisma…), `requirements.txt`, `pyproject.toml`, `go.mod`, `Cargo.toml`,
   `pom.xml`, `Gemfile`, `pubspec.yaml`, `*.xcodeproj`, `build.gradle`.
 - **Infra / CI**: `Dockerfile`, `docker-compose*`, `.github/workflows`, `*.tf`, `k8s`/`helm`.
-- **Data/ML**: `*.ipynb`, `numpy`/`pandas`/`torch`/`tensorflow` in deps.
+- **Data/ML**: `*.ipynb`, `numpy`/`pandas`/`torch`/`tensorflow` in deps, `wandb`/`mlflow`.
+- **Research / academic**: `*.tex`, `*.bib`, `papers/` dir, `arxiv` in deps.
 - **Security surface**: auth/payment/crypto libs, presence of `.env`.
 - **What's already set up**: read existing `.mcp.json`, `.claude/settings.json`,
   `.claude/settings.local.json`, and any `CLAUDE.md`. **Never recommend something already installed.**
@@ -53,8 +54,11 @@ Use Glob/Grep/Read. Keep it to a handful of targeted checks. Summarize the profi
    whose signal is `"always"` (i.e. `general`) is always in play as the baseline.
 2. Pick the 1–2 best-matching domains plus `general`.
 3. Union their `loadout` id lists. Rank items by: (a) strength of signal match against the project,
-   (b) whether the item is broadly useful (`signals` includes `"always"`), (c) not already installed.
-4. Drop anything already present in the repo's config. Cap the recommendation at ~6–8 items so the
+   (b) curated (Tier 1) over official marketplace (Tier 2), (c) whether the item is broadly useful
+   (`signals` includes `"always"`), (d) not already installed.
+4. For Tier 2 official plugins: only include when signals are **specific** (e.g. `react`, `postgres`) —
+   never flood the list with generic `python`/`package.json` matches. Cap official picks at ~2 in the shortlist.
+5. Drop anything already present in the repo's config. Cap the recommendation at ~6–8 items so the
    choice stays easy. Note (don't hide) anything you cut for length.
 
 ## Step 3 — Present the loadout for selection

@@ -56,7 +56,7 @@ export function scanProject(root = process.cwd()) {
     if (has("requirements.txt")) add("requirements.txt");
     if (has("pyproject.toml")) add("pyproject.toml");
     const py = (read("requirements.txt") + read("pyproject.toml")).toLowerCase();
-    for (const lib of ["numpy", "pandas", "torch", "tensorflow", "scikit-learn", "django", "flask", "fastapi", "ruff", "psycopg"]) {
+    for (const lib of ["numpy", "pandas", "torch", "tensorflow", "scikit-learn", "django", "flask", "fastapi", "ruff", "psycopg", "wandb", "mlflow", "arxiv"]) {
       if (py.includes(lib)) add(lib);
     }
   }
@@ -81,6 +81,7 @@ export function scanProject(root = process.cwd()) {
   if (has(".git")) add(".git");
   if (has(".github/workflows")) add(".github/workflows");
   if (has("docs")) add("docs");
+  if (has("papers")) add("papers");
 
   // shallow extension sweep (top level + one dir down) for .tf / .ipynb / .xcodeproj etc.
   sweepExtensions(root, signals);
@@ -93,6 +94,8 @@ function sweepExtensions(root, signals, depth = 2) {
   const extToSignal = {
     ".tf": "terraform",
     ".ipynb": ".ipynb",
+    ".tex": "latex",
+    ".bib": ".bib",
     ".xcodeproj": "*.xcodeproj",
     ".swift": "swift",
     ".kt": "kotlin",

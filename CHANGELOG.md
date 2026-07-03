@@ -4,7 +4,23 @@ All notable changes to Loadout are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/); versions follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
-- See [HANDOFF.md](HANDOFF.md) §6 for the live task board.
+- See [HANDOFF.md](HANDOFF.md) §6 and [LOOP.md](LOOP.md) for the improvement loop.
+
+## [0.3.1] — 2026-07-03
+### Added
+- **`research` domain** — notebooks, LaTeX/BibTeX, arxiv/wandb/mlflow signals; loadout centers on Exa, Tavily,
+  Fetch, Firecrawl, and document tooling.
+- **Curated Exa + Tavily skill entries** (`exa-research`, `tavily-research`) so literature-heavy repos get
+  deep-research plugins without digging through the full marketplace.
+- **`npm run test:recommend`** — regression checks that ML/paper repos surface the right tools and block
+  generic `python` marketplace noise.
+
+### Changed
+- **Smarter Tier-2 filtering** — official marketplace plugins need specific signals (or 2+ weak ones);
+  curated items rank first; at most 2 official plugins in the recommendation pool.
+- **`data-ml` loadout** — dropped MongoDB (only relevant when you actually use Mongo); added Exa/Tavily;
+  trimmed dev-only Superpowers from the default ML list.
+- **`general` loadout** — removed Brave Search (needs API key; not a universal default).
 
 ## [0.3.0] — 2026-07-03
 ### Added

@@ -88,6 +88,36 @@
     }
   },
   {
+    "id": "exa-research",
+    "type": "skill",
+    "name": "Exa (deep research)",
+    "description": "Official Exa plugin — web search, deep research, academic papers, and structured content extraction with citations.",
+    "domains": ["research", "data-ml", "docs-writing"],
+    "signals": [".ipynb", "jupyter", "latex", ".bib", "arxiv", "papers"],
+    "homepage": "https://exa.ai/docs/reference/exa-mcp",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "exa",
+      "commands": ["/plugin install exa@claude-plugins-official"]
+    }
+  },
+  {
+    "id": "tavily-research",
+    "type": "skill",
+    "name": "Tavily (search & research)",
+    "description": "Official Tavily plugin — real-time web search, extract, crawl, and research APIs for literature and competitive scans.",
+    "domains": ["research", "data-ml", "docs-writing"],
+    "signals": [".ipynb", "jupyter", "latex", ".bib", "arxiv", "papers"],
+    "homepage": "https://www.tavily.com/",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "tavily",
+      "commands": ["/plugin install tavily@claude-plugins-official"]
+    }
+  },
+  {
     "id": "awesome-claude-code",
     "type": "reference",
     "name": "awesome-claude-code (discovery list)",

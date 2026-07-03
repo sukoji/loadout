@@ -7,7 +7,7 @@ Loadout development without the original chat context. If a session dies mid-tas
 - **Local path:** `C:\Users\piai\Desktop\loadout`
 - **What it is:** A hybrid Claude Code **plugin marketplace + recommender**. It profiles a project and
   *applies* a domain-matched loadout of MCP servers / hooks / skills — instead of being one more list to read.
-- **Last updated:** 2026-07-03
+- **Last updated:** 2026-07-03 (v0.3.1 loop — research domain + recommend quality)
 - **Owner GitHub account:** `sukoji` (a *user*, not an org — `gh api user` returns `sukoji`, even though
   `gh auth status` shows the label `jskh-201910840`). Token scopes: `repo`, `workflow`, `gist`, `read:org`.
 
@@ -20,10 +20,10 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | Area | State |
 | :-- | :-- |
 | First release shipped & pushed | ✅ on `origin/main`; tagged `v0.1.0` |
-| Published to npm | ✅ `claude-loadout@0.2.0` live; `npx` verified from the public registry. npm user `sukojin`. **A bypass-2FA granular token is in `~/.npmrc`, so `npm publish` no longer needs an OTP** (confirmed by the 0.2.0 publish). To release: bump version in package.json + plugin.json + marketplace.json, update CHANGELOG, `npm publish`, `git tag vX.Y.Z && git push --tags`, `gh release create`. |
+| Published to npm | ✅ `claude-loadout@0.3.1` (loop iteration 1). Bump + `npm publish` + tag each loop pass. |
 | Plugin marketplace | ✅ **end-to-end verified from GitHub**: `/plugin marketplace add sukoji/loadout` → `/plugin install loadout@loadout` → `claude plugin details` lists Skills (2): browse, recommend. (Install-blocking bug fixed — see gotcha #8.) |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
-| Catalog | ✅ **3 tiers, 279 items**: 35 curated (hand-verified, auto-apply) + 242 official (Anthropic marketplace, ingested to `ecosystem.json`) + 2 community (`community.json`, `--discover` only, unverified). 0 warnings; every npx MCP verified on npm. |
+| Catalog | ✅ **3 tiers, 281 items**: 37 curated + 242 official + 2 community. **9 domains** incl. `research`. `npm run test:recommend` guards ranking quality. |
 | CLI (`node cli/index.js`) | ✅ zero-dep; profiles React & Python/ML correctly, writes valid `.mcp.json` + `.claude/settings.json`, idempotent (re-run skips installed). §5 `--dry-run` is read-only; reproduce the write/idempotency path with the optional test in §5. |
 | Cross-agent targets | ✅ `--target codex\|cursor\|gemini\|opencode\|openclaw\|all` writes each agent's MCP config in its verified format (TOML for Codex, JSON for the rest). Tested emitting all formats + HTTP handling. Skills/hooks stay Claude-only. Code: `cli/lib/targets.mjs`. |
 | Docs | ✅ `docs/domains/*.md` auto-generated, in sync with catalog |
@@ -144,9 +144,9 @@ lists were generated into this repo's planning; the one-line resume pointer is e
       for codex/cursor/gemini/opencode/openclaw; see `cli/lib/targets.mjs` and gotchas #9–10.
 
 ### P1 — content depth & correctness (this is what makes it genuinely useful)
-- [ ] **`expand-catalog-verified-entries` [L]** — grow 25 → 35+ items, ≥2 per domain. Verify each install
-      command before adding. Resume: `plugins/loadout/catalog/mcp.json`. Then `npm run validate` + `build:docs`.
-      Depends: fix-qa-domain-bug (done).
+- [x] **`research-domain-and-ranking` [M]** — ✅ DONE 2026-07-03 (v0.3.1). `research` domain, Exa/Tavily curated
+      skills, Tier-2 noise filter, `test:recommend`. See [LOOP.md](LOOP.md).
+- [ ] **`expand-catalog-verified-entries` [L]** — grow curated entries with runtime-verified MCPs only.
 - [ ] **`runtime-test-third-party-mcps` [M]** — new `scripts/test-mcps.mjs` that runs each third-party
       MCP command in a temp dir and checks it installs; HTTP MCPs check the URL responds. Add `test:mcps`
       npm script. Resume: `scripts/test-mcps.mjs` (new).

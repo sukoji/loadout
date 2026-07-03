@@ -1,6 +1,20 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
+// Signals too broad to justify a Tier-2 official plugin on their own.
+const WEAK_OFFICIAL_SIGNALS = new Set([
+  "python",
+  "package.json",
+  ".git",
+  "docs",
+  "javascript",
+  "typescript",
+  "always",
+]);
+
+const MAX_OFFICIAL_IN_RESULTS = 2;
+const RESULT_POOL_SIZE = 16;
+
 // Score domains against project signals and build a ranked, de-duplicated loadout.
 // Tier 1 (curated) recs come from domain loadouts; Tier 2 (official) enter by signal match;
 // Tier 3 (community) surface only when opts.discover is set, and are never auto-applied.
@@ -33,7 +47,7 @@ export function recommend({ domains, byId, all = [] }, signals, root = process.c
       seen.add(id);
       const item = byId.get(id);
       if (!item) continue;
-      if (installed.has(id)) continue; // don't recommend what's already there
+      if (installed.has(id)) continue;
       const strength = item.signals.filter((s) => s !== "always" && signals.has(s.toLowerCase())).length;
       const alwaysUseful = item.signals.includes("always");
       items.push({
@@ -46,29 +60,66 @@ export function recommend({ domains, byId, all = [] }, signals, root = process.c
     }
   }
 
-  // Tier 2: official-marketplace plugins that match a project signal (kept out of the pool unless relevant).
+  // Tier 2: official-marketplace plugins — only when signals are specific enough.
   for (const item of all) {
     if (item.tier !== "official") continue;
     if (seen.has(item.id) || installed.has(item.id)) continue;
-    const strength = item.signals.filter((s) => s !== "always" && signals.has(s.toLowerCase())).length;
-    if (strength <= 0) continue;
+    const matched = item.signals.filter((s) => s !== "always" && signals.has(s.toLowerCase()));
+    if (!officialSignalMatch(matched)) continue;
     seen.add(item.id);
-    items.push({ item, domain: item.domains[0], strength, alwaysUseful: false, reason: `matches ${item.signals.filter((s) => signals.has(s.toLowerCase())).slice(0, 3).join(", ")}` });
+    items.push({
+      item,
+      domain: item.domains[0],
+      strength: matched.length,
+      alwaysUseful: false,
+      reason: `matches ${matched.slice(0, 3).join(", ")}`,
+    });
   }
 
-  items.sort((a, b) => b.strength - a.strength || Number(b.alwaysUseful) - Number(a.alwaysUseful));
+  items.sort(rankEntries);
+  const finalized = capOfficialTier(items, RESULT_POOL_SIZE);
 
-  // Tier 3: community candidates — review-only, only shown in discover mode.
   const community = opts.discover
-    ? all.filter((i) => i.tier === "community" && !installed.has(i.id)).map((item) => ({ item, reason: "community · unverified — review before installing" }))
+    ? all
+        .filter((i) => i.tier === "community" && !installed.has(i.id))
+        .map((item) => ({ item, reason: "community · unverified — review before installing" }))
     : [];
 
   return {
     domains: chosen.map((c) => c.domain),
-    items,
+    items: finalized,
     community,
     installed: [...installed],
   };
+}
+
+function officialSignalMatch(matched) {
+  if (!matched.length) return false;
+  const strong = matched.filter((s) => !WEAK_OFFICIAL_SIGNALS.has(s.toLowerCase()));
+  if (strong.length > 0) return true;
+  return matched.length >= 2;
+}
+
+function rankEntries(a, b) {
+  const tierA = a.item.tier === "curated" ? 100 : 0;
+  const tierB = b.item.tier === "curated" ? 100 : 0;
+  const scoreA = a.strength + tierA + Number(a.alwaysUseful);
+  const scoreB = b.strength + tierB + Number(b.alwaysUseful);
+  return scoreB - scoreA;
+}
+
+function capOfficialTier(items, limit) {
+  const out = [];
+  let officialCount = 0;
+  for (const entry of items) {
+    if (entry.item.tier === "official") {
+      if (officialCount >= MAX_OFFICIAL_IN_RESULTS) continue;
+      officialCount++;
+    }
+    out.push(entry);
+    if (out.length >= limit) break;
+  }
+  return out;
 }
 
 function reasonFor(item, domain, signals) {
@@ -81,7 +132,6 @@ function reasonFor(item, domain, signals) {
 function detectInstalled(root) {
   const installed = new Set();
 
-  // MCP servers already configured
   const mcpPath = resolve(root, ".mcp.json");
   if (existsSync(mcpPath)) {
     try {
@@ -92,7 +142,6 @@ function detectInstalled(root) {
     }
   }
 
-  // settings.json — statusline + hook signatures
   const settingsPath = resolve(root, ".claude", "settings.json");
   if (existsSync(settingsPath)) {
     try {

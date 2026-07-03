@@ -21,7 +21,15 @@
     "title_ko": "데이터 / 머신러닝 / 노트북",
     "blurb": "Python data work, training pipelines, analysis, and reporting.",
     "signals": ["requirements.txt", "pyproject.toml", "numpy", "pandas", "torch", "tensorflow", "scikit-learn", ".ipynb", "jupyter"],
-    "loadout": ["context7", "fetch", "firecrawl", "brave-search", "sequential-thinking", "mongodb", "lint-python-on-edit", "office-docs", "code-review", "superpowers", "init-claude-md"]
+    "loadout": ["context7", "fetch", "exa-research", "tavily-research", "firecrawl", "brave-search", "sequential-thinking", "lint-python-on-edit", "office-docs", "code-review", "init-claude-md"]
+  },
+  {
+    "id": "research",
+    "title": "Research / Academic",
+    "title_ko": "연구 / 학술",
+    "blurb": "Literature review, notebooks, papers, and experiment repos — when discovery and writing matter as much as code.",
+    "signals": [".ipynb", "jupyter", "latex", ".bib", "arxiv", "wandb", "mlflow", "papers"],
+    "loadout": ["exa-research", "tavily-research", "fetch", "firecrawl", "brave-search", "sequential-thinking", "context7", "office-docs", "lint-python-on-edit", "init-claude-md"]
   },
   {
     "id": "devops",
@@ -61,6 +69,6 @@
     "title_ko": "일반 / 모든 프로젝트",
     "blurb": "The always-useful baseline every repo benefits from.",
     "signals": ["always"],
-    "loadout": ["init-claude-md", "code-review", "superpowers", "context7", "brave-search", "git", "guard-dangerous-bash", "block-push-to-main", "notify-on-stop", "statusline-git"]
+    "loadout": ["init-claude-md", "code-review", "superpowers", "context7", "git", "guard-dangerous-bash", "block-push-to-main", "notify-on-stop", "statusline-git"]
   }
 ]
