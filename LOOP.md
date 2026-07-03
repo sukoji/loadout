@@ -29,7 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
-| 0.3.17 | 2026-07-03 | --version; README/KO docs for JSON + team loadouts |
+| 0.3.18 | 2026-07-03 | scan lockfiles/vite/tsconfig; minimal manifest items[] |
 | 0.3.5 | 2026-07-03 | game-dev domain; cross-agent MCP detectInstalled |
 | 0.3.4 | 2026-07-03 | Windows Ruff hook; Jupyter research tests; CONTRIBUTING |
 | 0.3.3 | 2026-07-03 | FastAPI recommend tests; KO README parity |

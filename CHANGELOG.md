@@ -6,6 +6,14 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.18] — 2026-07-03
+### Added
+- **Scan** — `vite.config.*`, `tsconfig.json`, `pnpm-lock.yaml`, `uv.lock` project signals.
+- **Minimal manifest** — `apply -f` accepts `{ "items": ["id", …] }` string arrays (documented by test).
+
+### Changed
+- Frontend / data-ml domain signals include `tsconfig.json` and `uv.lock`.
+
 ## [0.3.17] — 2026-07-03
 ### Added
 - **`--version` / `-V`** — print package version.

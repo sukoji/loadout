@@ -4,7 +4,7 @@
     "title": "Frontend / Web UI",
     "title_ko": "프론트엔드 / 웹 UI",
     "blurb": "React, Vue, Svelte, Next — anything that ships to a browser.",
-    "signals": ["react", "next", "vue", "svelte", "vite", "tailwind", "angular", "package.json"],
+    "signals": ["react", "next", "vue", "svelte", "vite", "tailwind", "angular", "package.json", "tsconfig.json"],
     "loadout": ["context7", "playwright", "chrome-devtools", "figma", "format-js-on-edit", "eslint-fix-on-edit", "superpowers", "code-review", "init-claude-md"]
   },
   {
@@ -20,7 +20,7 @@
     "title": "Data / ML / Notebooks",
     "title_ko": "데이터 / 머신러닝 / 노트북",
     "blurb": "Python data work, training pipelines, analysis, and reporting.",
-    "signals": ["requirements.txt", "pyproject.toml", "numpy", "pandas", "torch", "tensorflow", "scikit-learn", ".ipynb", "jupyter"],
+    "signals": ["requirements.txt", "pyproject.toml", "uv.lock", "numpy", "pandas", "torch", "tensorflow", "scikit-learn", ".ipynb", "jupyter"],
     "loadout": ["context7", "fetch", "exa-research", "tavily-research", "firecrawl", "brave-search", "sequential-thinking", "lint-python-on-edit", "office-docs", "code-review", "init-claude-md"]
   },
   {

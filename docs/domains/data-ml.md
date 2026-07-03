@@ -2,7 +2,7 @@
 
 > Python data work, training pipelines, analysis, and reporting.
 
-_Signals that map here: `requirements.txt`, `pyproject.toml`, `numpy`, `pandas`, `torch`, `tensorflow`, `scikit-learn`, `.ipynb`, `jupyter`_
+_Signals that map here: `requirements.txt`, `pyproject.toml`, `uv.lock`, `numpy`, `pandas`, `torch`, `tensorflow`, `scikit-learn`, `.ipynb`, `jupyter`_
 
 ## MCP servers
 

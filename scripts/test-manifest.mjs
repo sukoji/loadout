@@ -78,6 +78,17 @@ try {
   const preview = previewManifestApply(catalog, manifestPath, { targets: ["claude"] });
   assert("preview apply lists sequential-thinking", preview.items.some((i) => i.id === "sequential-thinking"));
   assert("preview apply has targets", preview.targets.includes("claude"));
+
+  const minimalPath = join(dir, "minimal.loadout.json");
+  writeFileSync(minimalPath, JSON.stringify({ items: ["memory"] }));
+  const minDir = mkdtempSync(join(tmpdir(), "loadout-manifest-min-"));
+  try {
+    const { receipts: minReceipts } = applyManifest(catalog, minimalPath, minDir);
+    const minReceipt = minReceipts.find((r) => r.type === "claude")?.receipt;
+    assert("minimal string[] manifest applies memory", minReceipt?.mcp?.includes("memory"));
+  } finally {
+    rmSync(minDir, { recursive: true, force: true });
+  }
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

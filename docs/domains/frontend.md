@@ -2,7 +2,7 @@
 
 > React, Vue, Svelte, Next — anything that ships to a browser.
 
-_Signals that map here: `react`, `next`, `vue`, `svelte`, `vite`, `tailwind`, `angular`, `package.json`_
+_Signals that map here: `react`, `next`, `vue`, `svelte`, `vite`, `tailwind`, `angular`, `package.json`, `tsconfig.json`_
 
 ## MCP servers
 

@@ -35,6 +35,20 @@ try {
   const top = recommend(catalog, signals).items.slice(0, 8).map((e) => e.item.id);
   assert("notebook scan surfaces exa-research", top.includes("exa-research"), top.join(", "));
   assert("papers scan surfaces tavily-research", top.includes("tavily-research"), top.join(", "));
+
+  const viteDir = mkdtempSync(join(tmpdir(), "loadout-scan-vite-"));
+  try {
+    writeFileSync(join(viteDir, "vite.config.ts"), "export default {}\n");
+    writeFileSync(join(viteDir, "tsconfig.json"), "{}\n");
+    writeFileSync(join(viteDir, "package.json"), "{}");
+    const viteSignals = scanProject(viteDir);
+    assert("scan adds vite from vite.config.ts", viteSignals.has("vite"));
+    assert("scan adds tsconfig.json signal", viteSignals.has("tsconfig.json"));
+    const viteTop = recommend(catalog, viteSignals).items.slice(0, 8).map((e) => e.item.id);
+    assert("vite project surfaces playwright", viteTop.includes("playwright"), viteTop.join(", "));
+  } finally {
+    rmSync(viteDir, { recursive: true, force: true });
+  }
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

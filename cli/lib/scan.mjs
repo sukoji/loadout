@@ -73,9 +73,15 @@ export function scanProject(root = process.cwd()) {
     "docker-compose.yaml": "docker-compose",
     ".env": ".env",
     "mkdocs.yml": "mkdocs",
+    "tsconfig.json": "tsconfig.json",
+    "pnpm-lock.yaml": "pnpm-lock.yaml",
+    "uv.lock": "uv.lock",
   };
   for (const [file, sig] of Object.entries(fileSignals)) {
     if (has(file)) add(sig);
+  }
+  for (const f of ["vite.config.ts", "vite.config.js", "vite.config.mjs"]) {
+    if (has(f)) add("vite");
   }
 
   if (has(".git")) add(".git");
