@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout, argv, cwd, exit } from "node:process";
-import { resolve } from "node:path";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve, join } from "node:path";
 import { loadCatalog } from "./lib/catalog.mjs";
 import { scanProject } from "./lib/scan.mjs";
 import { recommend } from "./lib/recommend.mjs";
@@ -9,6 +11,10 @@ import { apply } from "./lib/apply.mjs";
 import { doctor } from "./lib/doctor.mjs";
 import { buildManifest, writeManifest, applyManifest, readManifestIds, buildRecommendPreview, previewManifestApply } from "./lib/manifest.mjs";
 import { applyToTarget, listTargets, detectTargets, TARGETS } from "./lib/targets.mjs";
+
+const PKG_VERSION = JSON.parse(
+  readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "package.json"), "utf8"),
+).version;
 
 const C = {
   reset: "\x1b[0m", bold: "\x1b[1m", dim: "\x1b[2m",
@@ -23,6 +29,7 @@ async function main() {
   const positional = args.filter((a) => !a.startsWith("-"));
 
   if (flags.has("--help") || flags.has("-h")) return printHelp();
+  if (flags.has("--version") || flags.has("-V")) return console.log(PKG_VERSION);
   if (positional[0] === "doctor") return runDoctor(flags);
   if (positional[0] === "export") return runExport(args, flags);
   if (positional[0] === "apply") return runApplyManifest(args, flags);

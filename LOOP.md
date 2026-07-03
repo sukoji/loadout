@@ -29,7 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
-| 0.3.16 | 2026-07-03 | apply dry-run --json; OpenClaw detectInstalled test |
+| 0.3.17 | 2026-07-03 | --version; README/KO docs for JSON + team loadouts |
 | 0.3.5 | 2026-07-03 | game-dev domain; cross-agent MCP detectInstalled |
 | 0.3.4 | 2026-07-03 | Windows Ruff hook; Jupyter research tests; CONTRIBUTING |
 | 0.3.3 | 2026-07-03 | FastAPI recommend tests; KO README parity |
@@ -40,4 +40,5 @@ run `npm test`, release, update this log.
 
 1. Add `NPM_TOKEN` to GitHub repo secrets to enable tag-triggered CI publish
 2. Expand curated research entries only after runtime verify
-3. Codex/OpenClaw `detectInstalled` parity — ✅ v0.3.7
+3. Cross-agent `detectInstalled` — ✅ all six agents (v0.3.16)
+4. Document JSON + team loadout UX — ✅ v0.3.17

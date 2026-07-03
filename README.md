@@ -99,6 +99,8 @@ npx claude-loadout            # interactive
 npx claude-loadout --dry-run  # just show the recommendation
 npx claude-loadout --all      # apply the whole recommended loadout
 npx claude-loadout doctor     # audit tokens, hook deps, security gaps (read-only)
+npx claude-loadout export     # team loadout → .loadout.json
+npx claude-loadout apply -f .loadout.json   # apply shared manifest
 npx claude-loadout --help     # full flag list
 ```
 
@@ -110,13 +112,23 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | :-- | :-- |
 | *(none)* | Interactive — pick items by number |
 | `--dry-run` / `-d` | Show recommendations only; write nothing |
+| `--json` | Print recommendations as JSON (no write; good for CI) |
 | `--all` / `-a` / `-y` | Apply the top recommendations without prompting |
 | `--discover` | Also surface **unverified** community skills |
 | `--target <id>` | Write MCP config for `cursor`, `codex`, `gemini`, `opencode`, `openclaw`, or `all` |
 | `--list-targets` | List agents and config file paths |
-| `doctor` | Read-only audit: unfilled tokens, missing hook tools, `.env` guard, suggested gaps |
+| `export` | Write team loadout manifest → `.loadout.json` (includes `installed` ids) |
+| `export --json` | Print manifest JSON to stdout |
+| `apply -f <file>` | Apply a shared team loadout |
+| `apply -f <file> --target <id>` | Apply manifest MCPs to Cursor, Codex, etc. |
+| `apply -f <file> --dry-run --json` | Preview apply as JSON |
+| `doctor` | Read-only audit: tokens, hook deps, cross-agent dupes, gaps |
+| `doctor --json` | Machine-readable audit (exit 1 when fixes needed) |
 
-**Non-interactive shells** (CI, pipes): use `--dry-run` or `--all` — otherwise Loadout prints recommendations and exits without hanging on input.
+**Team loadouts:** run `export` in a reference repo, commit `.loadout.json`, then teammates run
+`apply -f .loadout.json` (add `--target cursor` for non-Claude agents).
+
+**Non-interactive shells** (CI, pipes): use `--dry-run`, `--json`, or `--all` — otherwise Loadout prints recommendations and exits without hanging on input.
 
 ### What auto-applies vs what you do
 

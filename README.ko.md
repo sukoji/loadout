@@ -93,14 +93,19 @@ npx claude-loadout            # 대화형
 npx claude-loadout --dry-run  # 추천만 보기
 npx claude-loadout --all      # 추천 로드아웃 전체 적용
 npx claude-loadout doctor     # 토큰·훅·보안 감사 (읽기 전용)
+npx claude-loadout export     # 팀 로드아웃 → .loadout.json
+npx claude-loadout apply -f .loadout.json   # 공유 manifest 적용
 npx claude-loadout --help     # 플래그 전체 목록
 ```
 
-의존성 0개, 스캔·추천 약 1초, 전역 설치 불필요. **CI/파이프 환경**에서는 `--dry-run` 또는 `--all`을 쓰세요 — 입력 대기로 멈추지 않습니다.
+의존성 0개, 스캔·추천 약 1초, 전역 설치 불필요. **CI/파이프 환경**에서는 `--dry-run`, `--json`, 또는 `--all`을 쓰세요 — 입력 대기로 멈추지 않습니다.
 
 | `--dry-run` / `-d` | 추천만 표시, 파일 미작성 |
+| `--json` | 추천 결과 JSON 출력 (CI용) |
 | `--all` / `-a` / `-y` | 상위 추천 전체 자동 적용 |
-| `doctor` | 미입력 토큰, 훅 의존성(`jq`, `ruff`…), `.env` 보호 훅 점검 |
+| `doctor` / `doctor --json` | 미입력 토큰, 훅 의존성, cross-agent 중복, `.env` 보호 훅 |
+| `export` / `export --json` | 팀 manifest 작성 또는 JSON 출력 |
+| `apply -f <file>` | 공유 loadout 적용 (`--target cursor` 등 지원) |
 | `--discover` | 미검증 커뮤니티 스킬 추가 노출 |
 | `--target <id>` | `cursor`, `codex`, `gemini` 등 에이전트별 MCP 설정 작성 |
 | `--list-targets` | 지원 에이전트·설정 파일 경로 목록 |
@@ -213,11 +218,12 @@ npm run build:docs   # 카탈로그로부터 docs/domains/ 재생성
 
 ## 로드맵
 
-- [ ] `claude-loadout`를 npm에 배포해 `npx` 지원
-- [ ] 도메인 추가 (게임 개발, 임베디드, 브라우저 확장, Rust 시스템)
+- [x] `claude-loadout`를 npm에 배포해 `npx` 지원
+- [x] `game-dev` 도메인 (Godot, Unity, Unreal)
+- [x] `loadout doctor` — cross-agent 감사, `--json` 지원
+- [x] 팀 로드아웃 — `export` / `apply -f .loadout.json`, `--target` cross-agent
+- [ ] 더 많은 도메인 (임베디드, 브라우저 확장, Rust 시스템)
 - [ ] 커뮤니티 투표 기반 관련도 시그널
-- [ ] `loadout doctor` — 기존 세팅 감사 후 빠진 것 제안
-- [ ] 팀 로드아웃 — 프로젝트 로드아웃을 파일 하나로 공유
 
 ## 라이선스
 

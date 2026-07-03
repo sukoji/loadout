@@ -6,6 +6,13 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.17] — 2026-07-03
+### Added
+- **`--version` / `-V`** — print package version.
+
+### Changed
+- README + README.ko — document export/apply, all `--json` flags, team loadout workflow; KO roadmap synced.
+
 ## [0.3.16] — 2026-07-03
 ### Added
 - **`apply -f --dry-run --json`** — preview team manifest apply as structured JSON.
