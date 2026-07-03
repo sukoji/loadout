@@ -6,6 +6,12 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.16] — 2026-07-03
+### Added
+- **`apply -f --dry-run --json`** — preview team manifest apply as structured JSON.
+- **`LOADOUT_OPENCLAW_HOME`** — override OpenClaw config dir (detect, doctor, `--target openclaw`).
+- **OpenClaw `detectInstalled`** — covered in regression tests via env override.
+
 ## [0.3.15] — 2026-07-03
 ### Added
 - **`--json`** — print scan + recommend results as JSON (read-only; pairs with `--dry-run` in CI).

@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { homedir } from "node:os";
+import { openclawHome } from "./paths.mjs";
 
 // Cross-agent target adapters. MCP servers are portable across modern agents; each target
 // only differs in WHERE its config lives and WHAT shape an MCP entry takes. Verified formats:
@@ -28,14 +29,15 @@ export function listTargets() {
 export function detectTargets(root = process.cwd()) {
   const found = [];
   for (const [id, t] of Object.entries(TARGETS)) {
-    const base = t.scope === "home" ? homedir() : root;
+    const base = t.id === "openclaw" ? openclawHome() : t.scope === "home" ? homedir() : root;
     if (existsSync(resolve(base, t.file))) found.push(id);
   }
   return found;
 }
 
 function targetPath(t, root) {
-  return resolve(t.scope === "home" ? homedir() : root, t.file);
+  const base = t.id === "openclaw" ? openclawHome() : t.scope === "home" ? homedir() : root;
+  return resolve(base, t.file);
 }
 
 // Apply the given MCP catalog entries to one target. Returns a receipt.

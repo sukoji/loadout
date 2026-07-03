@@ -74,6 +74,19 @@ export function resolveManifestItems(catalog, ids) {
   return { items, skipped };
 }
 
+export function previewManifestApply(catalog, manifestPath, opts = {}) {
+  const ids = readManifestIds(manifestPath);
+  const { items, skipped } = resolveManifestItems(catalog, ids);
+  const targets = normalizeTargets(opts.targets);
+  return {
+    manifest: resolve(manifestPath),
+    targets,
+    items: items.map((i) => ({ id: i.id, name: i.name, type: i.type, tier: i.tier || "curated" })),
+    skipped,
+    claudeOnly: items.filter((i) => i.type !== "mcp").map((i) => i.id),
+  };
+}
+
 export function applyManifest(catalog, manifestPath, root = process.cwd(), opts = {}) {
   const ids = readManifestIds(manifestPath);
   const { items, skipped } = resolveManifestItems(catalog, ids);

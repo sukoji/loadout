@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { loadCatalog } from "../cli/lib/catalog.mjs";
-import { buildManifest, writeManifest, applyManifest } from "../cli/lib/manifest.mjs";
+import { buildManifest, writeManifest, applyManifest, previewManifestApply } from "../cli/lib/manifest.mjs";
 
 const catalog = loadCatalog();
 const dir = mkdtempSync(join(tmpdir(), "loadout-manifest-"));
@@ -74,6 +74,10 @@ try {
   const serialized = JSON.parse(JSON.stringify(jsonManifest));
   assert("export manifest JSON has installed array", Array.isArray(serialized.installed));
   assert("export manifest JSON has items array", Array.isArray(serialized.items) && serialized.items.length > 0);
+
+  const preview = previewManifestApply(catalog, manifestPath, { targets: ["claude"] });
+  assert("preview apply lists sequential-thinking", preview.items.some((i) => i.id === "sequential-thinking"));
+  assert("preview apply has targets", preview.targets.includes("claude"));
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

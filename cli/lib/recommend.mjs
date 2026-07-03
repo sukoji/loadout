@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { homedir } from "node:os";
+import { openclawConfigPath } from "./paths.mjs";
 
 // Signals too broad to justify a Tier-2 official plugin on their own.
 const WEAK_OFFICIAL_SIGNALS = new Set([
@@ -170,7 +170,7 @@ function detectInstalled(root) {
 
   for (const id of detectCodexServers(root)) installed.add(id);
 
-  const openclawPath = resolve(homedir(), ".openclaw/openclaw.json");
+  const openclawPath = openclawConfigPath();
   if (existsSync(openclawPath)) {
     try {
       const doc = JSON.parse(readFileSync(openclawPath, "utf8"));

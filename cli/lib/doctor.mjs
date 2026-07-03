@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { homedir } from "node:os";
+import { openclawConfigPath } from "./paths.mjs";
 import { execSync } from "node:child_process";
 import { loadCatalog } from "./catalog.mjs";
 import { scanProject } from "./scan.mjs";
@@ -137,7 +137,7 @@ function auditCrossAgentMcp(root, catalog, findings, mcpLocations) {
     }
   }
 
-  const openclawPath = resolve(homedir(), ".openclaw/openclaw.json");
+  const openclawPath = openclawConfigPath();
   if (existsSync(openclawPath)) {
     try {
       const doc = JSON.parse(readFileSync(openclawPath, "utf8"));
