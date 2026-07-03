@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.25 | 2026-07-04 | Helm/K8s/Ansible scan; devops recommend tests |
 | 0.3.24 | 2026-07-04 | domain-priority ranking; prepublishOnly test gate |
 | 0.3.23 | 2026-07-04 | mobile ranking fix (figma/playwright signals) |
 | 0.3.22 | 2026-07-04 | Flutter/Gradle/Swift scan; mobile recommend tests |

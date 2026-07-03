@@ -91,6 +91,13 @@ const expoTop = topNames(expo);
 assert("Expo includes context7", expoTop.includes("context7"), expoTop.join(", "));
 assert("Expo excludes postgres by default", !expoTop.includes("postgres"), expoTop.join(", "));
 
+// DevOps / infra.
+const devops = new Set(["always", "dockerfile", "terraform", "helm", "k8s", ".github/workflows", ".git"]);
+const dvTop = topNames(devops);
+assert("DevOps includes git or github", dvTop.includes("git") || dvTop.includes("github"), dvTop.join(", "));
+assert("DevOps includes guard-dangerous-bash", dvTop.includes("guard-dangerous-bash"), dvTop.join(", "));
+assert("DevOps excludes playwright", !dvTop.includes("playwright"), dvTop.join(", "));
+
 const officialInPool = recommend(catalog, mlResearch).items.filter((e) => e.item.tier === "official").length;
 assert("Official tier capped in pool", officialInPool <= 2, String(officialInPool));
 

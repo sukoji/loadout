@@ -86,6 +86,9 @@ export function scanProject(root = process.cwd()) {
     "build.gradle": "build.gradle",
     "build.gradle.kts": "build.gradle",
     "Package.swift": "swift",
+    "Chart.yaml": "helm",
+    "Chart.yml": "helm",
+    "ansible.cfg": "ansible",
   };
   for (const [file, sig] of Object.entries(fileSignals)) {
     if (has(file)) add(sig);
@@ -105,6 +108,9 @@ export function scanProject(root = process.cwd()) {
   if (isDir(root, "paper")) add("papers");
   if (has("project.godot")) add("godot");
   if (has("ProjectSettings/ProjectVersion.txt")) add("unity");
+  for (const dir of ["k8s", "kubernetes", "deploy/k8s", "manifests"]) {
+    if (isDir(root, dir)) add("k8s");
+  }
 
   // shallow extension sweep (top level + one dir down) for .tf / .ipynb / .xcodeproj etc.
   sweepExtensions(root, signals);

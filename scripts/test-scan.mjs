@@ -89,6 +89,24 @@ try {
   } finally {
     rmSync(flutterDir, { recursive: true, force: true });
   }
+
+  const devopsDir = mkdtempSync(join(tmpdir(), "loadout-scan-devops-"));
+  try {
+    writeFileSync(join(devopsDir, "Dockerfile"), "FROM alpine\n");
+    writeFileSync(join(devopsDir, "main.tf"), "resource \"null_resource\" \"x\" {}\n");
+    writeFileSync(join(devopsDir, "Chart.yaml"), "name: demo\n");
+    mkdirSync(join(devopsDir, "k8s"), { recursive: true });
+    writeFileSync(join(devopsDir, "k8s", "deploy.yaml"), "apiVersion: v1\n");
+    const dvSignals = scanProject(devopsDir);
+    assert("scan adds dockerfile signal", dvSignals.has("dockerfile"));
+    assert("scan adds terraform from .tf", dvSignals.has("terraform"));
+    assert("scan adds helm from Chart.yaml", dvSignals.has("helm"));
+    assert("scan adds k8s from k8s/ directory", dvSignals.has("k8s"));
+    const dvTop = recommend(catalog, dvSignals).items.slice(0, 8).map((e) => e.item.id);
+    assert("devops project surfaces github or git", dvTop.includes("github") || dvTop.includes("git"), dvTop.join(", "));
+  } finally {
+    rmSync(devopsDir, { recursive: true, force: true });
+  }
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.25] — 2026-07-04
+### Added
+- **Scan** — Helm (`Chart.yaml`), Ansible (`ansible.cfg`), Kubernetes dirs (`k8s/`, `kubernetes/`, …).
+- **`test:recommend` / `test:scan`** — DevOps ranking and infra file fixtures.
+
 ## [0.3.24] — 2026-07-04
 ### Changed
 - **Ranking** — items from the signal-matched domain outrank general always-on defaults when scores are otherwise equal.
