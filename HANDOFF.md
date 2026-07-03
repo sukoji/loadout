@@ -20,17 +20,19 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | Area | State |
 | :-- | :-- |
 | First release shipped & pushed | ✅ on `origin/main`; tagged `v0.1.0` |
-| Published to npm | ✅ `claude-loadout@0.1.0` live (2026-07-03). **Verified from the public registry**: `npx claude-loadout@0.1.0 --list-targets` and `--dry-run` both run correctly. npm user: `sukojin` (2FA/OTP required per publish). |
+| Published to npm | ✅ `claude-loadout@0.2.0` live; `npx` verified from the public registry. npm user `sukojin`. **A bypass-2FA granular token is in `~/.npmrc`, so `npm publish` no longer needs an OTP** (confirmed by the 0.2.0 publish). To release: bump version in package.json + plugin.json + marketplace.json, update CHANGELOG, `npm publish`, `git tag vX.Y.Z && git push --tags`, `gh release create`. |
 | Plugin marketplace | ✅ **end-to-end verified from GitHub**: `/plugin marketplace add sukoji/loadout` → `/plugin install loadout@loadout` → `claude plugin details` lists Skills (2): browse, recommend. (Install-blocking bug fixed — see gotcha #8.) |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
-| Catalog | ✅ 25 items (12 MCP, 7 skills, 6 hooks), 8 domains, `validate-catalog.mjs` = 0 warnings |
+| Catalog | ✅ 35 items (18 MCP, 7 skills, 10 hooks), 8 domains, 0 warnings. Every npx MCP verified to resolve on npm (`scripts/verify-mcp-packages.mjs`). |
 | CLI (`node cli/index.js`) | ✅ zero-dep; profiles React & Python/ML correctly, writes valid `.mcp.json` + `.claude/settings.json`, idempotent (re-run skips installed). §5 `--dry-run` is read-only; reproduce the write/idempotency path with the optional test in §5. |
 | Cross-agent targets | ✅ `--target codex\|cursor\|gemini\|opencode\|openclaw\|all` writes each agent's MCP config in its verified format (TOML for Codex, JSON for the rest). Tested emitting all formats + HTTP handling. Skills/hooks stay Claude-only. Code: `cli/lib/targets.mjs`. |
 | Docs | ✅ `docs/domains/*.md` auto-generated, in sync with catalog |
 | CI | ✅ `.github/workflows/validate.yml` runs validate + docs-sync gate |
 
 ### NOT done yet (known limitations — do not claim these work)
-- **Third-party MCP install commands are not runtime-tested** (Playwright, Figma, Context7, Chrome
+- Not yet submitted to awesome-claude-code (must use its **web issue form**, not a PR/gh CLI) or other
+  directories. README still lacks a full `--dry-run/--all/--help` flags section.
+- MCP package **names** are verified on npm, but the servers aren't **runtime-tested** (actually started) (Playwright, Figma, Context7, Chrome
   DevTools, postgres). They come from official/verifiable sources and are schema-correct, but nobody has
   run each one end-to-end. Task `runtime-test-third-party-mcps`.
 - No demo GIF; README lacks a flags section; not yet submitted to awesome-claude-code / marketplaces.
