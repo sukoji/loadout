@@ -98,9 +98,36 @@ cd your-project
 npx claude-loadout            # interactive
 npx claude-loadout --dry-run  # just show the recommendation
 npx claude-loadout --all      # apply the whole recommended loadout
+npx claude-loadout doctor     # audit tokens, hook deps, security gaps (read-only)
+npx claude-loadout --help     # full flag list
 ```
 
-Zero dependencies, ~1s, nothing to install globally.
+Zero dependencies, ~1s for scan/recommend, nothing to install globally.
+
+### CLI flags
+
+| Flag | What it does |
+| :-- | :-- |
+| *(none)* | Interactive — pick items by number |
+| `--dry-run` / `-d` | Show recommendations only; write nothing |
+| `--all` / `-a` / `-y` | Apply the top recommendations without prompting |
+| `--discover` | Also surface **unverified** community skills |
+| `--target <id>` | Write MCP config for `cursor`, `codex`, `gemini`, `opencode`, `openclaw`, or `all` |
+| `--list-targets` | List agents and config file paths |
+| `doctor` | Read-only audit: unfilled tokens, missing hook tools, `.env` guard, suggested gaps |
+
+**Non-interactive shells** (CI, pipes): use `--dry-run` or `--all` — otherwise Loadout prints recommendations and exits without hanging on input.
+
+### What auto-applies vs what you do
+
+| Kind | Loadout writes it? | You still need to… |
+| :-- | :-- | :-- |
+| MCP servers | ✅ merges into `.mcp.json` (or agent MCP file) | Fill API keys; OAuth on first use for hosted servers |
+| Hooks & settings | ✅ merges into `.claude/settings.json` | Install hook deps (`jq`, `ruff`, …); on Windows use Git Bash/WSL for shell hooks |
+| Built-in skills (`/init`, `/code-review`) | ❌ already in Claude Code | Run the slash command when you want it |
+| Marketplace plugins (Exa, Superpowers, …) | ❌ prints `/plugin install …` | Run those commands in Claude Code |
+
+Run `npx claude-loadout doctor` anytime to see unfilled placeholders and missing PATH tools.
 
 ## Works with your agent — not just Claude Code
 
@@ -143,7 +170,7 @@ live in one place.
 
 Loadout pulls from three tiers, so it reaches the whole ecosystem without ever blindly applying something unvetted:
 
-- **Curated (35)** — hand-verified MCP servers, hooks & skills. Safe to auto-apply; every npx package is checked to resolve on npm.
+- **Curated (37)** — hand-verified MCP servers, hooks & skills. Safe to auto-apply; every npx package is checked to resolve on npm (`npm run verify:mcp`) and smoke-started in release checks (`npm run test:mcps`).
 - **Official marketplace (~240)** — Anthropic's official plugin directory, ingested automatically. Surfaced when they match your stack, installed via `/plugin`.
 - **Community (`--discover`)** — well-known community skills like [caveman](https://github.com/JuliusBrussee/caveman) (token saver). Shown only when you ask, labeled **⚠ unverified**, and **never auto-applied**.
 
@@ -161,6 +188,7 @@ Loadout organizes its curated catalog by the kind of project you're working on:
 | [Frontend / Web UI](docs/domains/frontend.md) | React, Vue, Svelte, Next — anything in a browser |
 | [Backend / API](docs/domains/backend-api.md) | Servers, APIs, databases |
 | [Data / ML / Notebooks](docs/domains/data-ml.md) | Python data work, training, analysis |
+| [Research / Academic](docs/domains/research.md) | Literature review, notebooks, papers, experiments |
 | [DevOps / Infra](docs/domains/devops.md) | CI/CD, Docker, Terraform, Kubernetes |
 | [Mobile](docs/domains/mobile.md) | iOS, Android, React Native, Flutter |
 | [Security-sensitive](docs/domains/security.md) | Auth, payments, PII |
@@ -199,10 +227,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the entry schema.
 
 ## Roadmap
 
-- [ ] Publish `claude-loadout` to npm for `npx`
+- [x] Publish `claude-loadout` to npm for `npx`
+- [x] `loadout doctor` — audit an existing setup and suggest what's missing
 - [ ] More domains (game dev, embedded, browser extensions, Rust systems)
 - [ ] Community-voted relevance signals
-- [ ] `loadout doctor` — audit an existing setup and suggest what's missing
 - [ ] Team loadouts — share a project loadout via a single file
 
 ## License

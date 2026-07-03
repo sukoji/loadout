@@ -5,11 +5,12 @@ import { loadCatalog } from "./lib/catalog.mjs";
 import { scanProject } from "./lib/scan.mjs";
 import { recommend } from "./lib/recommend.mjs";
 import { apply } from "./lib/apply.mjs";
+import { doctor } from "./lib/doctor.mjs";
 import { applyToTarget, listTargets, detectTargets, TARGETS } from "./lib/targets.mjs";
 
 const C = {
   reset: "\x1b[0m", bold: "\x1b[1m", dim: "\x1b[2m",
-  cyan: "\x1b[36m", green: "\x1b[32m", yellow: "\x1b[33m", magenta: "\x1b[35m",
+  cyan: "\x1b[36m", green: "\x1b[32m", yellow: "\x1b[33m", magenta: "\x1b[35m", red: "\x1b[31m",
 };
 const c = (color, s) => `${C[color]}${s}${C.reset}`;
 const KIND_LABEL = { mcp: "MCP server", hook: "Hook/setting", setting: "Hook/setting", skill: "Skill", reference: "Reference" };
@@ -17,6 +18,11 @@ const KIND_LABEL = { mcp: "MCP server", hook: "Hook/setting", setting: "Hook/set
 async function main() {
   const args = argv.slice(2);
   const flags = new Set(args.filter((a) => a.startsWith("-")));
+  const positional = args.filter((a) => !a.startsWith("-"));
+
+  if (flags.has("--help") || flags.has("-h")) return printHelp();
+  if (positional[0] === "doctor") return runDoctor();
+
   const dryRun = flags.has("--dry-run") || flags.has("-d");
   const takeAll = flags.has("--all") || flags.has("-a") || flags.has("--yes") || flags.has("-y");
 
@@ -89,6 +95,14 @@ async function main() {
     return;
   }
 
+  if (!stdin.isTTY && !takeAll) {
+    console.log(
+      c("yellow", "\nNon-interactive terminal detected.") +
+        c("dim", " Pass --all to apply the recommended loadout, or --dry-run to preview only.\n")
+    );
+    return;
+  }
+
   let picks;
   if (takeAll) {
     picks = top;
@@ -140,6 +154,55 @@ function printTargets() {
     console.log(`  ${c("cyan", t.id.padEnd(9))} ${c("bold", t.label.padEnd(13))} ${c("dim", where)}`);
   }
   console.log(c("dim", "\nMCP servers apply to every target. Skills & hooks are Claude Code-native.\n"));
+}
+
+function printHelp() {
+  console.log(c("bold", "\n🎯 claude-loadout") + c("dim", " — project-aware agent setup\n"));
+  console.log(c("bold", "Usage:\n"));
+  console.log(`  ${c("cyan", "npx claude-loadout")}              Interactive recommend + apply (Claude Code)`);
+  console.log(`  ${c("cyan", "npx claude-loadout doctor")}     Audit .mcp.json + hooks (read-only)`);
+  console.log(`  ${c("cyan", "npx claude-loadout --dry-run")}  Show recommendations only`);
+  console.log(`  ${c("cyan", "npx claude-loadout --all")}      Apply top recommendations without prompting`);
+  console.log(`  ${c("cyan", "npx claude-loadout --discover")}  Also show unverified community skills`);
+  console.log(`  ${c("cyan", "npx claude-loadout --target cursor")}  Write MCP config for Cursor`);
+  console.log(`  ${c("cyan", "npx claude-loadout --list-targets")}   List supported agents\n`);
+  console.log(c("bold", "What auto-applies vs what you run:\n"));
+  console.log(`  ${c("green", "Auto-written")}   MCP entries → .mcp.json (or agent-specific MCP file)`);
+  console.log(`  ${c("green", "Auto-written")}   Hooks/settings → .claude/settings.json`);
+  console.log(`  ${c("yellow", "You run")}       Plugin skills → /plugin install … in Claude Code`);
+  console.log(`  ${c("yellow", "You fill")}       API keys / OAuth when a server needs auth\n`);
+  console.log(c("dim", "Docs: https://github.com/sukoji/loadout\n"));
+}
+
+function runDoctor() {
+  const root = cwd();
+  console.log(c("bold", "\n🩺 Loadout doctor") + c("dim", `  — auditing ${root}\n`));
+  const { ok, warn, fix } = doctor(root);
+
+  if (fix.length) {
+    console.log(c("red", "Fix:"));
+    fix.forEach((f) => console.log(`  • ${f.msg}${f.file ? c("dim", ` (${f.file})`) : ""}`));
+    console.log("");
+  }
+  if (warn.length) {
+    console.log(c("yellow", "Warnings:"));
+    warn.forEach((f) => console.log(`  • ${f.msg}${f.file ? c("dim", ` (${f.file})`) : ""}`));
+    console.log("");
+  }
+  if (ok.length) {
+    console.log(c("green", "OK:"));
+    ok.forEach((f) => console.log(`  • ${f.msg}`));
+    console.log("");
+  }
+  if (!fix.length && !warn.length) {
+    console.log(c("green", "Everything looks good.\n"));
+    return;
+  }
+  if (fix.length) {
+    console.log(c("dim", "Tip: npx claude-loadout --dry-run to see recommended additions.\n"));
+    exit(1);
+  }
+  console.log("");
 }
 
 function parseSelection(answer, top) {

@@ -15,6 +15,10 @@ jobs:
           node-version: 20
       - name: Validate catalog integrity
         run: node scripts/validate-catalog.mjs
+      - name: Recommend regression tests
+        run: node scripts/test-recommend.mjs
+      - name: Verify MCP packages on npm
+        run: node scripts/verify-mcp-packages.mjs
       - name: Check docs are in sync
         run: |
           node scripts/build-docs.mjs

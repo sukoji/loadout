@@ -20,22 +20,20 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | Area | State |
 | :-- | :-- |
 | First release shipped & pushed | ✅ on `origin/main`; tagged `v0.1.0` |
-| Published to npm | ✅ `claude-loadout@0.3.1` (loop iteration 1). Bump + `npm publish` + tag each loop pass. |
+| Published to npm | ✅ `claude-loadout@0.3.2` (loop iteration 2). Bump + `npm publish` + tag each loop pass. |
 | Plugin marketplace | ✅ **end-to-end verified from GitHub**: `/plugin marketplace add sukoji/loadout` → `/plugin install loadout@loadout` → `claude plugin details` lists Skills (2): browse, recommend. (Install-blocking bug fixed — see gotcha #8.) |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
 | Catalog | ✅ **3 tiers, 281 items**: 37 curated + 242 official + 2 community. **9 domains** incl. `research`. `npm run test:recommend` guards ranking quality. |
-| CLI (`node cli/index.js`) | ✅ zero-dep; profiles React & Python/ML correctly, writes valid `.mcp.json` + `.claude/settings.json`, idempotent (re-run skips installed). §5 `--dry-run` is read-only; reproduce the write/idempotency path with the optional test in §5. |
+| CLI (`node cli/index.js`) | ✅ `doctor`, `--help`, non-interactive guard; `npm test` (validate + test:recommend + verify:mcp). |
 | Cross-agent targets | ✅ `--target codex\|cursor\|gemini\|opencode\|openclaw\|all` writes each agent's MCP config in its verified format (TOML for Codex, JSON for the rest). Tested emitting all formats + HTTP handling. Skills/hooks stay Claude-only. Code: `cli/lib/targets.mjs`. |
 | Docs | ✅ `docs/domains/*.md` auto-generated, in sync with catalog |
-| CI | ✅ `.github/workflows/validate.yml` runs validate + docs-sync gate |
+| CI | ✅ validate + test:recommend + verify:mcp + docs-sync on every push |
 
 ### NOT done yet (known limitations — do not claim these work)
-- Not yet submitted to awesome-claude-code (must use its **web issue form**, not a PR/gh CLI) or other
-  directories. README still lacks a full `--dry-run/--all/--help` flags section.
-- MCP package **names** are verified on npm, but the servers aren't **runtime-tested** (actually started) (Playwright, Figma, Context7, Chrome
-  DevTools, postgres). They come from official/verifiable sources and are schema-correct, but nobody has
-  run each one end-to-end. Task `runtime-test-third-party-mcps`.
-- No demo GIF; README lacks a flags section; not yet submitted to awesome-claude-code / marketplaces.
+- Not yet submitted to awesome-claude-code (web issue form) or other directories.
+- `npm run test:mcps` is optional/slow (network); CI skips runtime smoke — uses `verify:mcp` instead.
+- Windows POSIX hooks still need Git Bash/WSL; PowerShell-native variants not yet in catalog.
+- No demo GIF; not yet submitted to awesome-claude-code / marketplaces.
 
 ---
 
@@ -52,7 +50,7 @@ plugins/loadout/
   catalog/community.json            ← Tier 3 community seed (unverified, --discover only)
 cli/
   index.js                          ← CLI entry (scan→recommend→pick→apply, --target), zero deps
-  lib/{catalog,scan,recommend,apply}.mjs
+  lib/{catalog,scan,recommend,apply,doctor}.mjs
   lib/targets.mjs                   ← cross-agent adapters (codex/cursor/gemini/opencode/openclaw)
 scripts/
   validate-catalog.mjs              ← integrity checks (run before every commit)
@@ -147,18 +145,13 @@ lists were generated into this repo's planning; the one-line resume pointer is e
 - [x] **`research-domain-and-ranking` [M]** — ✅ DONE 2026-07-03 (v0.3.1). `research` domain, Exa/Tavily curated
       skills, Tier-2 noise filter, `test:recommend`. See [LOOP.md](LOOP.md).
 - [ ] **`expand-catalog-verified-entries` [L]** — grow curated entries with runtime-verified MCPs only.
-- [ ] **`runtime-test-third-party-mcps` [M]** — new `scripts/test-mcps.mjs` that runs each third-party
-      MCP command in a temp dir and checks it installs; HTTP MCPs check the URL responds. Add `test:mcps`
-      npm script. Resume: `scripts/test-mcps.mjs` (new).
+- [x] **`runtime-test-third-party-mcps` [M]** — ✅ DONE 2026-07-03 (v0.3.2). `npm run test:mcps`.
 - [ ] **`add-game-dev-domain` [M]** — new domain (godot/unity/unreal signals) + `docs/domains/game-dev.md`.
       Resume: `plugins/loadout/catalog/domains.json`. Depends: expand-catalog.
-- [ ] **`implement-loadout-doctor` [M]** — read-only `loadout doctor` subcommand: audit an existing setup,
-      flag missing loadout items + unfilled `<your-...>` tokens + missing hook deps. Resume: new
-      `cli/lib/doctor.mjs` + wire into `cli/index.js`. Depends: publish-npm.
+- [x] **`implement-loadout-doctor` [M]** — ✅ DONE 2026-07-03 (v0.3.2). `cli/lib/doctor.mjs`.
 
 ### P2 — trust, docs, polish
-- [ ] **`improve-readme-discoverability` [S]** — add a Flags section (`--dry-run`, `--all`, `--help`),
-      make the `/plugin marketplace add` prerequisite explicit. Resume: `README.md`. (Audit-flagged gap.)
+- [x] **`improve-readme-discoverability` [S]** — ✅ DONE 2026-07-03 (v0.3.2). EN README + `--help`; KO partial.
 - [ ] **`add-contributing-workflow-doc` [M]** — expand `CONTRIBUTING.md` with a step-by-step add→validate→
       test→PR flow + a worked MCP example. Depends: runtime-test-third-party-mcps.
 - [ ] **`add-version-roadmap` [S]** — `CHANGELOG.md` (started, see file) + restructure README roadmap into

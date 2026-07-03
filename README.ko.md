@@ -92,9 +92,20 @@ cd your-project
 npx claude-loadout            # 대화형
 npx claude-loadout --dry-run  # 추천만 보기
 npx claude-loadout --all      # 추천 로드아웃 전체 적용
+npx claude-loadout doctor     # 토큰·훅·보안 감사 (읽기 전용)
+npx claude-loadout --help     # 플래그 전체 목록
 ```
 
-의존성 0개, 약 1초, 전역 설치 불필요.
+의존성 0개, 스캔·추천 약 1초, 전역 설치 불필요. **CI/파이프 환경**에서는 `--dry-run` 또는 `--all`을 쓰세요 — 입력 대기로 멈추지 않습니다.
+
+| 플래그 | 동작 |
+| :-- | :-- |
+| `--dry-run` | 추천만 표시, 파일 미작성 |
+| `--all` | 상위 추천 전체 자동 적용 |
+| `doctor` | 미입력 토큰, 훅 의존성(`jq`, `ruff`…), `.env` 보호 훅 점검 |
+| `--discover` | 미검증 커뮤니티 스킬 추가 노출 |
+
+**자동 적용 vs 직접 실행:** MCP·훅은 설정 파일에 병합됩니다. 마켓플레이스 플러그인(Exa, Superpowers 등)은 `/plugin install …`을 직접 실행해야 하고, API 키·OAuth는 사용자가 채웁니다.
 
 ## 내 에이전트에서 작동 — Claude Code 전용이 아님
 

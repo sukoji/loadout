@@ -104,8 +104,8 @@ Merge; never overwrite an existing file wholesale. Prefer project scope unless t
   - `install.type: "manual"` / `reference` → give the `homepage` link.
 
 After applying, print a short receipt: what was written to which file, what tokens still need filling,
-and the exact next commands to run. Remind the user to restart Claude Code (or `/reload-plugins`) so new
-MCP servers and plugins load.
+and the exact next commands to run. Suggest `npx claude-loadout doctor` if any auth placeholders were
+written. Remind the user to restart Claude Code (or `/reload-plugins`) so new MCP servers and plugins load.
 
 ## Other agents (Codex, Cursor, opencode, Gemini, OpenClaw)
 

@@ -4,7 +4,21 @@ All notable changes to Loadout are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/); versions follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
-- See [HANDOFF.md](HANDOFF.md) §6 and [LOOP.md](LOOP.md) for the improvement loop.
+- See [LOOP.md](LOOP.md).
+
+## [0.3.2] — 2026-07-03
+### Added
+- **`npx claude-loadout doctor`** — read-only audit: unfilled MCP tokens, missing hook PATH deps (`jq`,
+  `ruff`, …), `.env` without protect-secrets, and top recommendation gaps.
+- **`npm run test:mcps`** — smoke-starts curated stdio MCPs and probes HTTP endpoints (skippable via
+  `SKIP_MCP_RUNTIME=1`; placeholder configs use `verify:mcp` only).
+- **`--help`** — documents all flags and an honest auto-apply vs manual table.
+- **`npm test`** — validate + recommend regression + npm package verify (CI runs these).
+
+### Changed
+- **Non-interactive UX** — piped/CI shells no longer hang waiting for input; use `--all` or `--dry-run`.
+- **README** — CLI flags table, what auto-applies vs what you run, Research domain link, doctor in roadmap.
+- **CI** — runs `test:recommend` and `verify:mcp` on every push.
 
 ## [0.3.1] — 2026-07-03
 ### Added
