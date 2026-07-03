@@ -2,7 +2,9 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 // Score domains against project signals and build a ranked, de-duplicated loadout.
-export function recommend({ domains, byId }, signals, root = process.cwd()) {
+// Tier 1 (curated) recs come from domain loadouts; Tier 2 (official) enter by signal match;
+// Tier 3 (community) surface only when opts.discover is set, and are never auto-applied.
+export function recommend({ domains, byId, all = [] }, signals, root = process.cwd(), opts = {}) {
   const installed = detectInstalled(root);
 
   const scored = domains
@@ -44,10 +46,27 @@ export function recommend({ domains, byId }, signals, root = process.cwd()) {
     }
   }
 
+  // Tier 2: official-marketplace plugins that match a project signal (kept out of the pool unless relevant).
+  for (const item of all) {
+    if (item.tier !== "official") continue;
+    if (seen.has(item.id) || installed.has(item.id)) continue;
+    const strength = item.signals.filter((s) => s !== "always" && signals.has(s.toLowerCase())).length;
+    if (strength <= 0) continue;
+    seen.add(item.id);
+    items.push({ item, domain: item.domains[0], strength, alwaysUseful: false, reason: `matches ${item.signals.filter((s) => signals.has(s.toLowerCase())).slice(0, 3).join(", ")}` });
+  }
+
   items.sort((a, b) => b.strength - a.strength || Number(b.alwaysUseful) - Number(a.alwaysUseful));
+
+  // Tier 3: community candidates — review-only, only shown in discover mode.
+  const community = opts.discover
+    ? all.filter((i) => i.tier === "community" && !installed.has(i.id)).map((item) => ({ item, reason: "community · unverified — review before installing" }))
+    : [];
+
   return {
     domains: chosen.map((c) => c.domain),
     items,
+    community,
     installed: [...installed],
   };
 }

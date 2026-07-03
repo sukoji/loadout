@@ -37,9 +37,13 @@ async function main() {
   const targetLabels = targets.map((t) => TARGETS[t].label).join(", ");
   console.log(c("bold", "\n🎯 Loadout") + c("dim", `  — gearing up ${targetLabels} for this project\n`));
 
+  const discover = flags.has("--discover");
   const signals = scanProject(root);
-  let { domains, items, installed } = recommend(catalog, signals, root);
-  if (mcpOnly) items = items.filter((e) => e.item.type === "mcp");
+  let { domains, items, community, installed } = recommend(catalog, signals, root, { discover });
+  if (mcpOnly) {
+    items = items.filter((e) => e.item.type === "mcp");
+    community = [];
+  }
 
   console.log(c("dim", "Detected: ") + describeSignals(signals));
   console.log(c("dim", "Best-fit domains: ") + domains.map((d) => c("magenta", d.title)).join(c("dim", ", ")));
@@ -59,8 +63,8 @@ async function main() {
   top.forEach((entry, i) => {
     const { item, reason } = entry;
     const n = c("cyan", String(i + 1).padStart(2));
-    const src = item.official === true ? " · official" : item.official === false ? " · community" : "";
-    const kind = c("dim", `[${KIND_LABEL[item.type]}${src}]`);
+    const tierTag = item.tier === "official" ? " · official marketplace" : "";
+    const kind = c("dim", `[${KIND_LABEL[item.type]}${tierTag}]`);
     const needs = authLabel(item);
     console.log(`${n}  ${c("bold", item.name)} ${kind}${needs}`);
     console.log(`     ${item.description}`);
@@ -68,6 +72,17 @@ async function main() {
     if (item.homepage) console.log(c("dim", `     ↳ ${item.homepage}`));
     console.log("");
   });
+
+  if (community.length) {
+    console.log(c("yellow", "Discover — community skills") + c("dim", "  (unverified · review before installing):\n"));
+    community.forEach(({ item }) => {
+      console.log(`    ${c("bold", item.name)} ${c("dim", "[community]")}`);
+      console.log(`      ${item.description}`);
+      console.log(c("dim", `      ↳ ${item.homepage}`) + "\n");
+    });
+  } else if (!discover && !mcpOnly) {
+    console.log(c("dim", "Tip: add --discover to also surface community skills (e.g. caveman token-saver).\n"));
+  }
 
   if (dryRun) {
     console.log(c("dim", "Dry run — nothing written. Re-run without --dry-run to apply.\n"));

@@ -1,0 +1,36 @@
+[
+  {
+    "id": "caveman",
+    "tier": "community",
+    "verified": false,
+    "type": "skill",
+    "name": "Caveman (token saver)",
+    "description": "Community skill that makes the agent answer in terse 'caveman' style, cutting ~65–75% of output tokens while keeping technical accuracy. Levels: /caveman lite | full | ultra, plus Caveman Compress for CLAUDE.md.",
+    "domains": ["general"],
+    "signals": ["always"],
+    "official": false,
+    "homepage": "https://github.com/JuliusBrussee/caveman",
+    "install": {
+      "type": "manual",
+      "note": "Community (~14k★), UNVERIFIED by Loadout — review the repo before installing. Works with Claude Code and 40+ other agents.",
+      "commands": []
+    }
+  },
+  {
+    "id": "community-marketplace",
+    "tier": "community",
+    "verified": false,
+    "type": "reference",
+    "name": "Community plugin marketplace",
+    "description": "Anthropic's read-only community marketplace mirror — browse community-submitted plugins beyond this catalog. Submit at clau.de/plugin-directory-submission.",
+    "domains": ["general"],
+    "signals": [],
+    "official": false,
+    "homepage": "https://github.com/anthropics/claude-plugins-community",
+    "install": {
+      "type": "manual",
+      "note": "Discovery pointer — anything here is community-submitted; review before installing.",
+      "commands": []
+    }
+  }
+]

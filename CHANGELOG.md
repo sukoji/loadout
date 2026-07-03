@@ -6,6 +6,17 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [HANDOFF.md](HANDOFF.md) §6 for the live task board.
 
+## [0.3.0] — 2026-07-03
+### Added
+- **Three-tier coverage** — Loadout now reaches beyond its curated list:
+  - **Tier 1 curated (35)** — hand-verified, auto-apply safe.
+  - **Tier 2 official (~240)** — Anthropic's official plugin marketplace, ingested via
+    `scripts/ingest-official.mjs` into `catalog/ecosystem.json`. Surfaced when they match your stack,
+    installed with `/plugin`. Category → domain mapping + tech-signal derivation; de-duped against curated.
+  - **Tier 3 community** (`catalog/community.json`, seeded with the caveman token-saver) — surfaced only
+    with `--discover`, labeled **unverified**, and **never auto-applied**.
+- CLI `--discover` flag and tier badges on each candidate. `npm run ingest` refreshes the official tier.
+
 ## [0.2.1] — 2026-07-03
 ### Changed
 - Clearer candidate display: each recommended item now shows its kind + **official/community**, an
@@ -49,7 +60,8 @@ as the `sukoji/loadout` Claude Code plugin marketplace.
 - Removed a phantom `qa` domain reference from the `playwright` catalog entry and the validator whitelist
   that was masking it.
 
-[Unreleased]: https://github.com/sukoji/loadout/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/sukoji/loadout/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/sukoji/loadout/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/sukoji/loadout/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/sukoji/loadout/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/sukoji/loadout/releases/tag/v0.1.0

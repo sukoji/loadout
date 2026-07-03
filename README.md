@@ -139,6 +139,19 @@ If you don't pass `--target`, Loadout targets Claude Code and points out any oth
 It's also a **plugin marketplace** and a **browsable catalog** — so discovery, recommendation, and install all
 live in one place.
 
+## Coverage — three tiers (not just a fixed list)
+
+Loadout pulls from three tiers, so it reaches the whole ecosystem without ever blindly applying something unvetted:
+
+- **Curated (35)** — hand-verified MCP servers, hooks & skills. Safe to auto-apply; every npx package is checked to resolve on npm.
+- **Official marketplace (~240)** — Anthropic's official plugin directory, ingested automatically. Surfaced when they match your stack, installed via `/plugin`.
+- **Community (`--discover`)** — well-known community skills like [caveman](https://github.com/JuliusBrussee/caveman) (token saver). Shown only when you ask, labeled **⚠ unverified**, and **never auto-applied**.
+
+```bash
+npx claude-loadout            # curated + matching official plugins
+npx claude-loadout --discover # also surface community skills (review before installing)
+```
+
 ## Domains
 
 Loadout organizes its curated catalog by the kind of project you're working on:

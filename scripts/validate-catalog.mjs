@@ -5,9 +5,7 @@ import { loadCatalog } from "../cli/lib/catalog.mjs";
 
 const errors = [];
 const warn = [];
-const { mcp, skills, hooks, domains, byId } = loadCatalog();
-
-const all = [...mcp, ...skills, ...hooks];
+const { domains, byId, all, ecosystem, community } = loadCatalog();
 
 // unique ids
 const ids = new Map();
@@ -51,4 +49,5 @@ if (errors.length) {
   errors.forEach((e) => console.error(`   ${e}`));
   process.exit(1);
 }
-console.log(`\n✅ catalog OK — ${all.length} items across ${domains.length} domains, ${warn.length} warning(s).`);
+const curatedN = all.length - ecosystem.length - community.length;
+console.log(`\n✅ catalog OK — ${all.length} items (${curatedN} curated + ${ecosystem.length} official + ${community.length} community) across ${domains.length} domains, ${warn.length} warning(s).`);

@@ -10,18 +10,27 @@ Your job: look at THIS project, figure out what it is, and hand the user a short
 **loadout** of Claude Code extensions worth adding — then apply exactly the ones they choose.
 You are a recommender and installer, not a list-dumper. Never paste the whole catalog.
 
-## Step 0 — Load the catalog
+## Step 0 — Load the catalog (3 tiers)
 
-Read all four files from the plugin's bundled catalog:
+Read the curated (Tier 1) files fully — they're small and hand-verified:
 
 - `${CLAUDE_PLUGIN_ROOT}/catalog/mcp.json`
 - `${CLAUDE_PLUGIN_ROOT}/catalog/skills.json`
 - `${CLAUDE_PLUGIN_ROOT}/catalog/hooks.json`
 - `${CLAUDE_PLUGIN_ROOT}/catalog/domains.json`
+- `${CLAUDE_PLUGIN_ROOT}/catalog/community.json` (Tier 3, small)
 
-Each catalog item has an `id`, `name`, `description`, `domains`, and `signals`. MCP items carry a
-`config` (an `.mcp.json` server object), hook/setting items carry a `settings` object to merge, and
-skill items carry an `install` block.
+Each item has `id`, `name`, `description`, `domains`, `signals`. MCP items carry a `config`, hook/setting
+items a `settings` object, skill items an `install` block.
+
+**Tier 2 (official marketplace) is large (`catalog/ecosystem.json`, ~240 entries) — do NOT read it whole.**
+After you know the project's signals (Step 1), `Grep` `ecosystem.json` for those signal tokens to pull only
+the handful of official plugins that match. Each is a `tier: "official"`, verified Anthropic-marketplace
+plugin installed with the `/plugin install <name>@claude-plugins-official` command in its `install.commands`.
+
+Tier meaning: **curated** = auto-apply safe; **official** = trusted, install via `/plugin`; **community**
+(Tier 3) = UNVERIFIED — only surface if the user asks to "discover"/see more, label it clearly, and never
+auto-apply it.
 
 ## Step 1 — Profile the project
 
