@@ -7,7 +7,7 @@ Loadout development without the original chat context. If a session dies mid-tas
 - **Local path:** `C:\Users\piai\Desktop\loadout`
 - **What it is:** A hybrid Claude Code **plugin marketplace + recommender**. It profiles a project and
   *applies* a domain-matched loadout of MCP servers / hooks / skills — instead of being one more list to read.
-- **Last updated:** 2026-07-03 (v0.3.11 loop — apply -f --target)
+- **Last updated:** 2026-07-03 (v0.3.12 loop — scan jupyter signal + CI full test)
 - **Owner GitHub account:** `sukoji` (a *user*, not an org — `gh api user` returns `sukoji`, even though
   `gh auth status` shows the label `jskh-201910840`). Token scopes: `repo`, `workflow`, `gist`, `read:org`.
 
@@ -20,14 +20,14 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | Area | State |
 | :-- | :-- |
 | First release shipped & pushed | ✅ on `origin/main`; tagged `v0.1.0` |
-| Published to npm | ✅ `claude-loadout@0.3.11` live. Local `npm publish` uses `~/.npmrc` token. **GitHub Actions `publish` workflow** needs repo secret `NPM_TOKEN` (granular publish token) — without it the job warns and skips (not a hard fail). See CONTRIBUTING § Release. |
+| Published to npm | ✅ `claude-loadout@0.3.12` live. Local `npm publish` uses `~/.npmrc` token. **GitHub Actions `publish` workflow** needs repo secret `NPM_TOKEN` (granular publish token) — without it the job warns and skips (not a hard fail). See CONTRIBUTING § Release. |
 | Plugin marketplace | ✅ **end-to-end verified from GitHub**: `/plugin marketplace add sukoji/loadout` → `/plugin install loadout@loadout` → `claude plugin details` lists Skills (2): browse, recommend. (Install-blocking bug fixed — see gotcha #8.) |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
 | Catalog | ✅ **3 tiers, 281 items**: 37 curated + 242 official + 2 community. **9 domains** incl. `research`. `npm run test:recommend` guards ranking quality. |
 | CLI (`node cli/index.js`) | ✅ `doctor`, `--help`, non-interactive guard; `npm test` (validate + test:recommend + test:detect-installed + test:doctor + verify:mcp). |
 | Cross-agent targets | ✅ `--target codex\|cursor\|gemini\|opencode\|openclaw\|all` writes each agent's MCP config in its verified format (TOML for Codex, JSON for the rest). Tested emitting all formats + HTTP handling. Skills/hooks stay Claude-only. Code: `cli/lib/targets.mjs`. |
 | Docs | ✅ `docs/domains/*.md` auto-generated, in sync with catalog |
-| CI | ✅ validate + test:recommend + test:detect-installed + verify:mcp + docs-sync on every push |
+| CI | ✅ full `npm test` + docs-sync on every push |
 
 ### NOT done yet (known limitations — do not claim these work)
 - Not yet submitted to awesome-claude-code (web issue form) or other directories.

@@ -117,15 +117,20 @@ function sweepExtensions(root, signals, depth = 2) {
       const full = join(dir, e.name);
       if (e.isDirectory()) {
         for (const [ext, sig] of Object.entries(extToSignal)) {
-          if (e.name.endsWith(ext)) signals.add(sig);
+          if (e.name.endsWith(ext)) addExtensionSignal(signals, ext, sig);
         }
         walk(full, d - 1);
       } else {
         for (const [ext, sig] of Object.entries(extToSignal)) {
-          if (e.name.endsWith(ext)) signals.add(sig);
+          if (e.name.endsWith(ext)) addExtensionSignal(signals, ext, sig);
         }
       }
     }
   };
   walk(root, depth);
+}
+
+function addExtensionSignal(signals, ext, sig) {
+  signals.add(sig);
+  if (ext === ".ipynb") signals.add("jupyter");
 }

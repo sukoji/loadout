@@ -6,6 +6,14 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.12] — 2026-07-03
+### Added
+- **`test:scan`** — regression test that real `.ipynb`/`.bib` files produce research recommendations.
+- **Scan** — `.ipynb` files also emit a `jupyter` signal (not just the extension token).
+
+### Changed
+- CI runs full `npm test` (detect-installed, doctor, manifest regressions).
+
 ## [0.3.11] — 2026-07-03
 ### Added
 - **`apply -f`** — `--target cursor|codex|…` applies team manifest MCPs to other agents (hooks stay Claude-only).
