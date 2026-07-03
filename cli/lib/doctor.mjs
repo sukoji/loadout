@@ -55,9 +55,11 @@ export function doctor(root = process.cwd()) {
     const blob = JSON.stringify(settingsDoc || {}).toLowerCase();
     if (blob.includes("jq -r") || blob.includes("grep -eq")) {
       findings.warn.push({
-        msg: "Hooks use POSIX shell (jq/grep) — run Claude Code from Git Bash or WSL on Windows",
+        msg: "Hooks use POSIX shell — launch Claude Code from Git Bash or WSL; install jq via `winget install jqlang.jq` or scoop",
         file: ".claude/settings.json",
       });
+    } else if (settingsDoc?.hooks) {
+      findings.ok.push({ msg: "No POSIX-only hook shell detected (or hooks not configured)" });
     }
   }
 

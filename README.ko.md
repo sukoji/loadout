@@ -98,14 +98,23 @@ npx claude-loadout --help     # 플래그 전체 목록
 
 의존성 0개, 스캔·추천 약 1초, 전역 설치 불필요. **CI/파이프 환경**에서는 `--dry-run` 또는 `--all`을 쓰세요 — 입력 대기로 멈추지 않습니다.
 
-| 플래그 | 동작 |
-| :-- | :-- |
-| `--dry-run` | 추천만 표시, 파일 미작성 |
-| `--all` | 상위 추천 전체 자동 적용 |
+| `--dry-run` / `-d` | 추천만 표시, 파일 미작성 |
+| `--all` / `-a` / `-y` | 상위 추천 전체 자동 적용 |
 | `doctor` | 미입력 토큰, 훅 의존성(`jq`, `ruff`…), `.env` 보호 훅 점검 |
 | `--discover` | 미검증 커뮤니티 스킬 추가 노출 |
+| `--target <id>` | `cursor`, `codex`, `gemini` 등 에이전트별 MCP 설정 작성 |
+| `--list-targets` | 지원 에이전트·설정 파일 경로 목록 |
 
-**자동 적용 vs 직접 실행:** MCP·훅은 설정 파일에 병합됩니다. 마켓플레이스 플러그인(Exa, Superpowers 등)은 `/plugin install …`을 직접 실행해야 하고, API 키·OAuth는 사용자가 채웁니다.
+### 자동 적용 vs 직접 실행
+
+| 종류 | Loadout이 쓰나? | 사용자가 할 일 |
+| :-- | :-- | :-- |
+| MCP 서버 | ✅ `.mcp.json`(또는 에이전트 MCP 파일)에 병합 | API 키 입력; 호스팅 MCP는 첫 사용 시 OAuth |
+| 훅·설정 | ✅ `.claude/settings.json`에 병합 | `jq`, `ruff` 등 설치; **Windows는 Git Bash/WSL**에서 Claude Code 실행 |
+| 내장 스킬 (`/init` 등) | ❌ 이미 Claude Code에 포함 | 필요할 때 슬래시 명령 실행 |
+| 마켓플레이스 플러그인 | ❌ `/plugin install …` 안내만 | Claude Code에서 명령 직접 실행 |
+
+`npx claude-loadout doctor`로 미입력 토큰·누락된 PATH 도구를 언제든 점검할 수 있습니다.
 
 ## 내 에이전트에서 작동 — Claude Code 전용이 아님
 
@@ -164,6 +173,7 @@ Loadout은 큐레이션한 카탈로그를 "어떤 종류의 프로젝트인가"
 | [Frontend / Web UI](docs/domains/frontend.md) | React, Vue, Svelte, Next 등 브라우저용 |
 | [Backend / API](docs/domains/backend-api.md) | 서버, API, 데이터베이스 |
 | [Data / ML / Notebooks](docs/domains/data-ml.md) | 파이썬 데이터·학습·분석 |
+| [Research / Academic](docs/domains/research.md) | 문헌 조사, 노트북, 논문, 실험 |
 | [DevOps / Infra](docs/domains/devops.md) | CI/CD, Docker, Terraform, Kubernetes |
 | [Mobile](docs/domains/mobile.md) | iOS, Android, React Native, Flutter |
 | [Security-sensitive](docs/domains/security.md) | 인증, 결제, 개인정보 |

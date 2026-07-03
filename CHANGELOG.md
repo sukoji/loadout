@@ -6,6 +6,14 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.3] — 2026-07-03
+### Added
+- **FastAPI dev-path regression tests** in `test:recommend` (LOOP #6 — backend gets postgres/guards, not playwright).
+
+### Changed
+- **Korean README** — full parity for CLI flags, auto-apply table, Research domain link.
+- **`doctor` on Windows** — clearer Git Bash/WSL + `jq` install hint.
+
 ## [0.3.2] — 2026-07-03
 ### Added
 - **`npx claude-loadout doctor`** — read-only audit: unfilled MCP tokens, missing hook PATH deps (`jq`,

@@ -20,7 +20,7 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | Area | State |
 | :-- | :-- |
 | First release shipped & pushed | ✅ on `origin/main`; tagged `v0.1.0` |
-| Published to npm | ✅ `claude-loadout@0.3.2` (loop iteration 2). Bump + `npm publish` + tag each loop pass. |
+| Published to npm | ✅ `claude-loadout@0.3.3` (loop tick 3). |
 | Plugin marketplace | ✅ **end-to-end verified from GitHub**: `/plugin marketplace add sukoji/loadout` → `/plugin install loadout@loadout` → `claude plugin details` lists Skills (2): browse, recommend. (Install-blocking bug fixed — see gotcha #8.) |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
 | Catalog | ✅ **3 tiers, 281 items**: 37 curated + 242 official + 2 community. **9 domains** incl. `research`. `npm run test:recommend` guards ranking quality. |
@@ -151,7 +151,7 @@ lists were generated into this repo's planning; the one-line resume pointer is e
 - [x] **`implement-loadout-doctor` [M]** — ✅ DONE 2026-07-03 (v0.3.2). `cli/lib/doctor.mjs`.
 
 ### P2 — trust, docs, polish
-- [x] **`improve-readme-discoverability` [S]** — ✅ DONE 2026-07-03 (v0.3.2). EN README + `--help`; KO partial.
+- [x] **`improve-readme-discoverability` [S]** — ✅ DONE 2026-07-03 (v0.3.3). KO README full parity.
 - [ ] **`add-contributing-workflow-doc` [M]** — expand `CONTRIBUTING.md` with a step-by-step add→validate→
       test→PR flow + a worked MCP example. Depends: runtime-test-third-party-mcps.
 - [ ] **`add-version-roadmap` [S]** — `CHANGELOG.md` (started, see file) + restructure README roadmap into

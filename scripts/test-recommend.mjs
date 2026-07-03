@@ -49,11 +49,20 @@ const frontend = new Set(["always", "package.json", "react", "next", ".git"]);
 const feTop = topNames(frontend);
 assert("Frontend includes playwright", feTop.includes("playwright"), feTop.join(", "));
 
+// FastAPI backend should get API-appropriate tools, not frontend noise.
+const fastapi = new Set(["always", "requirements.txt", "pyproject.toml", "fastapi", "python", ".git", "postgres"]);
+const beTop = topNames(fastapi);
+assert("FastAPI includes context7", beTop.includes("context7"), beTop.join(", "));
+assert("FastAPI includes postgres", beTop.includes("postgres"), beTop.join(", "));
+assert("FastAPI includes guard-dangerous-bash", beTop.includes("guard-dangerous-bash"), beTop.join(", "));
+assert("FastAPI excludes playwright", !beTop.includes("playwright"), beTop.join(", "));
+
 const officialInPool = recommend(catalog, mlResearch).items.filter((e) => e.item.tier === "official").length;
 assert("Official tier capped in pool", officialInPool <= 2, String(officialInPool));
 
+const total = 4 + 4 + 1;
 if (failed) {
   console.error(`\n${failed} test(s) failed`);
   process.exit(1);
 }
-console.log(`\nAll ${4 + 1} recommend checks passed.`);
+console.log(`\nAll ${total} recommend checks passed.`);
