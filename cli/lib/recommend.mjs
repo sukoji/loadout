@@ -114,8 +114,11 @@ function officialSignalMatch(matched) {
 function rankEntries(a, b) {
   const tierA = a.item.tier === "curated" ? 100 : 0;
   const tierB = b.item.tier === "curated" ? 100 : 0;
-  const scoreA = a.strength + tierA + Number(a.alwaysUseful);
-  const scoreB = b.strength + tierB + Number(b.alwaysUseful);
+  // Prefer items from the signal-matched domain over general always-on defaults.
+  const domainA = a.domain && a.domain !== "general" ? 2 : 0;
+  const domainB = b.domain && b.domain !== "general" ? 2 : 0;
+  const scoreA = a.strength + tierA + Number(a.alwaysUseful) + domainA;
+  const scoreB = b.strength + tierB + Number(b.alwaysUseful) + domainB;
   return scoreB - scoreA;
 }
 

@@ -81,12 +81,11 @@ worse than no entry, because Loadout *applies* it. When in doubt, link the sourc
 ## Release (maintainers)
 
 ```bash
-npm test
 # bump version in package.json, plugins/loadout/.claude-plugin/plugin.json, .claude-plugin/marketplace.json
 # add CHANGELOG entry
 git commit -m "feat: vX.Y.Z — …"
 git push origin main
-npm publish
+npm publish   # runs `npm test` via prepublishOnly — will refuse to ship a red suite
 git tag vX.Y.Z && git push origin vX.Y.Z
 ```
 

@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.24] — 2026-07-04
+### Changed
+- **Ranking** — items from the signal-matched domain outrank general always-on defaults when scores are otherwise equal.
+- **`prepublishOnly`** — `npm publish` runs `npm test` first so a failing suite cannot ship.
+
 ## [0.3.23] — 2026-07-04
 ### Fixed
 - **Mobile ranking** — Figma and Playwright include `flutter` / `expo` / `react-native` signals so they surface in mobile loadouts (hotfix for v0.3.22 test gap).
