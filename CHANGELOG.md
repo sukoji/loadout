@@ -6,6 +6,14 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.26] — 2026-07-04
+### Added
+- **Scan** — docs (`.docx`/`.xlsx`, Docusaurus, `docs/`) and security (`auth`/`jwt`/`oauth` from auth packages).
+- **`test:recommend` / `test:scan`** — docs-writing and security-domain fixtures.
+
+### Changed
+- docs-writing domain signals use `.docx` / `.xlsx` (not bare `*.md`, which would match every README).
+
 ## [0.3.25] — 2026-07-04
 ### Added
 - **Scan** — Helm (`Chart.yaml`), Ansible (`ansible.cfg`), Kubernetes dirs (`k8s/`, `kubernetes/`, …).

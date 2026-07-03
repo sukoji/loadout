@@ -60,7 +60,7 @@
     "title": "Docs / Writing / Office",
     "title_ko": "문서 / 글쓰기 / 오피스",
     "blurb": "Documentation, reports, and real Word/Excel/PDF/PPT deliverables.",
-    "signals": ["docs", "*.md", "mkdocs", "docusaurus", "*.docx", "*.xlsx"],
+    "signals": ["docs", "mkdocs", "docusaurus", ".docx", ".xlsx"],
     "loadout": ["office-docs", "notion", "fetch", "firecrawl", "brave-search", "context7", "notify-on-stop"]
   },
   {

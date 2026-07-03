@@ -98,6 +98,18 @@ assert("DevOps includes git or github", dvTop.includes("git") || dvTop.includes(
 assert("DevOps includes guard-dangerous-bash", dvTop.includes("guard-dangerous-bash"), dvTop.join(", "));
 assert("DevOps excludes playwright", !dvTop.includes("playwright"), dvTop.join(", "));
 
+// Docs / writing.
+const docsWriting = new Set(["always", "docs", "mkdocs", "docusaurus", ".docx"]);
+const docsTop = topNames(docsWriting);
+assert("Docs includes office-docs or notion", docsTop.includes("office-docs") || docsTop.includes("notion"), docsTop.join(", "));
+assert("Docs excludes postgres by default", !docsTop.includes("postgres"), docsTop.join(", "));
+
+// Security-sensitive (auth/payments).
+const security = new Set(["always", "auth", "jwt", "stripe", ".env", ".git"]);
+const secTop = topNames(security);
+assert("Security includes protect-secrets", secTop.includes("protect-secrets"), secTop.join(", "));
+assert("Security includes guard-dangerous-bash", secTop.includes("guard-dangerous-bash"), secTop.join(", "));
+
 const officialInPool = recommend(catalog, mlResearch).items.filter((e) => e.item.tier === "official").length;
 assert("Official tier capped in pool", officialInPool <= 2, String(officialInPool));
 

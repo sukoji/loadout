@@ -2,7 +2,7 @@
 
 > Documentation, reports, and real Word/Excel/PDF/PPT deliverables.
 
-_Signals that map here: `docs`, `*.md`, `mkdocs`, `docusaurus`, `*.docx`, `*.xlsx`_
+_Signals that map here: `docs`, `mkdocs`, `docusaurus`, `.docx`, `.xlsx`_
 
 ## MCP servers
 

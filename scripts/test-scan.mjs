@@ -107,6 +107,42 @@ try {
   } finally {
     rmSync(devopsDir, { recursive: true, force: true });
   }
+
+  const docsDir = mkdtempSync(join(tmpdir(), "loadout-scan-docs-"));
+  try {
+    mkdirSync(join(docsDir, "docs"), { recursive: true });
+    writeFileSync(join(docsDir, "docs", "guide.md"), "# Guide\n");
+    writeFileSync(join(docsDir, "mkdocs.yml"), "site_name: Demo\n");
+    writeFileSync(join(docsDir, "report.docx"), "PK\n");
+    writeFileSync(join(docsDir, "package.json"), JSON.stringify({ dependencies: { "@docusaurus/core": "3" } }));
+    const docSignals = scanProject(docsDir);
+    assert("scan adds docs from docs/ directory", docSignals.has("docs"));
+    assert("scan adds mkdocs from mkdocs.yml", docSignals.has("mkdocs"));
+    assert("scan adds .docx from office file", docSignals.has(".docx"));
+    assert("scan adds docusaurus from package", docSignals.has("docusaurus"));
+    const docTop = recommend(catalog, docSignals).items.slice(0, 8).map((e) => e.item.id);
+    assert("docs project surfaces office-docs or notion", docTop.includes("office-docs") || docTop.includes("notion"), docTop.join(", "));
+  } finally {
+    rmSync(docsDir, { recursive: true, force: true });
+  }
+
+  const authDir = mkdtempSync(join(tmpdir(), "loadout-scan-auth-"));
+  try {
+    writeFileSync(
+      join(authDir, "package.json"),
+      JSON.stringify({ dependencies: { "next-auth": "4", jsonwebtoken: "9", stripe: "14" } }),
+    );
+    writeFileSync(join(authDir, ".env"), "SECRET=1\n");
+    const authSignals = scanProject(authDir);
+    assert("scan adds auth from next-auth", authSignals.has("auth"));
+    assert("scan adds jwt from jsonwebtoken", authSignals.has("jwt"));
+    assert("scan adds stripe from package", authSignals.has("stripe"));
+    assert("scan adds .env signal", authSignals.has(".env"));
+    const authTop = recommend(catalog, authSignals).items.slice(0, 8).map((e) => e.item.id);
+    assert("auth project surfaces protect-secrets or guard-dangerous-bash", authTop.includes("protect-secrets") || authTop.includes("guard-dangerous-bash"), authTop.join(", "));
+  } finally {
+    rmSync(authDir, { recursive: true, force: true });
+  }
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

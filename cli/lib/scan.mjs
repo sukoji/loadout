@@ -46,6 +46,21 @@ export function scanProject(root = process.cwd()) {
         if (name.includes("sentry")) add("sentry");
         if (name.includes("supabase")) add("supabase");
         if (name.includes("mongoose") || name.includes("mongodb")) add("mongodb");
+        if (name.includes("docusaurus")) add("docusaurus");
+        if (
+          name.includes("passport") ||
+          name.includes("next-auth") ||
+          name.includes("auth0") ||
+          name.includes("openid") ||
+          name.includes("oauth")
+        ) {
+          add("auth");
+          if (name.includes("oauth")) add("oauth");
+        }
+        if (name.includes("jsonwebtoken") || name.includes("jose") || name === "jwt") {
+          add("jwt");
+          add("auth");
+        }
       }
     } catch {
       /* ignore malformed package.json */
@@ -138,6 +153,8 @@ function sweepExtensions(root, signals, depth = 2) {
     ".kt": "kotlin",
     ".uproject": "unreal",
     ".gd": "godot",
+    ".docx": ".docx",
+    ".xlsx": ".xlsx",
   };
   const walk = (dir, d) => {
     if (d < 0) return;
