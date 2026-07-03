@@ -1,5 +1,8 @@
 # LOOP — Loadout improvement until claims are earned
 
+**Status: COMPLETE** as of `v0.3.6` (2026-07-03). Heartbeat stopped after tick 5 health check — all stop criteria met.
+Optional follow-ups (not blocking): `NPM_TOKEN` for CI publish, Codex/OpenClaw detectInstalled, more research MCPs.
+
 **Cadence goal:** 견고함 · 완성도 · 최신성 · 보안성 · UX — users should set up agents without friction,
 and marketing should never outrun what the tool actually does.
 
