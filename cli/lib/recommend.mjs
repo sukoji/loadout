@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { homedir } from "node:os";
 
 // Signals too broad to justify a Tier-2 official plugin on their own.
 const WEAK_OFFICIAL_SIGNALS = new Set([
@@ -167,6 +168,18 @@ function detectInstalled(root) {
     }
   }
 
+  for (const id of detectCodexServers(root)) installed.add(id);
+
+  const openclawPath = resolve(homedir(), ".openclaw/openclaw.json");
+  if (existsSync(openclawPath)) {
+    try {
+      const doc = JSON.parse(readFileSync(openclawPath, "utf8"));
+      for (const key of Object.keys(doc.mcp?.servers || {})) installed.add(key);
+    } catch {
+      /* ignore */
+    }
+  }
+
   const settingsPath = resolve(root, ".claude", "settings.json");
   if (existsSync(settingsPath)) {
     try {
@@ -187,4 +200,19 @@ function detectInstalled(root) {
   }
 
   return installed;
+}
+
+function detectCodexServers(root) {
+  const path = resolve(root, ".codex/config.toml");
+  if (!existsSync(path)) return [];
+  try {
+    const text = readFileSync(path, "utf8");
+    const ids = [];
+    const re = /^\[mcp_servers\.([^\]]+)\]/gm;
+    let m;
+    while ((m = re.exec(text))) ids.push(m[1]);
+    return ids;
+  } catch {
+    return [];
+  }
 }

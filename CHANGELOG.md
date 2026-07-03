@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.7] — 2026-07-03
+### Changed
+- **`detectInstalled`** — also reads Codex `.codex/config.toml` and OpenClaw `~/.openclaw/openclaw.json`
+  so cross-agent MCP setups are not re-recommended.
+
 ## [0.3.6] — 2026-07-03
 ### Added
 - **`npx claude-loadout export`** — write a shareable `.loadout.json` team manifest from the current repo profile.

@@ -1,7 +1,6 @@
 # LOOP — Loadout improvement until claims are earned
 
-**Status: COMPLETE** as of `v0.3.6` (2026-07-03). Heartbeat stopped after tick 5 health check — all stop criteria met.
-Optional follow-ups (not blocking): `NPM_TOKEN` for CI publish, Codex/OpenClaw detectInstalled, more research MCPs.
+**Status: ACTIVE** — heartbeat restarted 2026-07-03. Phase 1 stop criteria met at `v0.3.6`; continuing on optional follow-ups below.
 
 **Cadence goal:** 견고함 · 완성도 · 최신성 · 보안성 · UX — users should set up agents without friction,
 and marketing should never outrun what the tool actually does.
@@ -30,7 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
-| 0.3.6 | 2026-07-03 | team loadout export/apply; CI publish on tag |
+| 0.3.7 | 2026-07-03 | Codex + OpenClaw detectInstalled |
 | 0.3.5 | 2026-07-03 | game-dev domain; cross-agent MCP detectInstalled |
 | 0.3.4 | 2026-07-03 | Windows Ruff hook; Jupyter research tests; CONTRIBUTING |
 | 0.3.3 | 2026-07-03 | FastAPI recommend tests; KO README parity |
@@ -41,4 +40,4 @@ run `npm test`, release, update this log.
 
 1. Add `NPM_TOKEN` to GitHub repo secrets to enable tag-triggered CI publish
 2. Expand curated research entries only after runtime verify
-3. Codex/OpenClaw `detectInstalled` parity
+3. Codex/OpenClaw `detectInstalled` parity — ✅ v0.3.7
