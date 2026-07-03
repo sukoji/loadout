@@ -19,7 +19,8 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 
 | Area | State |
 | :-- | :-- |
-| First release shipped & pushed | ✅ two commits on `origin/main`: `52e4f58` (initial release) + `ac9e73a` (qa fix + this handoff system), both pushed |
+| First release shipped & pushed | ✅ on `origin/main`; tagged `v0.1.0` |
+| Published to npm | ✅ `claude-loadout@0.1.0` live (2026-07-03). **Verified from the public registry**: `npx claude-loadout@0.1.0 --list-targets` and `--dry-run` both run correctly. npm user: `sukojin` (2FA/OTP required per publish). |
 | Plugin marketplace | ✅ **end-to-end verified from GitHub**: `/plugin marketplace add sukoji/loadout` → `/plugin install loadout@loadout` → `claude plugin details` lists Skills (2): browse, recommend. (Install-blocking bug fixed — see gotcha #8.) |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
 | Catalog | ✅ 25 items (12 MCP, 7 skills, 6 hooks), 8 domains, `validate-catalog.mjs` = 0 warnings |
@@ -29,8 +30,6 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | CI | ✅ `.github/workflows/validate.yml` runs validate + docs-sync gate |
 
 ### NOT done yet (known limitations — do not claim these work)
-- **`npx claude-loadout` does NOT work yet** — the package is not published to npm. Today only
-  `node cli/index.js` works locally. This is roadmap task `publish-npm` (highest leverage).
 - **Third-party MCP install commands are not runtime-tested** (Playwright, Figma, Context7, Chrome
   DevTools, postgres). They come from official/verifiable sources and are schema-correct, but nobody has
   run each one end-to-end. Task `runtime-test-third-party-mcps`.
@@ -134,10 +133,11 @@ lists were generated into this repo's planning; the one-line resume pointer is e
 ### P0 — do first
 - [ ] **`fix-qa-domain-bug` [S]** — ✅ DONE 2026-07-03 (removed phantom `qa` domain from playwright entry;
       validator whitelist removed). Left here as a template for how to log completion.
-- [ ] **`publish-npm` [S]** — publish `claude-loadout` to npm so `npx` works. Highest adoption leverage.
-      Resume: verify `package.json` metadata → `npm publish --dry-run` → `npm publish`. Needs npm login
-      for account owning the `claude-loadout` name (check availability first; rename to `@sukoji/loadout`
-      if taken). Acceptance: `npx claude-loadout` runs from a clean temp dir.
+- [x] **`publish-npm` [S]** — ✅ DONE 2026-07-03. `claude-loadout@0.1.0` published (npm user `sukojin`;
+      account has 2FA so publishing needs an OTP each time). Verified `npx claude-loadout@0.1.0` runs from
+      the public registry. Next release: bump `package.json` version, update CHANGELOG, tag `vX.Y.Z`.
+- [x] **cross-agent targets** — ✅ DONE 2026-07-03 (this session, beyond the original board). `--target`
+      for codex/cursor/gemini/opencode/openclaw; see `cli/lib/targets.mjs` and gotchas #9–10.
 
 ### P1 — content depth & correctness (this is what makes it genuinely useful)
 - [ ] **`expand-catalog-verified-entries` [L]** — grow 25 → 35+ items, ≥2 per domain. Verify each install
