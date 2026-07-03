@@ -167,6 +167,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout doctor")}     Audit .mcp.json + hooks (read-only)`);
   console.log(`  ${c("cyan", "npx claude-loadout export")}     Write team loadout → .loadout.json`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
+  console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --target cursor")}  Apply MCPs to Cursor`);
   console.log(`  ${c("cyan", "npx claude-loadout --dry-run")}  Show recommendations only`);
   console.log(`  ${c("cyan", "npx claude-loadout --all")}      Apply top recommendations without prompting`);
   console.log(`  ${c("cyan", "npx claude-loadout --discover")}  Also show unverified community skills`);
@@ -218,20 +219,30 @@ function runApplyManifest(args, flags) {
   const root = cwd();
   const catalog = loadCatalog();
   const manifestPath = resolve(root, parseManifestPath(args));
+  const targets = parseTargets(args);
+  const invalid = targets.filter((t) => !TARGETS[t]);
+  if (invalid.length) {
+    console.error(c("yellow", `Unknown target(s): ${invalid.join(", ")}`) + c("dim", "  (run --list-targets)"));
+    exit(1);
+  }
   if (flags.has("--dry-run") || flags.has("-d")) {
     const ids = readManifestIds(manifestPath);
-    console.log(c("bold", "\nWould apply from") + c("dim", ` ${manifestPath}:\n`));
+    const label = targets.map((t) => TARGETS[t].label).join(", ");
+    console.log(c("bold", "\nWould apply from") + c("dim", ` ${manifestPath}`) + c("dim", ` → ${label}:\n`));
     ids.forEach((id) => console.log(`  • ${id}`));
     console.log("");
     return;
   }
-  const { receipt, skipped } = applyManifest(catalog, manifestPath, root);
+  const { receipts, skipped } = applyManifest(catalog, manifestPath, root, { targets });
   if (skipped.length) {
     console.log(c("yellow", "Skipped:"));
     skipped.forEach((s) => console.log(`  • ${s}`));
     console.log("");
   }
-  printReceipt(receipt);
+  for (const r of receipts) {
+    if (r.type === "claude" || r.type === "commands") printReceipt(r.receipt);
+    else printTargetReceipt(r.receipt);
+  }
 }
 
 function runDoctor() {

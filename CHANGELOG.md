@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.11] — 2026-07-03
+### Added
+- **`apply -f`** — `--target cursor|codex|…` applies team manifest MCPs to other agents (hooks stay Claude-only).
+
 ## [0.3.10] — 2026-07-03
 ### Added
 - **`export`** — `.loadout.json` now includes `installed` MCP ids already detected on disk.

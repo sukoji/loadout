@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { scanProject } from "./scan.mjs";
 import { recommend } from "./recommend.mjs";
 import { apply } from "./apply.mjs";
+import { applyToTarget, TARGETS } from "./targets.mjs";
 
 // Build a shareable team loadout manifest from the current project profile.
 export function buildManifest(catalog, root = process.cwd(), opts = {}) {
@@ -59,9 +60,36 @@ export function resolveManifestItems(catalog, ids) {
   return { items, skipped };
 }
 
-export function applyManifest(catalog, manifestPath, root = process.cwd()) {
+export function applyManifest(catalog, manifestPath, root = process.cwd(), opts = {}) {
   const ids = readManifestIds(manifestPath);
   const { items, skipped } = resolveManifestItems(catalog, ids);
-  const receipt = apply(items, root);
-  return { receipt, skipped, manifestPath: resolve(manifestPath) };
+  const targets = normalizeTargets(opts.targets);
+  const receipts = [];
+  const mcpItems = items.filter((i) => i.type === "mcp");
+  const claudeNative = items.filter((i) => i.type !== "mcp");
+
+  for (const t of targets) {
+    if (t === "claude") {
+      receipts.push({ type: "claude", receipt: apply(items, root) });
+    } else {
+      receipts.push({ type: "target", target: t, receipt: applyToTarget(t, mcpItems, root) });
+    }
+  }
+
+  if (claudeNative.length && !targets.includes("claude")) {
+    const skills = claudeNative.filter((i) => i.type === "skill" || i.type === "reference");
+    if (skills.length) receipts.push({ type: "commands", receipt: apply(skills, root) });
+    for (const item of claudeNative.filter((i) => i.type === "hook" || i.type === "setting")) {
+      skipped.push(`${item.id} (Claude Code-only — add --target claude to apply hooks)`);
+    }
+  }
+
+  return { receipts, skipped, manifestPath: resolve(manifestPath) };
+}
+
+function normalizeTargets(targets) {
+  if (!targets?.length) return ["claude"];
+  const ids = targets.map((s) => String(s).trim().toLowerCase()).filter(Boolean);
+  if (ids.includes("all")) return Object.keys(TARGETS);
+  return [...new Set(ids)];
 }
