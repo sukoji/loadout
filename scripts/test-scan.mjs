@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { scanProject } from "../cli/lib/scan.mjs";
@@ -22,14 +22,19 @@ try {
   writeFileSync(join(dir, "notebook.ipynb"), JSON.stringify({ cells: [] }));
   writeFileSync(join(dir, "references.bib"), "@article{demo, title={Demo}}\n");
 
+  mkdirSync(join(dir, "papers"), { recursive: true });
+  writeFileSync(join(dir, "papers", "draft.tex"), "\\documentclass{article}\n");
+
   const signals = scanProject(dir);
   assert("scan adds .ipynb from notebook file", signals.has(".ipynb"));
   assert("scan adds jupyter from notebook file", signals.has("jupyter"));
   assert("scan adds .bib from references file", signals.has(".bib"));
+  assert("scan adds papers from papers/ directory", signals.has("papers"));
 
   const catalog = loadCatalog();
   const top = recommend(catalog, signals).items.slice(0, 8).map((e) => e.item.id);
   assert("notebook scan surfaces exa-research", top.includes("exa-research"), top.join(", "));
+  assert("papers scan surfaces tavily-research", top.includes("tavily-research"), top.join(", "));
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

@@ -23,7 +23,7 @@ async function main() {
   const positional = args.filter((a) => !a.startsWith("-"));
 
   if (flags.has("--help") || flags.has("-h")) return printHelp();
-  if (positional[0] === "doctor") return runDoctor();
+  if (positional[0] === "doctor") return runDoctor(flags);
   if (positional[0] === "export") return runExport(args, flags);
   if (positional[0] === "apply") return runApplyManifest(args, flags);
 
@@ -165,6 +165,7 @@ function printHelp() {
   console.log(c("bold", "Usage:\n"));
   console.log(`  ${c("cyan", "npx claude-loadout")}              Interactive recommend + apply (Claude Code)`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor")}     Audit .mcp.json + hooks (read-only)`);
+  console.log(`  ${c("cyan", "npx claude-loadout doctor --json")}  Machine-readable audit (exit 1 on fixes)`);
   console.log(`  ${c("cyan", "npx claude-loadout export")}     Write team loadout → .loadout.json`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --target cursor")}  Apply MCPs to Cursor`);
@@ -245,10 +246,18 @@ function runApplyManifest(args, flags) {
   }
 }
 
-function runDoctor() {
+function runDoctor(flags = new Set()) {
   const root = cwd();
+  const findings = doctor(root);
+
+  if (flags.has("--json")) {
+    console.log(JSON.stringify(findings, null, 2));
+    if (findings.fix.length) exit(1);
+    return;
+  }
+
   console.log(c("bold", "\n🩺 Loadout doctor") + c("dim", `  — auditing ${root}\n`));
-  const { ok, warn, fix } = doctor(root);
+  const { ok, warn, fix } = findings;
 
   if (fix.length) {
     console.log(c("red", "Fix:"));

@@ -49,6 +49,9 @@ try {
   assert("warns .env without protect-secrets", hasMsg(warn, "protect-secrets"));
   assert("reports Claude MCP servers", hasMsg(ok, "MCP server(s) in .mcp.json"));
   assert("reports Cursor MCP servers", hasMsg(ok, "Cursor:"));
+
+  const parsed = JSON.parse(JSON.stringify({ fix, warn, ok }));
+  assert("doctor JSON shape has fix/warn/ok arrays", Array.isArray(parsed.fix) && Array.isArray(parsed.warn) && Array.isArray(parsed.ok));
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

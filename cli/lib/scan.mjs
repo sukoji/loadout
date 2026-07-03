@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { resolve, join } from "node:path";
 
 // Walk a shallow slice of the project and collect "signals" — lowercase tokens
@@ -81,6 +81,8 @@ export function scanProject(root = process.cwd()) {
   if (has(".git")) add(".git");
   if (has(".github/workflows")) add(".github/workflows");
   if (has("docs")) add("docs");
+  if (isDir(root, "papers")) add("papers");
+  if (isDir(root, "paper")) add("papers");
   if (has("project.godot")) add("godot");
   if (has("ProjectSettings/ProjectVersion.txt")) add("unity");
 
@@ -88,6 +90,14 @@ export function scanProject(root = process.cwd()) {
   sweepExtensions(root, signals);
 
   return signals;
+}
+
+function isDir(root, rel) {
+  try {
+    return statSync(resolve(root, rel)).isDirectory();
+  } catch {
+    return false;
+  }
 }
 
 function sweepExtensions(root, signals, depth = 2) {

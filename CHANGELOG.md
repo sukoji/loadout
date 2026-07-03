@@ -6,6 +6,14 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.13] — 2026-07-03
+### Added
+- **`doctor --json`** — machine-readable audit output; exits 1 when fix items exist.
+- **Scan** — `papers/` or `paper/` directory emits a `papers` research signal.
+
+### Changed
+- `test:scan` covers papers-directory → Tavily research ranking.
+
 ## [0.3.12] — 2026-07-03
 ### Added
 - **`test:scan`** — regression test that real `.ipynb`/`.bib` files produce research recommendations.
