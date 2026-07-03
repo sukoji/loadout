@@ -6,6 +6,14 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.8] — 2026-07-03
+### Added
+- **`test:detect-installed`** — regression test for Codex/Cursor MCP deduplication.
+- **`doctor`** — audits Cursor, Gemini, opencode, Codex TOML, and OpenClaw MCP configs.
+
+### Changed
+- `package.json` repository URL normalized for npm publish warnings.
+
 ## [0.3.7] — 2026-07-03
 ### Changed
 - **`detectInstalled`** — also reads Codex `.codex/config.toml` and OpenClaw `~/.openclaw/openclaw.json`

@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { homedir } from "node:os";
 import { execSync } from "node:child_process";
 import { loadCatalog } from "./catalog.mjs";
 import { scanProject } from "./scan.mjs";
@@ -45,7 +46,8 @@ export function doctor(root = process.cwd()) {
     }
   }
 
-  auditMcpServers(mcpDoc, catalog, findings);
+  auditMcpServers(mcpDoc, catalog, findings, ".mcp.json");
+  auditCrossAgentMcp(root, catalog, findings);
   auditTokens(mcpDoc, findings);
   auditHooks(settingsDoc, findings);
   auditSecurity(hasEnv, settingsDoc, findings);
@@ -71,31 +73,97 @@ export function doctor(root = process.cwd()) {
   return findings;
 }
 
-function auditMcpServers(mcpDoc, catalog, findings) {
+function auditMcpServers(mcpDoc, catalog, findings, file = ".mcp.json") {
   const servers = mcpDoc?.mcpServers || {};
   const keys = Object.keys(servers);
   if (!keys.length) return;
 
-  findings.ok.push({ msg: `${keys.length} MCP server(s) configured: ${keys.join(", ")}` });
+  findings.ok.push({ msg: `${keys.length} MCP server(s) in ${file}: ${keys.join(", ")}` });
 
   for (const [id, cfg] of Object.entries(servers)) {
-    const known = catalog.byId.get(id);
-    if (!known) {
-      findings.warn.push({ msg: `MCP "${id}" is not in the Loadout catalog — verify it yourself`, file: ".mcp.json" });
+    auditMcpEntry(id, cfg, catalog, findings, file);
+  }
+}
+
+function auditCrossAgentMcp(root, catalog, findings) {
+  const jsonConfigs = [
+    [".cursor/mcp.json", "Cursor"],
+    [".gemini/settings.json", "Gemini CLI"],
+  ];
+  for (const [rel, label] of jsonConfigs) {
+    const path = resolve(root, rel);
+    if (!existsSync(path)) continue;
+    try {
+      const doc = JSON.parse(readFileSync(path, "utf8"));
+      const servers = doc.mcpServers || {};
+      const keys = Object.keys(servers);
+      if (!keys.length) continue;
+      findings.ok.push({ msg: `${label}: ${keys.length} MCP server(s) in ${rel}` });
+      for (const [id, cfg] of Object.entries(servers)) auditMcpEntry(id, cfg, catalog, findings, rel);
+    } catch {
+      findings.fix.push({ msg: `${rel} is invalid JSON`, file: rel });
     }
-    if (cfg?.env) {
-      for (const [k, v] of Object.entries(cfg.env)) {
-        if (typeof v === "string" && TOKEN_RE.test(v)) {
-          TOKEN_RE.lastIndex = 0;
-          findings.fix.push({ msg: `Fill in ${k} for MCP "${id}"`, file: ".mcp.json" });
+  }
+
+  const opencodePath = resolve(root, "opencode.json");
+  if (existsSync(opencodePath)) {
+    try {
+      const doc = JSON.parse(readFileSync(opencodePath, "utf8"));
+      const keys = Object.keys(doc.mcp || {});
+      if (keys.length) {
+        findings.ok.push({ msg: `opencode: ${keys.length} MCP server(s) in opencode.json` });
+        for (const [id, cfg] of Object.entries(doc.mcp || {})) {
+          auditMcpEntry(id, cfg, catalog, findings, "opencode.json");
         }
       }
+    } catch {
+      findings.fix.push({ msg: "opencode.json is invalid JSON", file: "opencode.json" });
     }
-    const raw = JSON.stringify(cfg);
-    const placeholders = raw.match(TOKEN_RE) || [];
-    if (placeholders.length) {
-      findings.fix.push({ msg: `Replace ${placeholders.join(", ")} for MCP "${id}"`, file: ".mcp.json" });
+  }
+
+  const codexPath = resolve(root, ".codex/config.toml");
+  if (existsSync(codexPath)) {
+    const text = readFileSync(codexPath, "utf8");
+    const names = [...text.matchAll(/^\[mcp_servers\.([^\]]+)\]/gm)].map((m) => m[1]);
+    if (names.length) findings.ok.push({ msg: `Codex: ${names.length} MCP server(s) in .codex/config.toml` });
+    if (text.includes("<your-") || text.includes("postgresql://localhost/mydb")) {
+      findings.fix.push({ msg: "Codex config has placeholder values — fill in tokens/connection strings", file: ".codex/config.toml" });
     }
+  }
+
+  const openclawPath = resolve(homedir(), ".openclaw/openclaw.json");
+  if (existsSync(openclawPath)) {
+    try {
+      const doc = JSON.parse(readFileSync(openclawPath, "utf8"));
+      const servers = doc.mcp?.servers || {};
+      const keys = Object.keys(servers);
+      if (keys.length) {
+        findings.ok.push({ msg: `OpenClaw: ${keys.length} MCP server(s) in ~/.openclaw/openclaw.json` });
+        for (const [id, cfg] of Object.entries(servers)) auditMcpEntry(id, cfg, catalog, findings, "~/.openclaw/openclaw.json");
+      }
+    } catch {
+      findings.fix.push({ msg: "~/.openclaw/openclaw.json is invalid JSON", file: "~/.openclaw/openclaw.json" });
+    }
+  }
+}
+
+function auditMcpEntry(id, cfg, catalog, findings, file) {
+  const known = catalog.byId.get(id);
+  if (!known) {
+    findings.warn.push({ msg: `MCP "${id}" is not in the Loadout catalog — verify it yourself`, file });
+  }
+  if (cfg?.env) {
+    for (const [k, v] of Object.entries(cfg.env)) {
+      if (typeof v === "string" && TOKEN_RE.test(v)) {
+        TOKEN_RE.lastIndex = 0;
+        findings.fix.push({ msg: `Fill in ${k} for MCP "${id}"`, file });
+      }
+    }
+  }
+  const raw = JSON.stringify(cfg);
+  const placeholders = raw.match(TOKEN_RE) || [];
+  if (placeholders.length) {
+    findings.fix.push({ msg: `Replace ${placeholders.join(", ")} for MCP "${id}"`, file });
   }
 }
 
