@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.27 | 2026-07-04 | domains CLI command; all-10 domain catalog test |
 | 0.3.26 | 2026-07-04 | docs/security scan signals; domain fixtures |
 | 0.3.25 | 2026-07-04 | Helm/K8s/Ansible scan; devops recommend tests |
 | 0.3.24 | 2026-07-04 | domain-priority ranking; prepublishOnly test gate |
@@ -50,3 +51,5 @@ run `npm test`, release, update this log.
 2. Expand curated research entries only after runtime verify
 3. Cross-agent `detectInstalled` — ✅ all six agents (v0.3.16)
 4. Document JSON + team loadout UX — ✅ v0.3.17
+5. Domain scan/recommend coverage (frontend→security, mobile, devops, docs) — ✅ v0.3.22–0.3.27
+6. `domains` CLI browse — ✅ v0.3.27

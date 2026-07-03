@@ -31,6 +31,7 @@ async function main() {
   if (flags.has("--help") || flags.has("-h")) return printHelp();
   if (flags.has("--version") || flags.has("-V")) return console.log(PKG_VERSION);
   if (positional[0] === "doctor") return runDoctor(flags);
+  if (positional[0] === "domains") return runDomains(flags);
   if (positional[0] === "export") return runExport(args, flags);
   if (positional[0] === "apply") return runApplyManifest(args, flags);
 
@@ -193,6 +194,8 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout")}              Interactive recommend + apply (Claude Code)`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor")}     Audit .mcp.json + hooks (read-only)`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor --json")}  Machine-readable audit (exit 1 on fixes)`);
+  console.log(`  ${c("cyan", "npx claude-loadout domains")}    List catalog domains and loadout sizes`);
+  console.log(`  ${c("cyan", "npx claude-loadout domains --json")}  Domains as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout export")}     Write team loadout → .loadout.json`);
   console.log(`  ${c("cyan", "npx claude-loadout export --json")}  Print manifest JSON to stdout`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
@@ -287,6 +290,27 @@ function runApplyManifest(args, flags) {
     if (r.type === "claude" || r.type === "commands") printReceipt(r.receipt);
     else printTargetReceipt(r.receipt);
   }
+}
+
+function runDomains(flags = new Set()) {
+  const { domains } = loadCatalog();
+  const rows = domains.map((d) => ({
+    id: d.id,
+    title: d.title,
+    title_ko: d.title_ko,
+    signals: d.signals || [],
+    loadout: d.loadout || [],
+  }));
+  if (flags.has("--json")) {
+    console.log(JSON.stringify(rows, null, 2));
+    return;
+  }
+  console.log(c("bold", "\n📚 Catalog domains") + c("dim", `  (${rows.length})\n`));
+  for (const d of rows) {
+    console.log(`  ${c("cyan", d.id.padEnd(14))} ${c("bold", d.title)}`);
+    console.log(c("dim", `                 ${d.loadout.length} items · signals: ${d.signals.filter((s) => s !== "always").slice(0, 6).join(", ")}${d.signals.length > 7 ? "…" : ""}`));
+  }
+  console.log(c("dim", "\nDocs: https://github.com/sukoji/loadout/tree/main/docs/domains\n"));
 }
 
 function runDoctor(flags = new Set()) {

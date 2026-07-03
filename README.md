@@ -126,6 +126,8 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `apply -f <file> --json` | Apply and print receipts as JSON |
 | `doctor` | Read-only audit: tokens, hook deps, cross-agent dupes, gaps |
 | `doctor --json` | Machine-readable audit with `summary` counts (exit 1 when fixes needed) |
+| `domains` | List catalog domains, signal hints, and loadout sizes |
+| `domains --json` | Domains as JSON |
 
 **Team loadouts:** run `export` in a reference repo, commit `.loadout.json`, then teammates run
 `apply -f .loadout.json` (add `--target cursor` for non-Claude agents).

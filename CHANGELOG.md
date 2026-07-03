@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.27] — 2026-07-04
+### Added
+- **`domains` / `domains --json`** — list catalog domains, signal hints, and loadout sizes.
+- **`test:domains`** — asserts all 10 domains are present with non-empty loadouts.
+
 ## [0.3.26] — 2026-07-04
 ### Added
 - **Scan** — docs (`.docx`/`.xlsx`, Docusaurus, `docs/`) and security (`auth`/`jwt`/`oauth` from auth packages).
