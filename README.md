@@ -128,6 +128,8 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `doctor --json` | Machine-readable audit with `summary` counts (exit 1 when fixes needed) |
 | `domains` | List catalog domains, signal hints, and loadout sizes |
 | `domains --json` | Domains as JSON |
+| `show <id>` | Show one catalog entry (config, install, homepage) |
+| `show <id> --json` | Entry as JSON |
 
 **Team loadouts:** run `export` in a reference repo, commit `.loadout.json`, then teammates run
 `apply -f .loadout.json` (add `--target cursor` for non-Claude agents).

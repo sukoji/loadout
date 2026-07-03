@@ -32,6 +32,7 @@ async function main() {
   if (flags.has("--version") || flags.has("-V")) return console.log(PKG_VERSION);
   if (positional[0] === "doctor") return runDoctor(flags);
   if (positional[0] === "domains") return runDomains(flags);
+  if (positional[0] === "show") return runShow(positional[1], flags);
   if (positional[0] === "export") return runExport(args, flags);
   if (positional[0] === "apply") return runApplyManifest(args, flags);
 
@@ -196,6 +197,8 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout doctor --json")}  Machine-readable audit (exit 1 on fixes)`);
   console.log(`  ${c("cyan", "npx claude-loadout domains")}    List catalog domains and loadout sizes`);
   console.log(`  ${c("cyan", "npx claude-loadout domains --json")}  Domains as JSON`);
+  console.log(`  ${c("cyan", "npx claude-loadout show context7")}  Show one catalog entry`);
+  console.log(`  ${c("cyan", "npx claude-loadout show context7 --json")}  Entry as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout export")}     Write team loadout → .loadout.json`);
   console.log(`  ${c("cyan", "npx claude-loadout export --json")}  Print manifest JSON to stdout`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
@@ -290,6 +293,39 @@ function runApplyManifest(args, flags) {
     if (r.type === "claude" || r.type === "commands") printReceipt(r.receipt);
     else printTargetReceipt(r.receipt);
   }
+}
+
+function runShow(id, flags = new Set()) {
+  if (!id) {
+    console.error(c("yellow", "Usage: npx claude-loadout show <id>"));
+    exit(1);
+  }
+  const { byId } = loadCatalog();
+  const item = byId.get(id);
+  if (!item) {
+    console.error(c("yellow", `Unknown catalog id: ${id}`));
+    exit(1);
+  }
+  if (flags.has("--json")) {
+    console.log(JSON.stringify(item, null, 2));
+    return;
+  }
+  console.log(c("bold", `\n${item.name}`) + c("dim", `  (${item.id})\n`));
+  console.log(`  ${c("dim", "type")}     ${item.type}${item.tier ? c("dim", ` · ${item.tier}`) : ""}`);
+  if (item.domains?.length) console.log(`  ${c("dim", "domains")}  ${item.domains.join(", ")}`);
+  if (item.signals?.length) console.log(`  ${c("dim", "signals")}  ${item.signals.join(", ")}`);
+  if (item.description) console.log(`\n  ${item.description}`);
+  if (item.homepage) console.log(c("dim", `\n  ↳ ${item.homepage}`));
+  if (item.config) {
+    console.log(c("dim", "\n  config:"));
+    console.log(`  ${JSON.stringify(item.config, null, 2).split("\n").join("\n  ")}`);
+  }
+  if (item.install?.commands?.length) {
+    console.log(c("dim", "\n  install:"));
+    item.install.commands.forEach((cmd) => console.log(`  ${c("green", cmd)}`));
+  }
+  if (item.note) console.log(c("yellow", `\n  note: ${item.note}`));
+  console.log("");
 }
 
 function runDomains(flags = new Set()) {
