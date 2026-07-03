@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.15] — 2026-07-03
+### Added
+- **`--json`** — print scan + recommend results as JSON (read-only; pairs with `--dry-run` in CI).
+- **`buildRecommendPreview`** — shared JSON shape for recommend and export; `test:recommend-json`.
+
 ## [0.3.14] — 2026-07-03
 ### Added
 - **`export --json`** — print team manifest JSON to stdout (no file write).

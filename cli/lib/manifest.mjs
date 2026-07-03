@@ -12,14 +12,28 @@ export function buildManifest(catalog, root = process.cwd(), opts = {}) {
   return {
     version: 1,
     generatedAt: new Date().toISOString(),
+    ...buildRecommendPreview(signals, domains, items, [], installed, opts),
+  };
+}
+
+export function buildRecommendPreview(signals, domains, items, community, installed, opts = {}) {
+  const limit = opts.limit ?? 12;
+  return {
+    signals: [...signals].filter((s) => s !== "always").sort(),
     domains: domains.map((d) => ({ id: d.id, title: d.title })),
     installed: [...installed],
-    items: items.slice(0, 12).map(({ item, reason }) => ({
+    items: items.slice(0, limit).map(({ item, reason }) => ({
       id: item.id,
       name: item.name,
       type: item.type,
       tier: item.tier || "curated",
       reason,
+    })),
+    community: community.map(({ item }) => ({
+      id: item.id,
+      name: item.name,
+      type: item.type,
+      tier: "community",
     })),
   };
 }

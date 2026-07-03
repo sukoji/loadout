@@ -7,7 +7,7 @@ import { scanProject } from "./lib/scan.mjs";
 import { recommend } from "./lib/recommend.mjs";
 import { apply } from "./lib/apply.mjs";
 import { doctor } from "./lib/doctor.mjs";
-import { buildManifest, writeManifest, applyManifest, readManifestIds } from "./lib/manifest.mjs";
+import { buildManifest, writeManifest, applyManifest, readManifestIds, buildRecommendPreview } from "./lib/manifest.mjs";
 import { applyToTarget, listTargets, detectTargets, TARGETS } from "./lib/targets.mjs";
 
 const C = {
@@ -53,6 +53,11 @@ async function main() {
   if (mcpOnly) {
     items = items.filter((e) => e.item.type === "mcp");
     community = [];
+  }
+
+  if (flags.has("--json")) {
+    console.log(JSON.stringify(buildRecommendPreview(signals, domains, items, community, installed), null, 2));
+    return;
   }
 
   console.log(c("dim", "Detected: ") + describeSignals(signals));
@@ -171,6 +176,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --target cursor")}  Apply MCPs to Cursor`);
   console.log(`  ${c("cyan", "npx claude-loadout --dry-run")}  Show recommendations only`);
+  console.log(`  ${c("cyan", "npx claude-loadout --json")}       Print recommendations as JSON (no write)`);
   console.log(`  ${c("cyan", "npx claude-loadout --all")}      Apply top recommendations without prompting`);
   console.log(`  ${c("cyan", "npx claude-loadout --discover")}  Also show unverified community skills`);
   console.log(`  ${c("cyan", "npx claude-loadout --target cursor")}  Write MCP config for Cursor`);
