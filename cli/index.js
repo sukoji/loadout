@@ -50,9 +50,7 @@ async function main() {
 
   const catalog = loadCatalog();
   const root = cwd();
-
-  const targetLabels = targets.map((t) => TARGETS[t].label).join(", ");
-  console.log(c("bold", "\n🎯 Loadout") + c("dim", `  — gearing up ${targetLabels} for this project\n`));
+  const asJson = flags.has("--json");
 
   const discover = flags.has("--discover");
   const signals = scanProject(root);
@@ -62,52 +60,61 @@ async function main() {
     community = [];
   }
 
-  if (flags.has("--json")) {
+  if (asJson && !takeAll) {
     console.log(JSON.stringify(buildRecommendPreview(signals, domains, items, community, installed), null, 2));
     return;
   }
 
-  console.log(c("dim", "Detected: ") + describeSignals(signals));
-  console.log(c("dim", "Best-fit domains: ") + domains.map((d) => c("magenta", d.title)).join(c("dim", ", ")));
-  const detected = detectTargets(root).filter((t) => !targets.includes(t));
-  if (detected.length) console.log(c("dim", `Also configured here: ${detected.map((t) => TARGETS[t].label).join(", ")} (target them with --target)`));
-  if (installed.length) console.log(c("dim", `Already configured (skipped): ${installed.join(", ")}`));
-  if (mcpOnly) console.log(c("dim", "Non-Claude target → showing MCP servers only (skills/hooks are Claude Code-native)."));
-  console.log("");
+  if (!asJson) {
+    const targetLabels = targets.map((t) => TARGETS[t].label).join(", ");
+    console.log(c("bold", "\n🎯 Loadout") + c("dim", `  — gearing up ${targetLabels} for this project\n`));
+    console.log(c("dim", "Detected: ") + describeSignals(signals));
+    console.log(c("dim", "Best-fit domains: ") + domains.map((d) => c("magenta", d.title)).join(c("dim", ", ")));
+    const detected = detectTargets(root).filter((t) => !targets.includes(t));
+    if (detected.length) console.log(c("dim", `Also configured here: ${detected.map((t) => TARGETS[t].label).join(", ")} (target them with --target)`));
+    if (installed.length) console.log(c("dim", `Already configured (skipped): ${installed.join(", ")}`));
+    if (mcpOnly) console.log(c("dim", "Non-Claude target → showing MCP servers only (skills/hooks are Claude Code-native)."));
+    console.log("");
+
+    if (!items.length) {
+      console.log(c("green", "You're already well-equipped — nothing new to recommend. 🎉\n"));
+      return;
+    }
+
+    const top = items.slice(0, 8);
+    console.log(c("bold", "Recommended loadout:\n"));
+    top.forEach((entry, i) => {
+      const { item, reason } = entry;
+      const n = c("cyan", String(i + 1).padStart(2));
+      const tierTag = item.tier === "official" ? " · official marketplace" : "";
+      const kind = c("dim", `[${KIND_LABEL[item.type]}${tierTag}]`);
+      const needs = authLabel(item);
+      console.log(`${n}  ${c("bold", item.name)} ${kind}${needs}`);
+      console.log(`     ${item.description}`);
+      console.log(c("dim", `     why: ${reason}`));
+      if (item.homepage) console.log(c("dim", `     ↳ ${item.homepage}`));
+      console.log("");
+    });
+
+    if (community.length) {
+      console.log(c("yellow", "Discover — community skills") + c("dim", "  (unverified · review before installing):\n"));
+      community.forEach(({ item }) => {
+        console.log(`    ${c("bold", item.name)} ${c("dim", "[community]")}`);
+        console.log(`      ${item.description}`);
+        console.log(c("dim", `      ↳ ${item.homepage}`) + "\n");
+      });
+    } else if (!discover && !mcpOnly) {
+      console.log(c("dim", "Tip: add --discover to also surface community skills (e.g. caveman token-saver).\n"));
+    }
+  }
 
   if (!items.length) {
-    console.log(c("green", "You're already well-equipped — nothing new to recommend. 🎉\n"));
+    if (asJson && takeAll) console.log(JSON.stringify({ applied: [], targets, receipts: [] }, null, 2));
     return;
   }
 
-  const top = items.slice(0, 8);
-  console.log(c("bold", "Recommended loadout:\n"));
-  top.forEach((entry, i) => {
-    const { item, reason } = entry;
-    const n = c("cyan", String(i + 1).padStart(2));
-    const tierTag = item.tier === "official" ? " · official marketplace" : "";
-    const kind = c("dim", `[${KIND_LABEL[item.type]}${tierTag}]`);
-    const needs = authLabel(item);
-    console.log(`${n}  ${c("bold", item.name)} ${kind}${needs}`);
-    console.log(`     ${item.description}`);
-    console.log(c("dim", `     why: ${reason}`));
-    if (item.homepage) console.log(c("dim", `     ↳ ${item.homepage}`));
-    console.log("");
-  });
-
-  if (community.length) {
-    console.log(c("yellow", "Discover — community skills") + c("dim", "  (unverified · review before installing):\n"));
-    community.forEach(({ item }) => {
-      console.log(`    ${c("bold", item.name)} ${c("dim", "[community]")}`);
-      console.log(`      ${item.description}`);
-      console.log(c("dim", `      ↳ ${item.homepage}`) + "\n");
-    });
-  } else if (!discover && !mcpOnly) {
-    console.log(c("dim", "Tip: add --discover to also surface community skills (e.g. caveman token-saver).\n"));
-  }
-
   if (dryRun) {
-    console.log(c("dim", "Dry run — nothing written. Re-run without --dry-run to apply.\n"));
+    if (!asJson) console.log(c("dim", "Dry run — nothing written. Re-run without --dry-run to apply.\n"));
     return;
   }
 
@@ -121,29 +128,37 @@ async function main() {
 
   let picks;
   if (takeAll) {
-    picks = top;
+    picks = items.slice(0, 8);
   } else {
     const rl = createInterface({ input: stdin, output: stdout });
     const answer = await rl.question(
       c("bold", "Install which? ") + c("dim", "numbers e.g. 1,3,4  ·  'a' = all  ·  Enter = skip: ")
     );
     rl.close();
-    picks = parseSelection(answer, top);
+    picks = parseSelection(answer, items.slice(0, 8));
   }
 
   if (!picks.length) {
-    console.log(c("dim", "\nNothing selected. Bye!\n"));
+    if (!asJson) console.log(c("dim", "\nNothing selected. Bye!\n"));
     return;
   }
 
   const picked = picks.map((p) => p.item);
+  const receipts = [];
   for (const t of targets) {
     if (t === "claude") {
-      printReceipt(apply(picked, root));
+      const receipt = apply(picked, root);
+      receipts.push({ type: "claude", receipt });
+      if (!asJson) printReceipt(receipt);
     } else {
       const mcp = picked.filter((i) => i.type === "mcp");
-      printTargetReceipt(applyToTarget(t, mcp, root));
+      const receipt = applyToTarget(t, mcp, root);
+      receipts.push({ type: "target", target: t, receipt });
+      if (!asJson) printTargetReceipt(receipt);
     }
+  }
+  if (asJson) {
+    console.log(JSON.stringify({ applied: picked.map((i) => i.id), targets, receipts }, null, 2));
   }
 }
 
@@ -186,6 +201,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout --dry-run")}  Show recommendations only`);
   console.log(`  ${c("cyan", "npx claude-loadout --json")}       Print recommendations as JSON (no write)`);
   console.log(`  ${c("cyan", "npx claude-loadout --all")}      Apply top recommendations without prompting`);
+  console.log(`  ${c("cyan", "npx claude-loadout --all --json")} Apply top recommendations; print receipts as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout --discover")}  Also show unverified community skills`);
   console.log(`  ${c("cyan", "npx claude-loadout --target cursor")}  Write MCP config for Cursor`);
   console.log(`  ${c("cyan", "npx claude-loadout --list-targets")}   List supported agents\n`);

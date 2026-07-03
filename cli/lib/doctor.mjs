@@ -213,7 +213,7 @@ function auditHooks(settingsDoc, findings) {
   if (blob.includes("dangerous") || blob.includes("mkfs")) activeHookIds.add("guard-dangerous-bash");
   if (blob.includes("refusing to read") || blob.includes("secret")) activeHookIds.add("protect-secrets");
   if (blob.includes("waiting for you")) activeHookIds.add("notify-on-stop");
-  if (blob.includes("push directly")) activeHookIds.add("block-push-to-main");
+  if (blob.includes("push directly") || blob.includes("block-push")) activeHookIds.add("block-push-to-main");
   if (settingsDoc.statusLine) activeHookIds.add("statusline-git");
 
   if (activeHookIds.size) {

@@ -187,6 +187,9 @@ function detectInstalled(root) {
       const blob = JSON.stringify(settings).toLowerCase();
       if (settings.statusLine) installed.add("statusline-git");
       if (blob.includes("prettier")) installed.add("format-js-on-edit");
+      if (blob.includes("eslint")) installed.add("eslint-fix-on-edit");
+      if (blob.includes("gofmt")) installed.add("gofmt-on-edit");
+      if (blob.includes("rustfmt")) installed.add("rustfmt-on-edit");
       if (blob.includes("ruff")) {
         if (blob.includes("powershell")) installed.add("lint-python-on-edit-win");
         else installed.add("lint-python-on-edit");
@@ -194,6 +197,7 @@ function detectInstalled(root) {
       if (blob.includes("dangerous") || blob.includes("mkfs")) installed.add("guard-dangerous-bash");
       if (blob.includes("secret") || blob.includes("refusing to read")) installed.add("protect-secrets");
       if (blob.includes("waiting for you")) installed.add("notify-on-stop");
+      if (blob.includes("push directly") || blob.includes("block-push")) installed.add("block-push-to-main");
     } catch {
       /* ignore */
     }

@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.20] — 2026-07-04
+### Added
+- **`--all --json`** — apply top recommendations and print receipts as JSON (CI-friendly).
+- **detectInstalled** — recognizes eslint, gofmt, rustfmt, and block-push-to-main hooks already in settings.
+
 ## [0.3.19] — 2026-07-04
 ### Added
 - **Scan** — Angular (`angular.json`, `@angular/*`), NestJS (`nest-cli.json`), Fastify, `yarn.lock` / `bun.lock`.

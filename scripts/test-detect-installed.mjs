@@ -55,6 +55,34 @@ try {
     delete process.env.LOADOUT_OPENCLAW_HOME;
     rmSync(openclawHome, { recursive: true, force: true });
   }
+
+  const hooksDir = mkdtempSync(join(tmpdir(), "loadout-detect-hooks-"));
+  try {
+    mkdirSync(join(hooksDir, ".claude"), { recursive: true });
+    writeFileSync(
+      join(hooksDir, ".claude/settings.json"),
+      JSON.stringify({
+        hooks: {
+          PostToolUse: [{ hooks: [{ command: "eslint --fix" }] }],
+          PreToolUse: [{ hooks: [{ command: "echo block-push" }] }],
+        },
+        statusLine: { type: "command", command: "git status" },
+      }),
+    );
+    writeFileSync(join(hooksDir, "package.json"), JSON.stringify({ dependencies: { react: "18" } }));
+    const { items: hookItems, installed: hookInstalled } = recommend(
+      catalog,
+      new Set(["always", "package.json", "react"]),
+      hooksDir,
+    );
+    const hookIds = hookItems.map((e) => e.item.id);
+    assert("installed includes eslint-fix-on-edit from settings", hookInstalled.includes("eslint-fix-on-edit"));
+    assert("installed includes statusline-git from settings", hookInstalled.includes("statusline-git"));
+    assert("installed includes block-push-to-main from settings", hookInstalled.includes("block-push-to-main"));
+    assert("eslint-fix-on-edit not re-recommended", !hookIds.includes("eslint-fix-on-edit"));
+  } finally {
+    rmSync(hooksDir, { recursive: true, force: true });
+  }
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

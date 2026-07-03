@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.20 | 2026-07-04 | --all --json apply receipts; fuller hook detectInstalled |
 | 0.3.19 | 2026-07-04 | angular/nestjs/fastify scan; apply --json receipts |
 | 0.3.18 | 2026-07-03 | scan lockfiles/vite/tsconfig; minimal manifest items[] |
 | 0.3.5 | 2026-07-03 | game-dev domain; cross-agent MCP detectInstalled |
