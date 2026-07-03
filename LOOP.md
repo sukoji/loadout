@@ -15,8 +15,7 @@ research utility — not marketing.
 3. **Runtime confidence** — `npm run test:mcps` smoke-starts curated stdio MCPs; HTTP MCPs probed;
    placeholder configs covered by `verify:mcp`. Set `SKIP_MCP_RUNTIME=1` to skip slow network tests.
 4. **Honest UX** — ✅ README + `--help` separate auto-written (MCP/hooks) vs user-run (plugins, API keys).
-5. **Research path works** — a fresh Jupyter + LaTeX repo gets a loadout a researcher would actually pick
-   (web/literature MCPs, Ruff, docs) without irrelevant DB or GTM plugins.
+5. **Research path works** — ✅ Jupyter + paper fixture tests in `test:recommend`.
 6. **Dev path works** — ✅ FastAPI + React fixture tests in `test:recommend`.
 7. **`loadout doctor`** — ✅ v0.3.2 read-only audit (tokens, hook deps, `.env` guard, gaps).
 8. **Distribution** — each iteration: commit → push → `npm publish` (patch bump) → git tag `vX.Y.Z`.
@@ -28,11 +27,12 @@ run §5 verify, release, update §1 + this file’s checklist.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.4 | 2026-07-03 | Windows Ruff hook; Jupyter research tests; CONTRIBUTING workflow |
 | 0.3.3 | 2026-07-03 | FastAPI recommend tests; KO README parity; Windows doctor hints |
 | 0.3.2 | 2026-07-03 | `doctor`, MCP smoke tests, `--help`, non-interactive UX, CI hardening |
 | 0.3.1 | 2026-07-03 | Research domain; Exa/Tavily curated; Tier-2 noise filter; `test:recommend` |
 
 ## Next up (ordered)
 
-1. Windows-friendly hook variants (PowerShell) — optional catalog entries
-2. Expand curated research entries only after runtime verify
+1. Expand curated research entries only after runtime verify
+2. Team loadouts / shared loadout file format

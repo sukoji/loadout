@@ -9,7 +9,7 @@ const TOKEN_RE = /<your-[^>]+>/g;
 const HOOK_DEPS = {
   jq: ["format-js-on-edit", "lint-python-on-edit", "guard-dangerous-bash", "protect-secrets", "eslint-fix-on-edit", "gofmt-on-edit", "rustfmt-on-edit", "block-push-to-main", "statusline-git"],
   git: ["statusline-git", "block-push-to-main"],
-  ruff: ["lint-python-on-edit"],
+  ruff: ["lint-python-on-edit", "lint-python-on-edit-win"],
   prettier: ["format-js-on-edit"],
   eslint: ["eslint-fix-on-edit"],
   gofmt: ["gofmt-on-edit"],
@@ -53,7 +53,12 @@ export function doctor(root = process.cwd()) {
 
   if (process.platform === "win32") {
     const blob = JSON.stringify(settingsDoc || {}).toLowerCase();
-    if (blob.includes("jq -r") || blob.includes("grep -eq")) {
+    if (blob.includes("jq -r") && blob.includes("ruff")) {
+      findings.fix.push({
+        msg: "POSIX Ruff hook detected — re-run loadout on Windows to apply lint-python-on-edit-win (PowerShell, no jq)",
+        file: ".claude/settings.json",
+      });
+    } else if (blob.includes("jq -r") || blob.includes("grep -eq")) {
       findings.warn.push({
         msg: "Hooks use POSIX shell — launch Claude Code from Git Bash or WSL; install jq via `winget install jqlang.jq` or scoop",
         file: ".claude/settings.json",

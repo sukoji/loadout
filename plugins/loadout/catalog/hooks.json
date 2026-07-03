@@ -48,6 +48,30 @@
     }
   },
   {
+    "id": "lint-python-on-edit-win",
+    "type": "hook",
+    "name": "Auto-fix Python on edit (Ruff, Windows)",
+    "description": "After Claude edits a .py file, run `ruff check --fix` and `ruff format` via PowerShell — no jq or Git Bash required.",
+    "domains": ["data-ml", "backend-api", "research"],
+    "signals": ["requirements.txt", "pyproject.toml", "ruff", "python"],
+    "note": "Requires PowerShell and `ruff` on PATH. Loadout picks this automatically on Windows instead of the POSIX hook.",
+    "settings": {
+      "hooks": {
+        "PostToolUse": [
+          {
+            "matcher": "Write|Edit",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "powershell -NoProfile -Command \"& { $j = [Console]::In.ReadToEnd() | ConvertFrom-Json; $f = $j.tool_input.file_path; if ($f -match '\\.py$') { ruff check --fix $f 2>$null; ruff format $f 2>$null } }\""
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
     "id": "guard-dangerous-bash",
     "type": "hook",
     "name": "Block dangerous shell commands",

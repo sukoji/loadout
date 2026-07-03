@@ -49,6 +49,22 @@ const frontend = new Set(["always", "package.json", "react", "next", ".git"]);
 const feTop = topNames(frontend);
 assert("Frontend includes playwright", feTop.includes("playwright"), feTop.join(", "));
 
+// Jupyter + numpy research repo (LOOP #5).
+const jupyterResearch = new Set([
+  "always",
+  "requirements.txt",
+  "numpy",
+  "pandas",
+  ".ipynb",
+  "jupyter",
+  "python",
+  ".git",
+]);
+const jrTop = topNames(jupyterResearch);
+assert("Jupyter research includes exa-research", jrTop.includes("exa-research"), jrTop.join(", "));
+assert("Jupyter research excludes mongodb", !jrTop.includes("mongodb"), jrTop.join(", "));
+assert("Jupyter research includes fetch or firecrawl", jrTop.includes("fetch") || jrTop.includes("firecrawl"), jrTop.join(", "));
+
 // FastAPI backend should get API-appropriate tools, not frontend noise.
 const fastapi = new Set(["always", "requirements.txt", "pyproject.toml", "fastapi", "python", ".git", "postgres"]);
 const beTop = topNames(fastapi);
@@ -60,7 +76,7 @@ assert("FastAPI excludes playwright", !beTop.includes("playwright"), beTop.join(
 const officialInPool = recommend(catalog, mlResearch).items.filter((e) => e.item.tier === "official").length;
 assert("Official tier capped in pool", officialInPool <= 2, String(officialInPool));
 
-const total = 4 + 4 + 1;
+const total = 4 + 3 + 4 + 1;
 if (failed) {
   console.error(`\n${failed} test(s) failed`);
   process.exit(1);

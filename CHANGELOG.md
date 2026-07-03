@@ -6,6 +6,15 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.4] — 2026-07-03
+### Added
+- **`lint-python-on-edit-win`** — PowerShell Ruff hook; Loadout auto-selects on Windows instead of the jq/bash variant.
+- **Jupyter research regression tests** (LOOP #5).
+- **CONTRIBUTING.md** — full PR checklist + worked MCP example.
+
+### Changed
+- **`doctor`** — flags POSIX Ruff hooks on Windows and suggests the native variant.
+
 ## [0.3.3] — 2026-07-03
 ### Added
 - **FastAPI dev-path regression tests** in `test:recommend` (LOOP #6 — backend gets postgres/guards, not playwright).

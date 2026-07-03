@@ -40,9 +40,40 @@ Append your `id` to the relevant domain's `loadout` array in `domains.json` (ord
 ## Before you open a PR
 
 ```bash
-npm run validate     # unique ids, required fields, every domain loadout id resolves
-npm run build:docs   # regenerate docs/domains/ (commit the result)
+npm run validate        # unique ids, required fields, every domain loadout id resolves
+npm run test:recommend  # ranking regression (ML, research, frontend, FastAPI fixtures)
+npm run verify:mcp      # every npx MCP package resolves on npm
+npm run build:docs      # regenerate docs/domains/ (commit the result)
+npm test                # all of the above (except build:docs)
 ```
 
-CI runs `npm run validate` on every PR. Accuracy is the bar: an entry with a wrong install command is
+Optional before release: `npm run test:mcps` smoke-starts stdio MCPs (network-heavy; skip in CI with `SKIP_MCP_RUNTIME=1`).
+
+CI runs `validate`, `test:recommend`, and `verify:mcp` on every push. Accuracy is the bar: an entry with a wrong install command is
 worse than no entry, because Loadout *applies* it. When in doubt, link the source and mark it clearly.
+
+## Worked example — add an MCP server
+
+1. Confirm the install command on the upstream README (link it in `homepage`).
+2. Add to `plugins/loadout/catalog/mcp.json`:
+
+```json
+{
+  "id": "my-server",
+  "type": "mcp",
+  "name": "My Server",
+  "description": "One line what it does and why it helps.",
+  "domains": ["backend-api"],
+  "signals": ["fastapi", "postgres"],
+  "auth": false,
+  "homepage": "https://github.com/org/my-mcp",
+  "config": {
+    "command": "npx",
+    "args": ["-y", "@scope/my-mcp@latest"]
+  }
+}
+```
+
+3. Append `"my-server"` to a domain `loadout` in `domains.json`.
+4. Run `npm run validate && npm run verify:mcp && npm run build:docs`.
+5. Open a PR with the catalog + generated `docs/domains/` changes.

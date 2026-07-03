@@ -15,6 +15,15 @@ const WEAK_OFFICIAL_SIGNALS = new Set([
 const MAX_OFFICIAL_IN_RESULTS = 2;
 const RESULT_POOL_SIZE = 16;
 
+// On Windows, prefer native hook variants when catalog provides them.
+function resolveItemId(id, byId) {
+  if (process.platform === "win32") {
+    const winId = `${id}-win`;
+    if (byId.has(winId)) return winId;
+  }
+  return id;
+}
+
 // Score domains against project signals and build a ranked, de-duplicated loadout.
 // Tier 1 (curated) recs come from domain loadouts; Tier 2 (official) enter by signal match;
 // Tier 3 (community) surface only when opts.discover is set, and are never auto-applied.
@@ -43,11 +52,12 @@ export function recommend({ domains, byId, all = [] }, signals, root = process.c
   const items = [];
   for (const { domain } of chosen) {
     for (const id of domain.loadout) {
-      if (seen.has(id)) continue;
-      seen.add(id);
-      const item = byId.get(id);
+      const resolvedId = resolveItemId(id, byId);
+      if (seen.has(resolvedId)) continue;
+      seen.add(resolvedId);
+      const item = byId.get(resolvedId);
       if (!item) continue;
-      if (installed.has(id)) continue;
+      if (installed.has(resolvedId) || installed.has(id)) continue;
       const strength = item.signals.filter((s) => s !== "always" && signals.has(s.toLowerCase())).length;
       const alwaysUseful = item.signals.includes("always");
       items.push({
@@ -149,7 +159,10 @@ function detectInstalled(root) {
       const blob = JSON.stringify(settings).toLowerCase();
       if (settings.statusLine) installed.add("statusline-git");
       if (blob.includes("prettier")) installed.add("format-js-on-edit");
-      if (blob.includes("ruff")) installed.add("lint-python-on-edit");
+      if (blob.includes("ruff")) {
+        if (blob.includes("powershell")) installed.add("lint-python-on-edit-win");
+        else installed.add("lint-python-on-edit");
+      }
       if (blob.includes("dangerous") || blob.includes("mkfs")) installed.add("guard-dangerous-bash");
       if (blob.includes("secret") || blob.includes("refusing to read")) installed.add("protect-secrets");
       if (blob.includes("waiting for you")) installed.add("notify-on-stop");
