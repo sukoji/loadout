@@ -73,10 +73,16 @@ assert("FastAPI includes postgres", beTop.includes("postgres"), beTop.join(", ")
 assert("FastAPI includes guard-dangerous-bash", beTop.includes("guard-dangerous-bash"), beTop.join(", "));
 assert("FastAPI excludes playwright", !beTop.includes("playwright"), beTop.join(", "));
 
+// Godot game project.
+const godot = new Set(["always", "godot", "project.godot", ".git"]);
+const gdTop = topNames(godot);
+assert("Godot includes context7", gdTop.includes("context7"), gdTop.join(", "));
+assert("Godot includes guard-dangerous-bash", gdTop.includes("guard-dangerous-bash"), gdTop.join(", "));
+
 const officialInPool = recommend(catalog, mlResearch).items.filter((e) => e.item.tier === "official").length;
 assert("Official tier capped in pool", officialInPool <= 2, String(officialInPool));
 
-const total = 4 + 3 + 4 + 1;
+const total = 4 + 3 + 4 + 2 + 1;
 if (failed) {
   console.error(`\n${failed} test(s) failed`);
   process.exit(1);

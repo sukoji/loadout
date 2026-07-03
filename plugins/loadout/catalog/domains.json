@@ -64,6 +64,14 @@
     "loadout": ["office-docs", "notion", "fetch", "firecrawl", "brave-search", "context7", "notify-on-stop"]
   },
   {
+    "id": "game-dev",
+    "title": "Game Development",
+    "title_ko": "게임 개발",
+    "blurb": "Godot, Unity, Unreal — gameplay code, editor scripting, and engine tooling.",
+    "signals": ["godot", "unity", "unreal", "project.godot", ".uproject"],
+    "loadout": ["context7", "git", "playwright", "guard-dangerous-bash", "code-review", "init-claude-md", "superpowers"]
+  },
+  {
     "id": "general",
     "title": "General / Any project",
     "title_ko": "일반 / 모든 프로젝트",

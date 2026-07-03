@@ -27,7 +27,7 @@ run §5 verify, release, update §1 + this file’s checklist.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
-| 0.3.4 | 2026-07-03 | Windows Ruff hook; Jupyter research tests; CONTRIBUTING workflow |
+| 0.3.5 | 2026-07-03 | game-dev domain; cross-agent MCP detectInstalled |
 | 0.3.3 | 2026-07-03 | FastAPI recommend tests; KO README parity; Windows doctor hints |
 | 0.3.2 | 2026-07-03 | `doctor`, MCP smoke tests, `--help`, non-interactive UX, CI hardening |
 | 0.3.1 | 2026-07-03 | Research domain; Exa/Tavily curated; Tier-2 noise filter; `test:recommend` |

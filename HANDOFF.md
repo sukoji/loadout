@@ -91,10 +91,8 @@ CONTRIBUTING.md                     ← catalog entry schema
    Codex uses TOML `[mcp_servers.NAME]` and (stable) supports stdio only — HTTP MCPs are skipped with a note.
    opencode combines command+args into ONE array and uses `environment` (not `env`). OpenClaw nests under
    `mcp.servers` and uses `transport: streamable-http` for HTTP. Don't "simplify" these to the Claude shape.
-10. **`detectInstalled()` (recommend.mjs) only checks Claude config** (`.mcp.json`, `.claude/settings.json`).
-    For non-Claude targets it doesn't yet know what's already installed, so the recommend list may re-offer
-    MCP servers already in e.g. `.cursor/mcp.json`. Apply is still safe (JSON overwrite by key is idempotent;
-    Codex TOML skips existing tables). Making detection target-aware is a good follow-up task.
+10. **`detectInstalled()`** now checks Claude + Cursor + Gemini + opencode project configs. Codex TOML /
+    OpenClaw home config detection is still a follow-up.
 
 ---
 
@@ -146,8 +144,7 @@ lists were generated into this repo's planning; the one-line resume pointer is e
       skills, Tier-2 noise filter, `test:recommend`. See [LOOP.md](LOOP.md).
 - [ ] **`expand-catalog-verified-entries` [L]** — grow curated entries with runtime-verified MCPs only.
 - [x] **`runtime-test-third-party-mcps` [M]** — ✅ DONE 2026-07-03 (v0.3.2). `npm run test:mcps`.
-- [ ] **`add-game-dev-domain` [M]** — new domain (godot/unity/unreal signals) + `docs/domains/game-dev.md`.
-      Resume: `plugins/loadout/catalog/domains.json`. Depends: expand-catalog.
+- [x] **`add-game-dev-domain` [M]** — ✅ DONE 2026-07-03 (v0.3.5). `game-dev` domain + scan signals.
 - [x] **`implement-loadout-doctor` [M]** — ✅ DONE 2026-07-03 (v0.3.2). `cli/lib/doctor.mjs`.
 
 ### P2 — trust, docs, polish

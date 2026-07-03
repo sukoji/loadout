@@ -6,6 +6,15 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.5] — 2026-07-03
+### Added
+- **`game-dev` domain** — Godot (`project.godot`), Unity (`ProjectSettings`), Unreal (`.uproject`) signals.
+- **Godot recommend regression tests**.
+
+### Changed
+- **`detectInstalled`** — also reads `.cursor/mcp.json`, `.gemini/settings.json`, and `opencode.json` so
+  cross-agent setups are not re-recommended.
+
 ## [0.3.4] — 2026-07-03
 ### Added
 - **`lint-python-on-edit-win`** — PowerShell Ruff hook; Loadout auto-selects on Windows instead of the jq/bash variant.

@@ -142,11 +142,26 @@ function reasonFor(item, domain, signals) {
 function detectInstalled(root) {
   const installed = new Set();
 
-  const mcpPath = resolve(root, ".mcp.json");
-  if (existsSync(mcpPath)) {
+  const mcpPaths = [
+    resolve(root, ".mcp.json"),
+    resolve(root, ".cursor/mcp.json"),
+    resolve(root, ".gemini/settings.json"),
+  ];
+  for (const mcpPath of mcpPaths) {
+    if (!existsSync(mcpPath)) continue;
     try {
       const mcp = JSON.parse(readFileSync(mcpPath, "utf8"));
       for (const key of Object.keys(mcp.mcpServers || {})) installed.add(key);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  const opencodePath = resolve(root, "opencode.json");
+  if (existsSync(opencodePath)) {
+    try {
+      const doc = JSON.parse(readFileSync(opencodePath, "utf8"));
+      for (const key of Object.keys(doc.mcp || {})) installed.add(key);
     } catch {
       /* ignore */
     }

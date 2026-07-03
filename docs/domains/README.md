@@ -13,4 +13,5 @@ Generated from the canonical catalog — do not edit by hand (run `npm run build
 | [Mobile](mobile.md) | iOS, Android, React Native, Flutter apps. | 6 |
 | [Security-sensitive](security.md) | Auth, payments, PII, or anything where a mistake is expensive. | 8 |
 | [Docs / Writing / Office](docs-writing.md) | Documentation, reports, and real Word/Excel/PDF/PPT deliverables. | 7 |
+| [Game Development](game-dev.md) | Godot, Unity, Unreal — gameplay code, editor scripting, and engine tooling. | 7 |
 | [General / Any project](general.md) | The always-useful baseline every repo benefits from. | 9 |

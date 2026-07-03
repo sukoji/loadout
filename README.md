@@ -191,6 +191,7 @@ Loadout organizes its curated catalog by the kind of project you're working on:
 | [Research / Academic](docs/domains/research.md) | Literature review, notebooks, papers, experiments |
 | [DevOps / Infra](docs/domains/devops.md) | CI/CD, Docker, Terraform, Kubernetes |
 | [Mobile](docs/domains/mobile.md) | iOS, Android, React Native, Flutter |
+| [Game Development](docs/domains/game-dev.md) | Godot, Unity, Unreal |
 | [Security-sensitive](docs/domains/security.md) | Auth, payments, PII |
 | [Docs / Writing / Office](docs/domains/docs-writing.md) | Docs and real Word/Excel/PDF/PPT deliverables |
 | [General / Any project](docs/domains/general.md) | The always-useful baseline |

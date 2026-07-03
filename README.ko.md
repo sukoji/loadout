@@ -176,6 +176,7 @@ Loadout은 큐레이션한 카탈로그를 "어떤 종류의 프로젝트인가"
 | [Research / Academic](docs/domains/research.md) | 문헌 조사, 노트북, 논문, 실험 |
 | [DevOps / Infra](docs/domains/devops.md) | CI/CD, Docker, Terraform, Kubernetes |
 | [Mobile](docs/domains/mobile.md) | iOS, Android, React Native, Flutter |
+| [Game Development](docs/domains/game-dev.md) | Godot, Unity, Unreal |
 | [Security-sensitive](docs/domains/security.md) | 인증, 결제, 개인정보 |
 | [Docs / Writing / Office](docs/domains/docs-writing.md) | 문서와 실제 Word/Excel/PDF/PPT 산출물 |
 | [General / Any project](docs/domains/general.md) | 항상 유용한 기본 세트 |

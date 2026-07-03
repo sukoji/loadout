@@ -81,7 +81,8 @@ export function scanProject(root = process.cwd()) {
   if (has(".git")) add(".git");
   if (has(".github/workflows")) add(".github/workflows");
   if (has("docs")) add("docs");
-  if (has("papers")) add("papers");
+  if (has("project.godot")) add("godot");
+  if (has("ProjectSettings/ProjectVersion.txt")) add("unity");
 
   // shallow extension sweep (top level + one dir down) for .tf / .ipynb / .xcodeproj etc.
   sweepExtensions(root, signals);
@@ -99,6 +100,8 @@ function sweepExtensions(root, signals, depth = 2) {
     ".xcodeproj": "*.xcodeproj",
     ".swift": "swift",
     ".kt": "kotlin",
+    ".uproject": "unreal",
+    ".gd": "godot",
   };
   const walk = (dir, d) => {
     if (d < 0) return;
