@@ -33,7 +33,7 @@ for (const item of all) {
 const domainIds = new Set(domains.map((d) => d.id));
 for (const item of all) {
   for (const d of item.domains || []) {
-    if (!domainIds.has(d) && !["qa"].includes(d)) warn.push(`${item.id}: references unknown domain "${d}"`);
+    if (!domainIds.has(d)) warn.push(`${item.id}: references unknown domain "${d}"`);
   }
 }
 for (const d of domains) {

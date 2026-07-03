@@ -1,0 +1,159 @@
+# HANDOFF — resume this project cold
+
+**Read this file first.** It exists so any session (a new Claude Code session, or a human) can pick up
+Loadout development without the original chat context. If a session dies mid-task, start here.
+
+- **Repo:** https://github.com/sukoji/loadout (public, MIT)
+- **Local path:** `C:\Users\piai\Desktop\loadout`
+- **What it is:** A hybrid Claude Code **plugin marketplace + recommender**. It profiles a project and
+  *applies* a domain-matched loadout of MCP servers / hooks / skills — instead of being one more list to read.
+- **Last updated:** 2026-07-03
+- **Owner GitHub account:** `sukoji` (a *user*, not an org — `gh api user` returns `sukoji`, even though
+  `gh auth status` shows the label `jskh-201910840`). Token scopes: `repo`, `workflow`, `gist`, `read:org`.
+
+---
+
+## 1. Current status (what's DONE and verified)
+
+Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the commands in §5.
+
+| Area | State |
+| :-- | :-- |
+| First release shipped & pushed | ✅ `main` pushed to `origin` (commit `52e4f58` + the qa-fix on top) |
+| Plugin marketplace | ✅ `.claude-plugin/marketplace.json` valid; `claude plugin validate ./plugins/loadout` passes |
+| `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
+| Catalog | ✅ 25 items (12 MCP, 7 skills, 6 hooks), 8 domains, `validate-catalog.mjs` = 0 warnings |
+| CLI (`node cli/index.js`) | ✅ zero-dep; profiles React & Python/ML correctly, writes valid `.mcp.json` + `.claude/settings.json`, idempotent (re-run skips installed) |
+| Docs | ✅ `docs/domains/*.md` auto-generated, in sync with catalog |
+| CI | ✅ `.github/workflows/validate.yml` runs validate + docs-sync gate |
+
+### NOT done yet (known limitations — do not claim these work)
+- **`npx claude-loadout` does NOT work yet** — the package is not published to npm. Today only
+  `node cli/index.js` works locally. This is roadmap task `publish-npm` (highest leverage).
+- **Third-party MCP install commands are not runtime-tested** (Playwright, Figma, Context7, Chrome
+  DevTools, postgres). They come from official/verifiable sources and are schema-correct, but nobody has
+  run each one end-to-end. Task `runtime-test-third-party-mcps`.
+- No demo GIF; README lacks a flags section; not yet submitted to awesome-claude-code / marketplaces.
+
+---
+
+## 2. Repo map (where things live)
+
+```
+.claude-plugin/marketplace.json   ← makes the repo a CC marketplace (/plugin marketplace add sukoji/loadout)
+plugins/loadout/
+  .claude-plugin/plugin.json       ← plugin manifest (name: loadout, v0.1.0)
+  skills/recommend/SKILL.md         ← FLAGSHIP: scan→match→rank→AskUserQuestion→apply
+  skills/browse/SKILL.md            ← read-only catalog browse
+  catalog/*.json                    ← ⭐ CANONICAL SOURCE OF TRUTH (mcp, skills, hooks, domains)
+cli/
+  index.js                          ← CLI entry (scan→recommend→pick→apply), zero deps
+  lib/{catalog,scan,recommend,apply}.mjs
+scripts/
+  validate-catalog.mjs              ← integrity checks (run before every commit)
+  build-docs.mjs                    ← regenerates docs/domains/ from catalog
+docs/domains/*.md                   ← GENERATED — never edit by hand
+.github/workflows/validate.yml      ← CI
+README.md / README.ko.md            ← bilingual
+CONTRIBUTING.md                     ← catalog entry schema
+```
+
+---
+
+## 3. Architecture & non-obvious decisions (gotchas that will bite a cold start)
+
+1. **The catalog lives *inside the plugin* (`plugins/loadout/catalog/`), on purpose.** After a marketplace
+   install, plugins are copied to a cache and **cannot reference files outside their own directory**
+   (path traversal is blocked). So the `recommend` skill reads the catalog via `${CLAUDE_PLUGIN_ROOT}/catalog/`.
+   Do **not** move the catalog to the repo root. The CLI reads the same files via a relative path, and the
+   npm `files` list ships them — so it's one source of truth for both.
+2. **Plugin skills are always namespaced `plugin:skill`.** There is no way to make it just `/loadout`.
+   The commands are `/loadout:recommend` and `/loadout:browse`. README reflects this — keep it accurate.
+3. **`docs/domains/*.md` is generated.** Edit the catalog, then run `npm run build:docs`. CI fails if they
+   drift. Never hand-edit the generated pages.
+4. **Accuracy bar > quantity.** Loadout *applies* what it recommends, so a wrong install command is worse
+   than no entry. Every `install`/`config` must come from a verifiable source (link it in `homepage`).
+   High-confidence set: official `@modelcontextprotocol/*`, `@playwright/mcp`, `@upstash/context7-mcp`,
+   `chrome-devtools-mcp`, GitHub's hosted server, `obra/superpowers`, and built-in slash commands.
+5. **`apply` deep-merges, never clobbers.** MCP → `.mcp.json` under `mcpServers`; hooks → append to the
+   right event array in `.claude/settings.json`; skills → print the exact `/plugin` or built-in commands.
+6. **Windows shell caveat:** the hook snippets use POSIX shell + `jq`. They run under Git Bash/WSL; each
+   hook entry carries a `note` about this. Don't "fix" them into PowerShell in the catalog.
+7. **`recommend.detectInstalled()`** dedupes by MCP server key and by hook-command signature substrings
+   (`prettier`, `ruff`, `mkfs`, etc.). If you rename a hook's command, update those signatures too.
+
+---
+
+## 4. Resume protocol (do this when you pick up the project)
+
+1. `cd C:\Users\piai\Desktop\loadout`
+2. Run §5 verification. If anything is red, fixing it is your first task.
+3. `git status` / `git log --oneline -5` to see where the last session stopped.
+4. Open the **task board** (§6), pick the highest-priority unblocked task, and use its *resume pointer*.
+5. When you finish a task: run §5, commit, push, and **update §1 and §6 of this file** (check it off).
+
+## 5. Verify the build (copy-paste)
+
+```bash
+cd C:/Users/piai/Desktop/loadout
+node scripts/validate-catalog.mjs            # expect: catalog OK, 0 warnings
+node scripts/build-docs.mjs && git status --porcelain docs/   # expect: no output (in sync)
+node cli/index.js --dry-run                  # expect: sensible recommendation for cwd
+claude plugin validate ./plugins/loadout     # expect: Validation passed
+git status -sb                               # see push state
+```
+
+---
+
+## 6. Task board (remaining work — ordered by leverage)
+
+Each task is atomic and independently resumable. `[S/M/L]` = effort. Full acceptance criteria and step
+lists were generated into this repo's planning; the one-line resume pointer is enough to restart cold.
+
+### P0 — do first
+- [ ] **`fix-qa-domain-bug` [S]** — ✅ DONE 2026-07-03 (removed phantom `qa` domain from playwright entry;
+      validator whitelist removed). Left here as a template for how to log completion.
+- [ ] **`publish-npm` [S]** — publish `claude-loadout` to npm so `npx` works. Highest adoption leverage.
+      Resume: verify `package.json` metadata → `npm publish --dry-run` → `npm publish`. Needs npm login
+      for account owning the `claude-loadout` name (check availability first; rename to `@sukoji/loadout`
+      if taken). Acceptance: `npx claude-loadout` runs from a clean temp dir.
+
+### P1 — content depth & correctness (this is what makes it genuinely useful)
+- [ ] **`expand-catalog-verified-entries` [L]** — grow 25 → 35+ items, ≥2 per domain. Verify each install
+      command before adding. Resume: `plugins/loadout/catalog/mcp.json`. Then `npm run validate` + `build:docs`.
+      Depends: fix-qa-domain-bug (done).
+- [ ] **`runtime-test-third-party-mcps` [M]** — new `scripts/test-mcps.mjs` that runs each third-party
+      MCP command in a temp dir and checks it installs; HTTP MCPs check the URL responds. Add `test:mcps`
+      npm script. Resume: `scripts/test-mcps.mjs` (new).
+- [ ] **`add-game-dev-domain` [M]** — new domain (godot/unity/unreal signals) + `docs/domains/game-dev.md`.
+      Resume: `plugins/loadout/catalog/domains.json`. Depends: expand-catalog.
+- [ ] **`implement-loadout-doctor` [M]** — read-only `loadout doctor` subcommand: audit an existing setup,
+      flag missing loadout items + unfilled `<your-...>` tokens + missing hook deps. Resume: new
+      `cli/lib/doctor.mjs` + wire into `cli/index.js`. Depends: publish-npm.
+
+### P2 — trust, docs, polish
+- [ ] **`improve-readme-discoverability` [S]** — add a Flags section (`--dry-run`, `--all`, `--help`),
+      make the `/plugin marketplace add` prerequisite explicit. Resume: `README.md`. (Audit-flagged gap.)
+- [ ] **`add-contributing-workflow-doc` [M]** — expand `CONTRIBUTING.md` with a step-by-step add→validate→
+      test→PR flow + a worked MCP example. Depends: runtime-test-third-party-mcps.
+- [ ] **`add-version-roadmap` [S]** — `CHANGELOG.md` (started, see file) + restructure README roadmap into
+      done / 0.2 / 1.0.
+- [ ] **`setup-ci-publish` [M]** — `.github/workflows/publish.yml` to auto-`npm publish` on `v*` tag; store
+      `NPM_TOKEN` secret. Depends: publish-npm.
+
+### P3 — distribution (the "get famous" step; do after npm + a demo exist)
+- [ ] **`create-demo-gif` [M]** — asciinema/GIF of scan→recommend→apply, embed near top of README. Depends: publish-npm.
+- [ ] **`submit-awesome-claude-code` [S]** — PR to hesreallyhim/awesome-claude-code. Angle: "recommender +
+      installer, not another list." Depends: publish-npm.
+- [ ] **`submit-to-claude-marketplaces` [S]** — list on claudemarketplaces.com and any official directory.
+      Depends: publish-npm, improve-readme-discoverability.
+
+---
+
+## 7. Before you stop (keep this doc alive)
+
+If you're about to run low on tokens or end a session:
+1. Commit and **push** whatever compiles (push = the only durable state; local-only can be lost).
+2. Update **§1 status** and check off / annotate the task in **§6** you touched (leave a one-line "next step").
+3. If mid-task, add a `WIP:` note under that task saying exactly what's half-done and the next command to run.
+4. Never leave `docs/` out of sync (`npm run build:docs`) or the catalog invalid (`npm run validate`) — CI will fail and the next session inherits a red build.

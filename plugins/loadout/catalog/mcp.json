@@ -94,7 +94,7 @@
     "type": "mcp",
     "name": "Playwright (browser automation)",
     "description": "Drive a real browser — navigate, click, fill, assert, screenshot — via structured accessibility snapshots (no pixel guessing). The standard for testing and verifying web UIs.",
-    "domains": ["frontend", "mobile", "qa"],
+    "domains": ["frontend", "mobile"],
     "signals": ["react", "next", "vue", "svelte", "vite", "playwright", "package.json"],
     "auth": false,
     "official": false,
