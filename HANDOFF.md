@@ -19,11 +19,11 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 
 | Area | State |
 | :-- | :-- |
-| First release shipped & pushed | ✅ `main` pushed to `origin` (commit `52e4f58` + the qa-fix on top) |
+| First release shipped & pushed | ✅ two commits on `origin/main`: `52e4f58` (initial release) + `ac9e73a` (qa fix + this handoff system), both pushed |
 | Plugin marketplace | ✅ `.claude-plugin/marketplace.json` valid; `claude plugin validate ./plugins/loadout` passes |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
 | Catalog | ✅ 25 items (12 MCP, 7 skills, 6 hooks), 8 domains, `validate-catalog.mjs` = 0 warnings |
-| CLI (`node cli/index.js`) | ✅ zero-dep; profiles React & Python/ML correctly, writes valid `.mcp.json` + `.claude/settings.json`, idempotent (re-run skips installed) |
+| CLI (`node cli/index.js`) | ✅ zero-dep; profiles React & Python/ML correctly, writes valid `.mcp.json` + `.claude/settings.json`, idempotent (re-run skips installed). §5 `--dry-run` is read-only; reproduce the write/idempotency path with the optional test in §5. |
 | Docs | ✅ `docs/domains/*.md` auto-generated, in sync with catalog |
 | CI | ✅ `.github/workflows/validate.yml` runs validate + docs-sync gate |
 
@@ -101,6 +101,14 @@ node scripts/build-docs.mjs && git status --porcelain docs/   # expect: no outpu
 node cli/index.js --dry-run                  # expect: sensible recommendation for cwd
 claude plugin validate ./plugins/loadout     # expect: Validation passed
 git status -sb                               # see push state
+```
+
+Optional — exercise the **apply + idempotency** path in a throwaway dir (proves the write behavior §1 claims):
+
+```bash
+SB=$(mktemp -d) && echo '{"dependencies":{"next":"14"}}' > "$SB/package.json"
+( cd "$SB" && node C:/Users/piai/Desktop/loadout/cli/index.js --all )      # writes .mcp.json + .claude/settings.json
+( cd "$SB" && node C:/Users/piai/Desktop/loadout/cli/index.js --dry-run )  # re-run → "Already configured (skipped): ..."
 ```
 
 ---
