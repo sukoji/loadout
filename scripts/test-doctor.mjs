@@ -50,8 +50,14 @@ try {
   assert("reports Claude MCP servers", hasMsg(ok, "MCP server(s) in .mcp.json"));
   assert("reports Cursor MCP servers", hasMsg(ok, "Cursor:"));
 
-  const parsed = JSON.parse(JSON.stringify({ fix, warn, ok }));
+  const parsed = JSON.parse(JSON.stringify({
+    fix,
+    warn,
+    ok,
+    summary: { fix: fix.length, warn: warn.length, ok: ok.length },
+  }));
   assert("doctor JSON shape has fix/warn/ok arrays", Array.isArray(parsed.fix) && Array.isArray(parsed.warn) && Array.isArray(parsed.ok));
+  assert("doctor summary counts match arrays", parsed.summary.fix === fix.length && parsed.summary.warn === warn.length);
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

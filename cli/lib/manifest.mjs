@@ -22,20 +22,26 @@ export function buildRecommendPreview(signals, domains, items, community, instal
     signals: [...signals].filter((s) => s !== "always").sort(),
     domains: domains.map((d) => ({ id: d.id, title: d.title })),
     installed: [...installed],
-    items: items.slice(0, limit).map(({ item, reason }) => ({
-      id: item.id,
-      name: item.name,
-      type: item.type,
-      tier: item.tier || "curated",
-      reason,
-    })),
-    community: community.map(({ item }) => ({
-      id: item.id,
-      name: item.name,
-      type: item.type,
-      tier: "community",
-    })),
+    items: items.slice(0, limit).map(({ item, reason }) => serializeItem(item, reason)),
+    community: community.map(({ item }) => serializeItem(item)),
   };
+}
+
+function serializeItem(item, reason) {
+  const placeholders = item.config
+    ? (JSON.stringify(item.config).match(/<your-[^>]+>/g) || [])
+    : [];
+  const out = {
+    id: item.id,
+    name: item.name,
+    type: item.type,
+    tier: item.tier || "curated",
+  };
+  if (reason) out.reason = reason;
+  if (item.homepage) out.homepage = item.homepage;
+  if (item.auth) out.auth = true;
+  if (placeholders.length) out.needsTokens = [...new Set(placeholders)];
+  return out;
 }
 
 export function writeManifest(manifest, outPath) {

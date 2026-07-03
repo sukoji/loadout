@@ -114,6 +114,7 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `--dry-run` / `-d` | Show recommendations only; write nothing |
 | `--json` | Print recommendations as JSON (no write; good for CI) |
 | `--all` / `-a` / `-y` | Apply the top recommendations without prompting |
+| `--all --json` | Apply top recommendations; print receipts as JSON only |
 | `--discover` | Also surface **unverified** community skills |
 | `--target <id>` | Write MCP config for `cursor`, `codex`, `gemini`, `opencode`, `openclaw`, or `all` |
 | `--list-targets` | List agents and config file paths |
@@ -122,13 +123,14 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `apply -f <file>` | Apply a shared team loadout |
 | `apply -f <file> --target <id>` | Apply manifest MCPs to Cursor, Codex, etc. |
 | `apply -f <file> --dry-run --json` | Preview apply as JSON |
+| `apply -f <file> --json` | Apply and print receipts as JSON |
 | `doctor` | Read-only audit: tokens, hook deps, cross-agent dupes, gaps |
-| `doctor --json` | Machine-readable audit (exit 1 when fixes needed) |
+| `doctor --json` | Machine-readable audit with `summary` counts (exit 1 when fixes needed) |
 
 **Team loadouts:** run `export` in a reference repo, commit `.loadout.json`, then teammates run
 `apply -f .loadout.json` (add `--target cursor` for non-Claude agents).
 
-**Non-interactive shells** (CI, pipes): use `--dry-run`, `--json`, or `--all` — otherwise Loadout prints recommendations and exits without hanging on input.
+**Non-interactive shells** (CI, pipes): use `--dry-run`, `--json`, `--all`, or `--all --json` — otherwise Loadout prints recommendations and exits without hanging on input.
 
 ### What auto-applies vs what you do
 

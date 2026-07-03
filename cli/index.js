@@ -294,7 +294,14 @@ function runDoctor(flags = new Set()) {
   const findings = doctor(root);
 
   if (flags.has("--json")) {
-    console.log(JSON.stringify(findings, null, 2));
+    console.log(JSON.stringify({
+      ...findings,
+      summary: {
+        fix: findings.fix.length,
+        warn: findings.warn.length,
+        ok: findings.ok.length,
+      },
+    }, null, 2));
     if (findings.fix.length) exit(1);
     return;
   }

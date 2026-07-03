@@ -6,6 +6,14 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.21] — 2026-07-04
+### Added
+- **`--json` recommend** — items include `homepage`, `auth`, and `needsTokens` when relevant.
+- **`doctor --json`** — includes `summary: { fix, warn, ok }` counts.
+
+### Changed
+- README / README.ko document `--all --json` and `apply --json`.
+
 ## [0.3.20] — 2026-07-04
 ### Added
 - **`--all --json`** — apply top recommendations and print receipts as JSON (CI-friendly).

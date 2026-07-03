@@ -25,6 +25,7 @@ assert("JSON has installed array", Array.isArray(json.installed));
 assert("JSON signals include react", json.signals.includes("react"));
 assert("frontend includes playwright in JSON", json.items.some((i) => i.id === "playwright"), json.items.map((i) => i.id).join(", "));
 assert("each item has id, name, type, reason", json.items.every((i) => i.id && i.name && i.type && i.reason));
+assert("items include homepage when available", json.items.some((i) => i.homepage));
 
 const serialized = JSON.parse(JSON.stringify(json));
 assert("JSON round-trips", serialized.items.length === json.items.length);
