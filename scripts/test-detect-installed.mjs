@@ -22,8 +22,11 @@ try {
   writeFileSync(join(dir, "package.json"), JSON.stringify({ dependencies: { react: "18", next: "14" } }));
   mkdirSync(join(dir, ".codex"), { recursive: true });
   mkdirSync(join(dir, ".cursor"), { recursive: true });
+  mkdirSync(join(dir, ".gemini"), { recursive: true });
   writeFileSync(join(dir, ".codex/config.toml"), '[mcp_servers.context7]\ncommand = "npx"\n');
   writeFileSync(join(dir, ".cursor/mcp.json"), JSON.stringify({ mcpServers: { playwright: { command: "npx" } } }));
+  writeFileSync(join(dir, ".gemini/settings.json"), JSON.stringify({ mcpServers: { memory: { command: "npx" } } }));
+  writeFileSync(join(dir, "opencode.json"), JSON.stringify({ mcp: { postgres: { type: "local", command: ["npx"] } } }));
 
   const signals = new Set(["always", "package.json", "react", "next"]);
   const { items, installed } = recommend(catalog, signals, dir);
@@ -31,8 +34,12 @@ try {
 
   assert("installed includes context7 from Codex", installed.includes("context7"));
   assert("installed includes playwright from Cursor", installed.includes("playwright"));
+  assert("installed includes memory from Gemini", installed.includes("memory"));
+  assert("installed includes postgres from opencode", installed.includes("postgres"));
   assert("context7 not re-recommended", !ids.includes("context7"));
   assert("playwright not re-recommended", !ids.includes("playwright"));
+  assert("memory not re-recommended", !ids.includes("memory"));
+  assert("postgres not re-recommended", !ids.includes("postgres"));
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

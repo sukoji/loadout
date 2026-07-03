@@ -167,6 +167,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout doctor")}     Audit .mcp.json + hooks (read-only)`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor --json")}  Machine-readable audit (exit 1 on fixes)`);
   console.log(`  ${c("cyan", "npx claude-loadout export")}     Write team loadout → .loadout.json`);
+  console.log(`  ${c("cyan", "npx claude-loadout export --json")}  Print manifest JSON to stdout`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --target cursor")}  Apply MCPs to Cursor`);
   console.log(`  ${c("cyan", "npx claude-loadout --dry-run")}  Show recommendations only`);
@@ -206,6 +207,10 @@ function runExport(args, flags) {
   const discover = flags.has("--discover");
   const outPath = resolve(root, parseOutputPath(args, flags));
   const manifest = buildManifest(catalog, root, { discover });
+  if (flags.has("--json")) {
+    console.log(JSON.stringify(manifest, null, 2));
+    return;
+  }
   writeManifest(manifest, outPath);
   console.log(c("bold", "\n📦 Loadout exported") + c("dim", `  → ${outPath}\n`));
   console.log(c("dim", `Domains: ${manifest.domains.map((d) => d.title).join(", ")}`));

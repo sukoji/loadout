@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.14] — 2026-07-03
+### Added
+- **`export --json`** — print team manifest JSON to stdout (no file write).
+- **detectInstalled tests** — Gemini CLI and opencode MCP configs covered in regression suite.
+
 ## [0.3.13] — 2026-07-03
 ### Added
 - **`doctor --json`** — machine-readable audit output; exits 1 when fix items exist.

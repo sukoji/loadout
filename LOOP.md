@@ -29,7 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
-| 0.3.13 | 2026-07-03 | doctor --json; scan papers/ directory |
+| 0.3.14 | 2026-07-03 | export --json; gemini/opencode detectInstalled tests |
 | 0.3.5 | 2026-07-03 | game-dev domain; cross-agent MCP detectInstalled |
 | 0.3.4 | 2026-07-03 | Windows Ruff hook; Jupyter research tests; CONTRIBUTING |
 | 0.3.3 | 2026-07-03 | FastAPI recommend tests; KO README parity |

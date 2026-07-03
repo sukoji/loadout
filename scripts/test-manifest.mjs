@@ -69,6 +69,11 @@ try {
   const manifest = buildManifest(catalog, dir);
   assert("export lists installed MCP ids", manifest.installed.includes("playwright"));
   assert("export excludes already-installed playwright", !manifest.items.some((i) => i.id === "playwright"));
+
+  const jsonManifest = buildManifest(catalog, dir);
+  const serialized = JSON.parse(JSON.stringify(jsonManifest));
+  assert("export manifest JSON has installed array", Array.isArray(serialized.installed));
+  assert("export manifest JSON has items array", Array.isArray(serialized.items) && serialized.items.length > 0);
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }
