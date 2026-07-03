@@ -77,3 +77,20 @@ worse than no entry, because Loadout *applies* it. When in doubt, link the sourc
 3. Append `"my-server"` to a domain `loadout` in `domains.json`.
 4. Run `npm run validate && npm run verify:mcp && npm run build:docs`.
 5. Open a PR with the catalog + generated `docs/domains/` changes.
+
+## Release (maintainers)
+
+```bash
+npm test
+# bump version in package.json, plugins/loadout/.claude-plugin/plugin.json, .claude-plugin/marketplace.json
+# add CHANGELOG entry
+git commit -m "feat: vX.Y.Z — …"
+git push origin main
+npm publish
+git tag vX.Y.Z && git push origin vX.Y.Z
+```
+
+Tag pushes run [`.github/workflows/publish.yml`](.github/workflows/publish.yml). For CI publish, add an npm
+**granular access token** (Automation, publish-only) as the repo secret **`NPM_TOKEN`** at
+GitHub → Settings → Secrets and variables → Actions. Without it the workflow warns and skips; local
+`npm publish` via `~/.npmrc` still works.

@@ -46,8 +46,11 @@ export function doctor(root = process.cwd()) {
     }
   }
 
-  auditMcpServers(mcpDoc, catalog, findings, ".mcp.json");
-  auditCrossAgentMcp(root, catalog, findings);
+  const mcpLocations = new Map();
+
+  auditMcpServers(mcpDoc, catalog, findings, ".mcp.json", mcpLocations);
+  auditCrossAgentMcp(root, catalog, findings, mcpLocations);
+  auditDuplicateMcp(mcpLocations, findings);
   auditTokens(mcpDoc, findings);
   auditHooks(settingsDoc, findings);
   auditSecurity(hasEnv, settingsDoc, findings);
@@ -73,7 +76,7 @@ export function doctor(root = process.cwd()) {
   return findings;
 }
 
-function auditMcpServers(mcpDoc, catalog, findings, file = ".mcp.json") {
+function auditMcpServers(mcpDoc, catalog, findings, file = ".mcp.json", mcpLocations) {
   const servers = mcpDoc?.mcpServers || {};
   const keys = Object.keys(servers);
   if (!keys.length) return;
@@ -81,11 +84,11 @@ function auditMcpServers(mcpDoc, catalog, findings, file = ".mcp.json") {
   findings.ok.push({ msg: `${keys.length} MCP server(s) in ${file}: ${keys.join(", ")}` });
 
   for (const [id, cfg] of Object.entries(servers)) {
-    auditMcpEntry(id, cfg, catalog, findings, file);
+    auditMcpEntry(id, cfg, catalog, findings, file, mcpLocations);
   }
 }
 
-function auditCrossAgentMcp(root, catalog, findings) {
+function auditCrossAgentMcp(root, catalog, findings, mcpLocations) {
   const jsonConfigs = [
     [".cursor/mcp.json", "Cursor"],
     [".gemini/settings.json", "Gemini CLI"],
@@ -99,7 +102,7 @@ function auditCrossAgentMcp(root, catalog, findings) {
       const keys = Object.keys(servers);
       if (!keys.length) continue;
       findings.ok.push({ msg: `${label}: ${keys.length} MCP server(s) in ${rel}` });
-      for (const [id, cfg] of Object.entries(servers)) auditMcpEntry(id, cfg, catalog, findings, rel);
+      for (const [id, cfg] of Object.entries(servers)) auditMcpEntry(id, cfg, catalog, findings, rel, mcpLocations);
     } catch {
       findings.fix.push({ msg: `${rel} is invalid JSON`, file: rel });
     }
@@ -113,7 +116,7 @@ function auditCrossAgentMcp(root, catalog, findings) {
       if (keys.length) {
         findings.ok.push({ msg: `opencode: ${keys.length} MCP server(s) in opencode.json` });
         for (const [id, cfg] of Object.entries(doc.mcp || {})) {
-          auditMcpEntry(id, cfg, catalog, findings, "opencode.json");
+          auditMcpEntry(id, cfg, catalog, findings, "opencode.json", mcpLocations);
         }
       }
     } catch {
@@ -125,7 +128,10 @@ function auditCrossAgentMcp(root, catalog, findings) {
   if (existsSync(codexPath)) {
     const text = readFileSync(codexPath, "utf8");
     const names = [...text.matchAll(/^\[mcp_servers\.([^\]]+)\]/gm)].map((m) => m[1]);
-    if (names.length) findings.ok.push({ msg: `Codex: ${names.length} MCP server(s) in .codex/config.toml` });
+    if (names.length) {
+      findings.ok.push({ msg: `Codex: ${names.length} MCP server(s) in .codex/config.toml` });
+      for (const id of names) trackMcp(id, ".codex/config.toml", mcpLocations);
+    }
     if (text.includes("<your-") || text.includes("postgresql://localhost/mydb")) {
       findings.fix.push({ msg: "Codex config has placeholder values — fill in tokens/connection strings", file: ".codex/config.toml" });
     }
@@ -139,7 +145,7 @@ function auditCrossAgentMcp(root, catalog, findings) {
       const keys = Object.keys(servers);
       if (keys.length) {
         findings.ok.push({ msg: `OpenClaw: ${keys.length} MCP server(s) in ~/.openclaw/openclaw.json` });
-        for (const [id, cfg] of Object.entries(servers)) auditMcpEntry(id, cfg, catalog, findings, "~/.openclaw/openclaw.json");
+        for (const [id, cfg] of Object.entries(servers)) auditMcpEntry(id, cfg, catalog, findings, "~/.openclaw/openclaw.json", mcpLocations);
       }
     } catch {
       findings.fix.push({ msg: "~/.openclaw/openclaw.json is invalid JSON", file: "~/.openclaw/openclaw.json" });
@@ -147,7 +153,25 @@ function auditCrossAgentMcp(root, catalog, findings) {
   }
 }
 
-function auditMcpEntry(id, cfg, catalog, findings, file) {
+function trackMcp(id, file, mcpLocations) {
+  if (!mcpLocations) return;
+  if (!mcpLocations.has(id)) mcpLocations.set(id, new Set());
+  mcpLocations.get(id).add(file);
+}
+
+function auditDuplicateMcp(mcpLocations, findings) {
+  if (!mcpLocations) return;
+  for (const [id, files] of mcpLocations) {
+    if (files.size > 1) {
+      findings.warn.push({
+        msg: `MCP "${id}" appears in ${files.size} configs (${[...files].join(", ")}) — dedupe or keep in sync`,
+      });
+    }
+  }
+}
+
+function auditMcpEntry(id, cfg, catalog, findings, file, mcpLocations) {
+  trackMcp(id, file, mcpLocations);
   const known = catalog.byId.get(id);
   if (!known) {
     findings.warn.push({ msg: `MCP "${id}" is not in the Loadout catalog — verify it yourself`, file });

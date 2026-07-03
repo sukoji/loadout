@@ -6,6 +6,14 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.9] — 2026-07-03
+### Added
+- **`doctor`** — warns when the same MCP id is configured in multiple agent configs.
+- **`test:doctor`** — regression test for placeholder tokens, cross-agent dupes, `.env` guard gap.
+
+### Changed
+- CONTRIBUTING: release checklist + `NPM_TOKEN` CI publish setup.
+
 ## [0.3.8] — 2026-07-03
 ### Added
 - **`test:detect-installed`** — regression test for Codex/Cursor MCP deduplication.
