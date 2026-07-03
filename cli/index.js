@@ -182,6 +182,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout export --json")}  Print manifest JSON to stdout`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --dry-run --json")}  Preview apply as JSON`);
+  console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --json")}  Apply and print receipts as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout --dry-run")}  Show recommendations only`);
   console.log(`  ${c("cyan", "npx claude-loadout --json")}       Print recommendations as JSON (no write)`);
   console.log(`  ${c("cyan", "npx claude-loadout --all")}      Apply top recommendations without prompting`);
@@ -257,6 +258,10 @@ function runApplyManifest(args, flags) {
     return;
   }
   const { receipts, skipped } = applyManifest(catalog, manifestPath, root, { targets });
+  if (flags.has("--json")) {
+    console.log(JSON.stringify({ manifest: manifestPath, targets, skipped, receipts }, null, 2));
+    return;
+  }
   if (skipped.length) {
     console.log(c("yellow", "Skipped:"));
     skipped.forEach((s) => console.log(`  • ${s}`));

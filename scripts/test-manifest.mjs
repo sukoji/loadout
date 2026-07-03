@@ -86,6 +86,8 @@ try {
     const { receipts: minReceipts } = applyManifest(catalog, minimalPath, minDir);
     const minReceipt = minReceipts.find((r) => r.type === "claude")?.receipt;
     assert("minimal string[] manifest applies memory", minReceipt?.mcp?.includes("memory"));
+    const applyJson = JSON.parse(JSON.stringify({ receipts: minReceipts, skipped: [] }));
+    assert("apply receipts serialize to JSON", applyJson.receipts.some((r) => r.type === "claude"));
   } finally {
     rmSync(minDir, { recursive: true, force: true });
   }

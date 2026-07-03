@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.19] — 2026-07-04
+### Added
+- **Scan** — Angular (`angular.json`, `@angular/*`), NestJS (`nest-cli.json`), Fastify, `yarn.lock` / `bun.lock`.
+- **`apply -f --json`** — print apply receipts as JSON after writing configs.
+
 ## [0.3.18] — 2026-07-03
 ### Added
 - **Scan** — `vite.config.*`, `tsconfig.json`, `pnpm-lock.yaml`, `uv.lock` project signals.

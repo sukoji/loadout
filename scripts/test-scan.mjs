@@ -49,6 +49,32 @@ try {
   } finally {
     rmSync(viteDir, { recursive: true, force: true });
   }
+
+  const angularDir = mkdtempSync(join(tmpdir(), "loadout-scan-ng-"));
+  try {
+    writeFileSync(join(angularDir, "angular.json"), "{}\n");
+    writeFileSync(join(angularDir, "package.json"), JSON.stringify({ dependencies: { "@angular/core": "18" } }));
+    const ngSignals = scanProject(angularDir);
+    assert("scan adds angular from angular.json", ngSignals.has("angular"));
+    assert("scan adds angular from @angular/core", ngSignals.has("angular"));
+    const ngTop = recommend(catalog, ngSignals).items.slice(0, 8).map((e) => e.item.id);
+    assert("angular project surfaces playwright", ngTop.includes("playwright"), ngTop.join(", "));
+  } finally {
+    rmSync(angularDir, { recursive: true, force: true });
+  }
+
+  const nestDir = mkdtempSync(join(tmpdir(), "loadout-scan-nest-"));
+  try {
+    writeFileSync(join(nestDir, "nest-cli.json"), "{}\n");
+    writeFileSync(join(nestDir, "package.json"), JSON.stringify({ dependencies: { fastify: "4", "@nestjs/core": "10" } }));
+    const nestSignals = scanProject(nestDir);
+    assert("scan adds nestjs from nest-cli.json", nestSignals.has("nestjs"));
+    assert("scan adds fastify from package.json", nestSignals.has("fastify"));
+    const nestTop = recommend(catalog, nestSignals).items.slice(0, 8).map((e) => e.item.id);
+    assert("nestjs project surfaces postgres or context7", nestTop.includes("postgres") || nestTop.includes("context7"), nestTop.join(", "));
+  } finally {
+    rmSync(nestDir, { recursive: true, force: true });
+  }
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

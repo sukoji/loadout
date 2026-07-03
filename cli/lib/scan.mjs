@@ -32,7 +32,9 @@ export function scanProject(root = process.cwd()) {
         if (name.includes("tailwind")) add("tailwind");
         if (name.includes("vite")) add("vite");
         if (name.includes("express")) add("express");
+        if (name.includes("fastify")) add("fastify");
         if (name.includes("nest")) add("nestjs");
+        if (name.includes("angular") || name.startsWith("@angular/")) add("angular");
         if (name.includes("prisma")) add("prisma");
         if (name.includes("drizzle")) add("drizzle");
         if (name.includes("playwright")) add("playwright");
@@ -75,7 +77,12 @@ export function scanProject(root = process.cwd()) {
     "mkdocs.yml": "mkdocs",
     "tsconfig.json": "tsconfig.json",
     "pnpm-lock.yaml": "pnpm-lock.yaml",
+    "yarn.lock": "yarn.lock",
+    "bun.lock": "bun.lock",
+    "bun.lockb": "bun.lock",
     "uv.lock": "uv.lock",
+    "angular.json": "angular",
+    "nest-cli.json": "nestjs",
   };
   for (const [file, sig] of Object.entries(fileSignals)) {
     if (has(file)) add(sig);
