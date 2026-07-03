@@ -42,6 +42,8 @@ export function scanProject(root = process.cwd()) {
         if (/(pg|postgres)/.test(name)) add("postgres");
         if (name.includes("stripe")) add("stripe");
         if (name.includes("sentry")) add("sentry");
+        if (name.includes("supabase")) add("supabase");
+        if (name.includes("mongoose") || name.includes("mongodb")) add("mongodb");
       }
     } catch {
       /* ignore malformed package.json */

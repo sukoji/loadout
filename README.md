@@ -38,6 +38,8 @@ That's Loadout.
 
 ## What it does
 
+<p align="center"><img src="assets/demo.svg" alt="Loadout in action: detect the stack, recommend a loadout, pick, and apply to .mcp.json + settings.json" width="92%"></p>
+
 ```text
 $ npx claude-loadout
 

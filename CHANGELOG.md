@@ -6,6 +6,15 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [HANDOFF.md](HANDOFF.md) §6 for the live task board.
 
+## [0.2.0] — 2026-07-03
+### Added
+- **Catalog expanded 25 → 35 entries**, all verified: MCP servers **Supabase, MongoDB, Stripe, Notion,
+  Brave Search, Firecrawl**; hooks **ESLint --fix on edit, gofmt on edit, rustfmt on edit,
+  block-push-to-main**. New signals (supabase, mongodb) for detection.
+- **Accuracy gate** — `scripts/verify-mcp-packages.mjs` confirms every npx-based MCP server resolves to a
+  real published npm package (a wrong install command is worse than no entry).
+- **Animated terminal demo** (`assets/demo.svg`) embedded in the README.
+
 ## [0.1.0] — 2026-07-03
 Initial public release — on npm as [`claude-loadout`](https://www.npmjs.com/package/claude-loadout) and
 as the `sukoji/loadout` Claude Code plugin marketplace.
@@ -32,5 +41,6 @@ as the `sukoji/loadout` Claude Code plugin marketplace.
 - Removed a phantom `qa` domain reference from the `playwright` catalog entry and the validator whitelist
   that was masking it.
 
-[Unreleased]: https://github.com/sukoji/loadout/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/sukoji/loadout/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/sukoji/loadout/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/sukoji/loadout/releases/tag/v0.1.0

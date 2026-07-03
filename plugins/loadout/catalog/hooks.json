@@ -132,5 +132,101 @@
         "command": "input=$(cat); dir=$(echo \"$input\" | jq -r '.workspace.current_dir // .cwd' | sed \"s|$HOME|~|\"); model=$(echo \"$input\" | jq -r '.model.display_name // \"claude\"'); branch=$(git -C \"$(echo \"$input\" | jq -r '.cwd')\" branch --show-current 2>/dev/null); printf '%s  %s  %s' \"$(basename \"$dir\")\" \"${branch:+\\u2387 $branch}\" \"$model\""
       }
     }
+  },
+  {
+    "id": "eslint-fix-on-edit",
+    "type": "hook",
+    "name": "Auto-fix JS/TS lint on edit (ESLint)",
+    "description": "After Claude edits a JS/TS file, run `eslint --fix` on that file so lint errors get fixed inline instead of failing CI later. Pairs with the Prettier hook.",
+    "domains": ["frontend", "backend-api"],
+    "signals": ["eslint", "package.json"],
+    "note": "Requires `jq` and a local ESLint. No-ops if eslint isn't installed.",
+    "settings": {
+      "hooks": {
+        "PostToolUse": [
+          {
+            "matcher": "Write|Edit",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "f=$(jq -r '.tool_input.file_path'); case \"$f\" in *.js|*.jsx|*.ts|*.tsx) npx --no-install eslint --fix \"$f\" 2>/dev/null;; esac; exit 0"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "gofmt-on-edit",
+    "type": "hook",
+    "name": "Auto-format Go on edit (gofmt)",
+    "description": "After Claude edits a .go file, run `gofmt -w` on it. Keeps Go code canonical and diffs noise-free.",
+    "domains": ["backend-api", "devops"],
+    "signals": ["go.mod"],
+    "note": "Requires `jq` and the Go toolchain (`gofmt`).",
+    "settings": {
+      "hooks": {
+        "PostToolUse": [
+          {
+            "matcher": "Write|Edit",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "f=$(jq -r '.tool_input.file_path'); case \"$f\" in *.go) gofmt -w \"$f\" 2>/dev/null;; esac; exit 0"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "rustfmt-on-edit",
+    "type": "hook",
+    "name": "Auto-format Rust on edit (rustfmt)",
+    "description": "After Claude edits a .rs file, run `rustfmt` on it so formatting matches the Rust standard and stays consistent.",
+    "domains": ["backend-api"],
+    "signals": ["Cargo.toml"],
+    "note": "Requires `jq` and `rustfmt` (ships with rustup).",
+    "settings": {
+      "hooks": {
+        "PostToolUse": [
+          {
+            "matcher": "Write|Edit",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "f=$(jq -r '.tool_input.file_path'); case \"$f\" in *.rs) rustfmt \"$f\" 2>/dev/null;; esac; exit 0"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "block-push-to-main",
+    "type": "hook",
+    "name": "Block direct push to main/master",
+    "description": "A PreToolUse guard that blocks `git push` while you're on main or master, nudging you toward a feature branch + PR. Stops accidental direct pushes during autonomous runs.",
+    "domains": ["devops", "security", "general"],
+    "signals": ["always"],
+    "note": "Requires `jq` and `git`. Blocks via exit code 2; edit the branch names to your convention.",
+    "settings": {
+      "hooks": {
+        "PreToolUse": [
+          {
+            "matcher": "Bash",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "c=$(jq -r '.tool_input.command'); echo \"$c\" | grep -Eq 'git[[:space:]]+push' && b=$(git branch --show-current 2>/dev/null) && echo \"$b\" | grep -Eq '^(main|master)$' && { echo \"loadout: refusing to push directly to $b — use a branch + PR\" >&2; exit 2; }; exit 0"
+              }
+            ]
+          }
+        ]
+      }
+    }
   }
 ]

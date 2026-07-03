@@ -12,6 +12,8 @@ _Signals that map here: `Dockerfile`, `docker-compose`, `.github/workflows`, `te
 
 ## Hooks & settings
 
+- **Block direct push to main/master** — A PreToolUse guard that blocks `git push` while you're on main or master, nudging you toward a feature branch + PR. Stops accidental direct pushes during autonomous runs.
+- **Auto-format Go on edit (gofmt)** — After Claude edits a .go file, run `gofmt -w` on it. Keeps Go code canonical and diffs noise-free.
 - **Block dangerous shell commands** — A PreToolUse guard that blocks catastrophic commands (recursive deletes of /, ~, or $HOME, and disk-wipe patterns) before they run. Cheap insurance for autonomous sessions.
 - **Refuse to read secret files** — Blocks Read on .env / credential files so secrets never get pulled into context (and can't leak into logs or commits). Good default for any repo with real credentials.
 - **Ping me when Claude finishes** — Rings the terminal bell (and prints a marker) when Claude stops responding, so you can tab away during long runs and come back when it's your turn.

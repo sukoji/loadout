@@ -1,0 +1,64 @@
+<svg viewBox="0 0 820 430" width="820" height="430" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="dt dd" font-family="'SF Mono','JetBrains Mono','Consolas',ui-monospace,monospace">
+  <title id="dt">Loadout demo</title>
+  <desc id="dd">A terminal running `npx claude-loadout`: it detects the stack, recommends Playwright, a Prettier hook, and Context7, you pick 1,2,3, and it applies them to .mcp.json and .claude/settings.json.</desc>
+  <style>
+    .l1{animation:l1 10s infinite}.l2{animation:l2 10s infinite}.l3{animation:l3 10s infinite}
+    .l4{animation:l4 10s infinite}.l5{animation:l5 10s infinite}.l6{animation:l6 10s infinite}
+    .l7{animation:l7 10s infinite}.l8{animation:l8 10s infinite}.l9{animation:l9 10s infinite}
+    .cur{animation:blink 1s steps(1) infinite}
+    @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+    @keyframes l1{0%,2%{opacity:0}5%,95%{opacity:1}100%{opacity:0}}
+    @keyframes l2{0%,13%{opacity:0}16%,95%{opacity:1}100%{opacity:0}}
+    @keyframes l3{0%,19%{opacity:0}22%,95%{opacity:1}100%{opacity:0}}
+    @keyframes l4{0%,28%{opacity:0}31%,95%{opacity:1}100%{opacity:0}}
+    @keyframes l5{0%,34%{opacity:0}37%,95%{opacity:1}100%{opacity:0}}
+    @keyframes l6{0%,40%{opacity:0}43%,95%{opacity:1}100%{opacity:0}}
+    @keyframes l7{0%,46%{opacity:0}49%,95%{opacity:1}100%{opacity:0}}
+    @keyframes l8{0%,56%{opacity:0}59%,95%{opacity:1}100%{opacity:0}}
+    @keyframes l9{0%,66%{opacity:0}69%,95%{opacity:1}100%{opacity:0}}
+  </style>
+
+  <rect x="1" y="1" width="818" height="428" rx="14" fill="#0E1626" stroke="#223049" stroke-width="1.5"/>
+  <rect x="1" y="1" width="818" height="40" rx="14" fill="#141F33"/>
+  <rect x="1" y="26" width="818" height="15" fill="#141F33"/>
+  <circle cx="26" cy="21" r="6" fill="#FF5F57"/>
+  <circle cx="47" cy="21" r="6" fill="#FEBC2E"/>
+  <circle cx="68" cy="21" r="6" fill="#28C840"/>
+  <text x="410" y="26" text-anchor="middle" font-size="14" fill="#5B6A82">loadout — recommend &amp; apply</text>
+
+  <g font-size="16.5">
+    <g class="l1">
+      <text x="28" y="80"><tspan fill="#A78BFA">$</tspan> <tspan fill="#E6EAF2">npx claude-loadout</tspan></text>
+      <rect class="cur" x="232" y="68" width="9" height="17" fill="#A78BFA"/>
+    </g>
+    <text class="l2" x="28" y="118" fill="#64748B">detected  <tspan fill="#8BE9C0">next · react · tailwind · prettier</tspan></text>
+    <text class="l3" x="28" y="144" fill="#64748B">best-fit  <tspan fill="#C4B5FD">Frontend / Web UI</tspan></text>
+
+    <text class="l4" x="28" y="186" fill="#94A3B8">Recommended loadout:</text>
+
+    <g class="l5">
+      <text x="28" y="220"><tspan fill="#22D3EE"> 1</tspan>  <tspan fill="#E6EAF2">Playwright</tspan></text>
+      <rect x="250" y="206" width="46" height="20" rx="6" fill="#1B2338" stroke="#2C3A57"/>
+      <text x="273" y="220" text-anchor="middle" font-size="12.5" fill="#93C5FD">MCP</text>
+    </g>
+    <g class="l6">
+      <text x="28" y="250"><tspan fill="#22D3EE"> 2</tspan>  <tspan fill="#E6EAF2">Prettier on edit</tspan></text>
+      <rect x="250" y="236" width="46" height="20" rx="6" fill="#20291C" stroke="#3A4A2A"/>
+      <text x="273" y="250" text-anchor="middle" font-size="12.5" fill="#A3E635">hook</text>
+    </g>
+    <g class="l7">
+      <text x="28" y="280"><tspan fill="#22D3EE"> 3</tspan>  <tspan fill="#E6EAF2">Context7</tspan></text>
+      <rect x="250" y="266" width="46" height="20" rx="6" fill="#1B2338" stroke="#2C3A57"/>
+      <text x="273" y="280" text-anchor="middle" font-size="12.5" fill="#93C5FD">MCP</text>
+    </g>
+
+    <text class="l8" x="28" y="322"><tspan fill="#A78BFA">Install which?</tspan> <tspan fill="#94A3B8">numbers ·</tspan> <tspan fill="#E6EAF2">1,2,3</tspan></text>
+
+    <g class="l9">
+      <path d="M30 356 l7 7 l14 -15" fill="none" stroke="#34D399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="60" y="364" fill="#34D399">Applied</text>
+      <text x="140" y="364" fill="#64748B">→ .mcp.json + .claude/settings.json</text>
+    </g>
+    <text class="l9" x="28" y="396" fill="#4E5A6E">Restart Claude Code to load them. Other agents: --target codex|cursor|…</text>
+  </g>
+</svg>

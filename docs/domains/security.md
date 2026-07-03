@@ -6,6 +6,7 @@ _Signals that map here: `auth`, `oauth`, `jwt`, `stripe`, `payment`, `crypto`, `
 
 ## MCP servers
 
+- **Stripe** — Official Stripe MCP — create and inspect customers, products, prices, and payment links, and search Stripe's docs, straight from the session. Use a restricted/test key. — [source](https://github.com/stripe/agent-toolkit) · 🔑 needs auth
 - **Git** — Structured git operations (status, log, diff, blame, branch) as first-class tools instead of shell parsing. Handy for history-heavy tasks and safer diffs. — [source](https://github.com/modelcontextprotocol/servers/tree/main/src/git)
 - **GitHub** — Read and act on GitHub — issues, PRs, code search, Actions, reviews — from inside the session. Uses GitHub's official hosted MCP server (OAuth on first use). — [source](https://github.com/github/github-mcp-server) · 🔑 needs auth
 
@@ -13,6 +14,7 @@ _Signals that map here: `auth`, `oauth`, `jwt`, `stripe`, `payment`, `crypto`, `
 
 - **Block dangerous shell commands** — A PreToolUse guard that blocks catastrophic commands (recursive deletes of /, ~, or $HOME, and disk-wipe patterns) before they run. Cheap insurance for autonomous sessions.
 - **Refuse to read secret files** — Blocks Read on .env / credential files so secrets never get pulled into context (and can't leak into logs or commits). Good default for any repo with real credentials.
+- **Block direct push to main/master** — A PreToolUse guard that blocks `git push` while you're on main or master, nudging you toward a feature branch + PR. Stops accidental direct pushes during autonomous runs.
 
 ## Skills
 

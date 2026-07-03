@@ -181,5 +181,113 @@
         "FIGMA_API_KEY": "<your-figma-token>"
       }
     }
+  },
+  {
+    "id": "supabase",
+    "type": "mcp",
+    "name": "Supabase",
+    "description": "Let Claude inspect your Supabase project — schema, tables, and (read-only) queries — so it writes migrations and SQL against your real database. Runs read-only by default.",
+    "domains": ["backend-api", "data-ml"],
+    "signals": ["supabase", "postgres"],
+    "auth": true,
+    "official": true,
+    "homepage": "https://github.com/supabase-community/supabase-mcp",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase@latest", "--read-only"],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "<your-supabase-access-token>"
+      }
+    }
+  },
+  {
+    "id": "mongodb",
+    "type": "mcp",
+    "name": "MongoDB",
+    "description": "Explore a MongoDB database and run queries/aggregations from the session, so Claude works against your real collections instead of guessing the shape.",
+    "domains": ["backend-api", "data-ml"],
+    "signals": ["mongodb", "mongoose"],
+    "auth": true,
+    "official": true,
+    "homepage": "https://github.com/mongodb-js/mongodb-mcp-server",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "mongodb-mcp-server"],
+      "env": {
+        "MDB_MCP_CONNECTION_STRING": "<your-mongodb-connection-string>"
+      }
+    }
+  },
+  {
+    "id": "stripe",
+    "type": "mcp",
+    "name": "Stripe",
+    "description": "Official Stripe MCP — create and inspect customers, products, prices, and payment links, and search Stripe's docs, straight from the session. Use a restricted/test key.",
+    "domains": ["backend-api", "security"],
+    "signals": ["stripe", "payment"],
+    "auth": true,
+    "official": true,
+    "homepage": "https://github.com/stripe/agent-toolkit",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "@stripe/mcp", "--tools=all"],
+      "env": {
+        "STRIPE_SECRET_KEY": "<your-stripe-secret-key>"
+      }
+    }
+  },
+  {
+    "id": "notion",
+    "type": "mcp",
+    "name": "Notion",
+    "description": "Read and write Notion pages and databases — pull specs, docs, and tasks into context, or push generated notes back. Official Notion MCP.",
+    "domains": ["docs-writing", "general"],
+    "signals": ["notion"],
+    "auth": true,
+    "official": true,
+    "homepage": "https://github.com/makenotion/notion-mcp-server",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
+      "env": {
+        "NOTION_TOKEN": "<your-notion-integration-token>"
+      }
+    }
+  },
+  {
+    "id": "brave-search",
+    "type": "mcp",
+    "name": "Brave Search",
+    "description": "Web and local search via the Brave Search API — give Claude fresh results without a full browser. Good default when you just need to look something up.",
+    "domains": ["general", "data-ml", "docs-writing"],
+    "signals": [],
+    "auth": true,
+    "official": true,
+    "homepage": "https://github.com/modelcontextprotocol/servers/tree/main/src/brave-search",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+      "env": {
+        "BRAVE_API_KEY": "<your-brave-api-key>"
+      }
+    }
+  },
+  {
+    "id": "firecrawl",
+    "type": "mcp",
+    "name": "Firecrawl (web scrape/crawl)",
+    "description": "Scrape, crawl, and extract structured data from websites — turn docs sites, changelogs, or competitors into clean context. Great for research and data collection.",
+    "domains": ["data-ml", "docs-writing", "general"],
+    "signals": ["firecrawl", "scraping"],
+    "auth": true,
+    "official": false,
+    "homepage": "https://github.com/firecrawl/firecrawl-mcp-server",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": {
+        "FIRECRAWL_API_KEY": "<your-firecrawl-api-key>"
+      }
+    }
   }
 ]

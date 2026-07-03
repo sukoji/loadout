@@ -14,6 +14,7 @@ _Signals that map here: `react`, `next`, `vue`, `svelte`, `vite`, `tailwind`, `a
 ## Hooks & settings
 
 - **Auto-format JS/TS on edit (Prettier)** — After Claude writes or edits a file, run Prettier on that exact file so the diff is always clean. Keeps you from reviewing formatting noise.
+- **Auto-fix JS/TS lint on edit (ESLint)** — After Claude edits a JS/TS file, run `eslint --fix` on that file so lint errors get fixed inline instead of failing CI later. Pairs with the Prettier hook.
 
 ## Skills
 
