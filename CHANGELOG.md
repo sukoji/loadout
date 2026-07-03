@@ -4,7 +4,15 @@ All notable changes to Loadout are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/); versions follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
-- See [HANDOFF.md](HANDOFF.md) §6 for the live task board.
+### Added
+- Designed SVG hero banner (`assets/banner.svg`) and clearer plain-language README intro.
+
+### Fixed
+- Plugin install failed with "source type your Claude Code version does not support." Switched the
+  marketplace entry from `metadata.pluginRoot` + bare source to an explicit `source: ./plugins/loadout`.
+  Verified end-to-end (add → install → skills resolve) from GitHub.
+
+See [HANDOFF.md](HANDOFF.md) §6 for the live task board.
 
 ## [0.1.0] — 2026-07-03
 Initial public release.

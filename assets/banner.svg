@@ -1,0 +1,97 @@
+<svg viewBox="0 0 1200 360" width="1200" height="360" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title id="t">Loadout</title>
+  <desc id="d">Gear up Claude Code for your project in one command — profiles your repo, then recommends and applies the right MCP servers, hooks and skills.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0A0E17"/>
+      <stop offset="1" stop-color="#111B2E"/>
+    </linearGradient>
+    <radialGradient id="glowV" cx="0.16" cy="0.18" r="0.55">
+      <stop offset="0" stop-color="#7C3AED" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#7C3AED" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowC" cx="0.92" cy="0.95" r="0.5">
+      <stop offset="0" stop-color="#06B6D4" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#06B6D4" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#A78BFA"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="word" x1="0" y1="0" x2="1" y2="0.4">
+      <stop offset="0" stop-color="#F5F3FF"/>
+      <stop offset="0.55" stop-color="#C4B5FD"/>
+      <stop offset="1" stop-color="#A78BFA"/>
+    </linearGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.6" fill="#8B5CF6" opacity="0.05"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="360" fill="url(#bg)"/>
+  <rect width="1200" height="360" fill="url(#dots)"/>
+  <rect width="1200" height="360" fill="url(#glowV)"/>
+  <rect width="1200" height="360" fill="url(#glowC)"/>
+
+  <g transform="translate(112,98)">
+    <circle r="40" fill="none" stroke="url(#violet)" stroke-width="6.5"/>
+    <circle r="22" fill="none" stroke="#22D3EE" stroke-width="4.5"/>
+    <circle r="6" fill="#22D3EE"/>
+    <g stroke="url(#violet)" stroke-width="6.5" stroke-linecap="round">
+      <line x1="0" y1="-57" x2="0" y2="-45"/>
+      <line x1="0" y1="57" x2="0" y2="45"/>
+      <line x1="-57" y1="0" x2="-45" y2="0"/>
+      <line x1="57" y1="0" x2="45" y2="0"/>
+    </g>
+  </g>
+
+  <text x="182" y="126" font-size="74" font-weight="800" letter-spacing="-1.5" fill="url(#word)">Loadout</text>
+  <rect x="185" y="142" width="196" height="5" rx="2.5" fill="url(#violet)"/>
+
+  <text x="184" y="194" font-size="24" font-weight="700" fill="#EEF1F6">Gear up Claude Code — in one command.</text>
+  <text x="185" y="230" font-size="17" font-weight="400" fill="#93A0B4">Profiles your repo, then recommends and applies</text>
+  <text x="185" y="253" font-size="17" font-weight="400" fill="#93A0B4">the right MCP servers, hooks &amp; skills — not a list you read.</text>
+
+  <g font-family="'SF Mono','JetBrains Mono','Consolas',ui-monospace,monospace">
+    <rect x="185" y="278" width="212" height="38" rx="19" fill="#181633" stroke="#4C1D95" stroke-width="1.5"/>
+    <text x="207" y="303" font-size="15.5" fill="#C4B5FD">$ npx claude-loadout</text>
+    <rect x="409" y="278" width="214" height="38" rx="19" fill="#0E2230" stroke="#155E75" stroke-width="1.5"/>
+    <text x="431" y="303" font-size="15.5" fill="#67E8F9">/loadout:recommend</text>
+  </g>
+
+  <g transform="translate(722,58)">
+    <rect x="0" y="0" width="430" height="252" rx="15" fill="#0E1626" stroke="#223049" stroke-width="1.5"/>
+    <rect x="0" y="0" width="430" height="42" rx="15" fill="#141F33"/>
+    <rect x="0" y="27" width="430" height="15" fill="#141F33"/>
+    <circle cx="24" cy="21" r="5.5" fill="#FF5F57"/>
+    <circle cx="44" cy="21" r="5.5" fill="#FEBC2E"/>
+    <circle cx="64" cy="21" r="5.5" fill="#28C840"/>
+    <text x="215" y="26" text-anchor="middle" font-size="13.5" font-family="'SF Mono','Consolas',ui-monospace,monospace" fill="#5B6A82">loadout · recommend</text>
+
+    <g font-family="'SF Mono','JetBrains Mono','Consolas',ui-monospace,monospace" font-size="15">
+      <text x="24" y="82" fill="#A78BFA">detected</text>
+      <text x="112" y="82" fill="#CBD5E1">next · react · tailwind</text>
+      <line x1="24" y1="100" x2="406" y2="100" stroke="#1E293B" stroke-width="1"/>
+
+      <text x="24" y="134" fill="#475569">›</text>
+      <text x="44" y="134" fill="#E2E8F0">Playwright</text>
+      <rect x="250" y="120" width="52" height="20" rx="6" fill="#1B2338" stroke="#2C3A57"/>
+      <text x="276" y="134" text-anchor="middle" font-size="12" fill="#93C5FD">MCP</text>
+      <path d="M372 128 l6 6 l12 -13" fill="none" stroke="#34D399" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <text x="24" y="170" fill="#475569">›</text>
+      <text x="44" y="170" fill="#E2E8F0">Prettier on edit</text>
+      <rect x="250" y="156" width="52" height="20" rx="6" fill="#20291C" stroke="#3A4A2A"/>
+      <text x="276" y="170" text-anchor="middle" font-size="12" fill="#A3E635">hook</text>
+      <path d="M372 164 l6 6 l12 -13" fill="none" stroke="#34D399" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <text x="24" y="206" fill="#475569">›</text>
+      <text x="44" y="206" fill="#E2E8F0">Context7</text>
+      <rect x="250" y="192" width="52" height="20" rx="6" fill="#1B2338" stroke="#2C3A57"/>
+      <text x="276" y="206" text-anchor="middle" font-size="12" fill="#93C5FD">MCP</text>
+      <path d="M372 200 l6 6 l12 -13" fill="none" stroke="#34D399" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <text x="24" y="238" font-size="13.5" fill="#4E5A6E">applied → .mcp.json + settings.json</text>
+    </g>
+  </g>
+</svg>

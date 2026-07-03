@@ -1,11 +1,14 @@
 <div align="center">
 
-# 🎯 Loadout
+<img src="assets/banner.svg" alt="Loadout — gear up Claude Code for your project in one command" width="100%">
 
-### Gear up Claude Code for *your* project — in one command.
+<br/>
 
-**Loadout profiles your repo, recommends a domain-matched set of skills, MCP servers, and hooks, and applies the ones you pick.**
-Not another 500-item list you have to read. A loadout you *apply*.
+### Loadout looks at your project and sets up Claude Code for it — automatically.
+
+It figures out which **MCP servers, hooks, and skills** actually fit your stack, shows you a short
+ranked list with a reason for each, and **installs the ones you pick** — writing the config for you.
+One command instead of reading a 500-item "awesome" list and copy-pasting install commands by hand.
 
 [English](README.md) · [한국어](README.ko.md)
 
@@ -17,6 +20,8 @@ Not another 500-item list you have to read. A loadout you *apply*.
 </div>
 
 ---
+
+> **In one line:** point it at a repo → it recommends the right Claude Code extensions for that repo → it applies them.
 
 ## The problem
 

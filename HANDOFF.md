@@ -20,7 +20,7 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | Area | State |
 | :-- | :-- |
 | First release shipped & pushed | ✅ two commits on `origin/main`: `52e4f58` (initial release) + `ac9e73a` (qa fix + this handoff system), both pushed |
-| Plugin marketplace | ✅ `.claude-plugin/marketplace.json` valid; `claude plugin validate ./plugins/loadout` passes |
+| Plugin marketplace | ✅ **end-to-end verified from GitHub**: `/plugin marketplace add sukoji/loadout` → `/plugin install loadout@loadout` → `claude plugin details` lists Skills (2): browse, recommend. (Install-blocking bug fixed — see gotcha #8.) |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
 | Catalog | ✅ 25 items (12 MCP, 7 skills, 6 hooks), 8 domains, `validate-catalog.mjs` = 0 warnings |
 | CLI (`node cli/index.js`) | ✅ zero-dep; profiles React & Python/ML correctly, writes valid `.mcp.json` + `.claude/settings.json`, idempotent (re-run skips installed). §5 `--dry-run` is read-only; reproduce the write/idempotency path with the optional test in §5. |
@@ -81,6 +81,9 @@ CONTRIBUTING.md                     ← catalog entry schema
    hook entry carries a `note` about this. Don't "fix" them into PowerShell in the catalog.
 7. **`recommend.detectInstalled()`** dedupes by MCP server key and by hook-command signature substrings
    (`prettier`, `ruff`, `mkfs`, etc.). If you rename a hook's command, update those signatures too.
+8. **Marketplace plugin `source` must be an explicit relative path** (`"source": "./plugins/loadout"`).
+   The `metadata.pluginRoot` + bare `"source": "loadout"` form *validates* but **fails at install time**
+   on current Claude Code with "source type your Claude Code version does not support." Don't reintroduce it.
 
 ---
 
