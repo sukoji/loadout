@@ -50,11 +50,23 @@ Use Glob/Grep/Read. Keep it to a handful of targeted checks. Summarize the profi
 
 ## Step 3 — Present the loadout for selection
 
-Show a tight table first: each recommended item as **name — one-line why it fits _this_ project**,
-grouped by kind (MCP / Hooks & settings / Skills). Then call `AskUserQuestion` with
-`multiSelect: true` so the user checks what they want. Put the strongest 2–3 picks first and mark the
-top one "(Recommended)". Include items that need auth/tokens but label them clearly (e.g.
-"needs a Figma token", "OAuth on first use").
+First show a tight table so the user can decide informed — one row per item with these columns:
+
+| Item | Kind | What it does | Needs |
+| :-- | :-- | :-- | :-- |
+| name | MCP · official/community, hook, or skill | one plain-language line | a token / login, or "—" |
+
+Group by kind (MCP / Hooks & settings / Skills). Then call `AskUserQuestion` with `multiSelect: true`.
+**Every option must be self-explanatory** — a user should never have to guess what a checkbox means:
+
+- **label** = the item name.
+- **description** = `[kind · official/community] <one-line what it does>. <auth note>. Source: <homepage>` —
+  e.g. `[MCP · community] Drives a real browser to test/verify web UIs. No auth. Source: github.com/microsoft/playwright-mcp`,
+  or `[MCP · official] Read/write your Notion pages. Needs a Notion integration token. Source: …`.
+
+Put the strongest 2–3 picks first and mark the top one "(Recommended)". Always spell out auth/token needs
+in the option itself (e.g. "needs a Figma token", "needs a Stripe secret key", "OAuth on first use") so no
+one installs something and then hits a wall.
 
 If a project signal is ambiguous (e.g. no clear framework), ask one short clarifying question about the
 project's domain before recommending — don't guess wildly.

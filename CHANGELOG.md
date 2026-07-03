@@ -6,6 +6,14 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [HANDOFF.md](HANDOFF.md) §6 for the live task board.
 
+## [0.2.1] — 2026-07-03
+### Changed
+- Clearer candidate display: each recommended item now shows its kind + **official/community**, an
+  **auth/token** badge, and a **source link**, so you know what you're choosing before you pick. The
+  `/loadout:recommend` skill presents the same detail in its selection prompt.
+### Removed
+- Dropped a legacy account email from the `plugin.json` / `marketplace.json` author fields.
+
 ## [0.2.0] — 2026-07-03
 ### Added
 - **Catalog expanded 25 → 35 entries**, all verified: MCP servers **Supabase, MongoDB, Stripe, Notion,
@@ -41,6 +49,7 @@ as the `sukoji/loadout` Claude Code plugin marketplace.
 - Removed a phantom `qa` domain reference from the `playwright` catalog entry and the validator whitelist
   that was masking it.
 
-[Unreleased]: https://github.com/sukoji/loadout/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/sukoji/loadout/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/sukoji/loadout/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/sukoji/loadout/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/sukoji/loadout/releases/tag/v0.1.0

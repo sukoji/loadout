@@ -3,15 +3,14 @@
   "name": "loadout",
   "description": "Loadout — profile your project and gear up Claude Code with the right skills, MCP servers, and hooks. Not a list you read; a loadout you apply.",
   "owner": {
-    "name": "sukoji",
-    "email": "tirgh2192@gmail.com"
+    "name": "sukoji"
   },
   "plugins": [
     {
       "name": "loadout",
       "source": "./plugins/loadout",
       "description": "Analyze your repo, recommend a domain-matched loadout of Claude Code extensions, and apply the ones you pick — MCP servers, hooks, settings, and skills.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "category": "workflow",
       "keywords": ["setup", "recommender", "mcp", "skills", "hooks", "onboarding", "curated"],
       "homepage": "https://github.com/sukoji/loadout",

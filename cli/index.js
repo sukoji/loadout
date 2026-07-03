@@ -59,11 +59,14 @@ async function main() {
   top.forEach((entry, i) => {
     const { item, reason } = entry;
     const n = c("cyan", String(i + 1).padStart(2));
-    const kind = c("dim", `[${KIND_LABEL[item.type]}]`);
-    const auth = item.auth ? c("yellow", " (needs auth)") : "";
-    console.log(`${n}  ${c("bold", item.name)} ${kind}${auth}`);
+    const src = item.official === true ? " · official" : item.official === false ? " · community" : "";
+    const kind = c("dim", `[${KIND_LABEL[item.type]}${src}]`);
+    const needs = authLabel(item);
+    console.log(`${n}  ${c("bold", item.name)} ${kind}${needs}`);
     console.log(`     ${item.description}`);
-    console.log(c("dim", `     why: ${reason}`) + "\n");
+    console.log(c("dim", `     why: ${reason}`));
+    if (item.homepage) console.log(c("dim", `     ↳ ${item.homepage}`));
+    console.log("");
   });
 
   if (dryRun) {
@@ -132,6 +135,13 @@ function parseSelection(answer, top) {
     a.split(/[\s,]+/).map((t) => parseInt(t, 10) - 1).filter((n) => n >= 0 && n < top.length)
   );
   return [...idx].map((i) => top[i]);
+}
+
+function authLabel(item) {
+  const ph = item.config ? JSON.stringify(item.config).match(/<your-[^>]+>/g) || [] : [];
+  if (ph.length) return c("yellow", ph.length > 1 ? " ⚠ needs tokens" : " ⚠ needs a token");
+  if (item.auth) return c("yellow", " ⚠ login/OAuth on first use");
+  return "";
 }
 
 function describeSignals(signals) {

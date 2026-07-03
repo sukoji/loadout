@@ -2,11 +2,10 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "loadout",
   "displayName": "Loadout",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Profile your project and gear up Claude Code with the right skills, MCP servers, and hooks.",
   "author": {
-    "name": "sukoji",
-    "email": "tirgh2192@gmail.com"
+    "name": "sukoji"
   },
   "homepage": "https://github.com/sukoji/loadout",
   "repository": "https://github.com/sukoji/loadout",
