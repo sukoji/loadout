@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.22 | 2026-07-04 | Flutter/Gradle/Swift scan; mobile recommend tests |
 | 0.3.21 | 2026-07-04 | richer --json (homepage/auth/tokens); doctor summary |
 | 0.3.20 | 2026-07-04 | --all --json apply receipts; fuller hook detectInstalled |
 | 0.3.19 | 2026-07-04 | angular/nestjs/fastify scan; apply --json receipts |

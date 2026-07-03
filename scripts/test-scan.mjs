@@ -75,6 +75,20 @@ try {
   } finally {
     rmSync(nestDir, { recursive: true, force: true });
   }
+
+  const flutterDir = mkdtempSync(join(tmpdir(), "loadout-scan-flutter-"));
+  try {
+    writeFileSync(join(flutterDir, "pubspec.yaml"), "name: demo\nflutter:\n  assets: []\n");
+    writeFileSync(join(flutterDir, "build.gradle"), "android {}\n");
+    const flSignals = scanProject(flutterDir);
+    assert("scan adds pubspec.yaml signal", flSignals.has("pubspec.yaml"));
+    assert("scan adds flutter from pubspec", flSignals.has("flutter"));
+    assert("scan adds build.gradle signal", flSignals.has("build.gradle"));
+    const flTop = recommend(catalog, flSignals).items.slice(0, 8).map((e) => e.item.id);
+    assert("flutter project surfaces context7", flTop.includes("context7"), flTop.join(", "));
+  } finally {
+    rmSync(flutterDir, { recursive: true, force: true });
+  }
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

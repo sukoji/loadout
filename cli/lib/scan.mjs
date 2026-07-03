@@ -83,9 +83,16 @@ export function scanProject(root = process.cwd()) {
     "uv.lock": "uv.lock",
     "angular.json": "angular",
     "nest-cli.json": "nestjs",
+    "build.gradle": "build.gradle",
+    "build.gradle.kts": "build.gradle",
+    "Package.swift": "swift",
   };
   for (const [file, sig] of Object.entries(fileSignals)) {
     if (has(file)) add(sig);
+  }
+  if (has("pubspec.yaml")) {
+    const pub = read("pubspec.yaml").toLowerCase();
+    if (pub.includes("flutter:")) add("flutter");
   }
   for (const f of ["vite.config.ts", "vite.config.js", "vite.config.mjs"]) {
     if (has(f)) add("vite");

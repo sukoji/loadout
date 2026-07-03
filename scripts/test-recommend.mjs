@@ -79,12 +79,23 @@ const gdTop = topNames(godot);
 assert("Godot includes context7", gdTop.includes("context7"), gdTop.join(", "));
 assert("Godot includes guard-dangerous-bash", gdTop.includes("guard-dangerous-bash"), gdTop.join(", "));
 
+// Flutter / mobile.
+const flutter = new Set(["always", "pubspec.yaml", "flutter", "build.gradle", ".git"]);
+const flTop = topNames(flutter);
+assert("Flutter includes context7", flTop.includes("context7"), flTop.join(", "));
+assert("Flutter includes figma or playwright", flTop.includes("figma") || flTop.includes("playwright"), flTop.join(", "));
+
+// Expo / React Native.
+const expo = new Set(["always", "package.json", "expo", "react-native", ".git"]);
+const expoTop = topNames(expo);
+assert("Expo includes context7", expoTop.includes("context7"), expoTop.join(", "));
+assert("Expo excludes postgres by default", !expoTop.includes("postgres"), expoTop.join(", "));
+
 const officialInPool = recommend(catalog, mlResearch).items.filter((e) => e.item.tier === "official").length;
 assert("Official tier capped in pool", officialInPool <= 2, String(officialInPool));
 
-const total = 4 + 3 + 4 + 2 + 1;
 if (failed) {
   console.error(`\n${failed} test(s) failed`);
   process.exit(1);
 }
-console.log(`\nAll ${total} recommend checks passed.`);
+console.log("\nAll recommend checks passed.");

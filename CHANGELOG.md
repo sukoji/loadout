@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.22] — 2026-07-04
+### Added
+- **Scan** — Flutter (`flutter:` in `pubspec.yaml`), `build.gradle` / `.kts`, `Package.swift`.
+- **`test:recommend`** — Flutter and Expo/React Native ranking fixtures.
+
 ## [0.3.21] — 2026-07-04
 ### Added
 - **`--json` recommend** — items include `homepage`, `auth`, and `needsTokens` when relevant.
