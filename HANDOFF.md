@@ -20,7 +20,7 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | Area | State |
 | :-- | :-- |
 | First release shipped & pushed | ✅ on `origin/main`; tagged `v0.1.0` |
-| Published to npm | ✅ `claude-loadout@0.3.6` (loop tick 5). CI: `publish.yml` on tags when `NPM_TOKEN` set. |
+| Published to npm | ✅ `claude-loadout@0.3.6` live. Local `npm publish` uses `~/.npmrc` token. **GitHub Actions `publish` workflow** needs repo secret `NPM_TOKEN` (granular publish token) — without it the job warns and skips (not a hard fail). |
 | Plugin marketplace | ✅ **end-to-end verified from GitHub**: `/plugin marketplace add sukoji/loadout` → `/plugin install loadout@loadout` → `claude plugin details` lists Skills (2): browse, recommend. (Install-blocking bug fixed — see gotcha #8.) |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
 | Catalog | ✅ **3 tiers, 281 items**: 37 curated + 242 official + 2 community. **9 domains** incl. `research`. `npm run test:recommend` guards ranking quality. |

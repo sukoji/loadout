@@ -20,6 +20,19 @@ jobs:
       - name: Verify before publish
         run: npm test
       - name: Publish to npm
-        run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::warning::NPM_TOKEN secret is not set — skipping npm publish."
+            echo "::warning::Add an npm granular token at Settings → Secrets → Actions → NPM_TOKEN"
+            echo "::warning::Or publish locally: npm publish (your ~/.npmrc token still works)."
+            exit 0
+          fi
+          VER=$(node -p "require('./package.json').version")
+          PUBLISHED=$(npm view claude-loadout version 2>/dev/null || true)
+          if [ "$VER" = "$PUBLISHED" ]; then
+            echo "::notice::claude-loadout@$VER is already on npm — skipping publish"
+            exit 0
+          fi
+          npm publish --provenance --access public
