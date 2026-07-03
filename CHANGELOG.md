@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.23] — 2026-07-04
+### Fixed
+- **Mobile ranking** — Figma and Playwright include `flutter` / `expo` / `react-native` signals so they surface in mobile loadouts (hotfix for v0.3.22 test gap).
+
 ## [0.3.22] — 2026-07-04
 ### Added
 - **Scan** — Flutter (`flutter:` in `pubspec.yaml`), `build.gradle` / `.kts`, `Package.swift`.
