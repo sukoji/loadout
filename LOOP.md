@@ -1,5 +1,8 @@
 # LOOP — Loadout improvement until claims are earned
 
+**Cadence goal:** 견고함 · 완성도 · 최신성 · 보안성 · UX — users should set up agents without friction,
+and marketing should never outrun what the tool actually does.
+
 This file drives the `/loop` cadence: keep shipping until Loadout’s promises match real dev **and**
 research utility — not marketing.
 
