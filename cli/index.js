@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout, argv, cwd, exit } from "node:process";
+import { resolve } from "node:path";
 import { loadCatalog } from "./lib/catalog.mjs";
 import { scanProject } from "./lib/scan.mjs";
 import { recommend } from "./lib/recommend.mjs";
 import { apply } from "./lib/apply.mjs";
 import { doctor } from "./lib/doctor.mjs";
+import { buildManifest, writeManifest, applyManifest, readManifestIds } from "./lib/manifest.mjs";
 import { applyToTarget, listTargets, detectTargets, TARGETS } from "./lib/targets.mjs";
 
 const C = {
@@ -22,6 +24,8 @@ async function main() {
 
   if (flags.has("--help") || flags.has("-h")) return printHelp();
   if (positional[0] === "doctor") return runDoctor();
+  if (positional[0] === "export") return runExport(args, flags);
+  if (positional[0] === "apply") return runApplyManifest(args, flags);
 
   const dryRun = flags.has("--dry-run") || flags.has("-d");
   const takeAll = flags.has("--all") || flags.has("-a") || flags.has("--yes") || flags.has("-y");
@@ -161,6 +165,8 @@ function printHelp() {
   console.log(c("bold", "Usage:\n"));
   console.log(`  ${c("cyan", "npx claude-loadout")}              Interactive recommend + apply (Claude Code)`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor")}     Audit .mcp.json + hooks (read-only)`);
+  console.log(`  ${c("cyan", "npx claude-loadout export")}     Write team loadout → .loadout.json`);
+  console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
   console.log(`  ${c("cyan", "npx claude-loadout --dry-run")}  Show recommendations only`);
   console.log(`  ${c("cyan", "npx claude-loadout --all")}      Apply top recommendations without prompting`);
   console.log(`  ${c("cyan", "npx claude-loadout --discover")}  Also show unverified community skills`);
@@ -172,6 +178,57 @@ function printHelp() {
   console.log(`  ${c("yellow", "You run")}       Plugin skills → /plugin install … in Claude Code`);
   console.log(`  ${c("yellow", "You fill")}       API keys / OAuth when a server needs auth\n`);
   console.log(c("dim", "Docs: https://github.com/sukoji/loadout\n"));
+}
+
+function parseOutputPath(args, flags) {
+  for (let i = 0; i < args.length; i++) {
+    if ((args[i] === "--output" || args[i] === "-o") && args[i + 1]) return args[i + 1];
+    if (args[i].startsWith("--output=")) return args[i].slice("--output=".length);
+  }
+  return ".loadout.json";
+}
+
+function parseManifestPath(args) {
+  for (let i = 0; i < args.length; i++) {
+    if ((args[i] === "--from" || args[i] === "-f") && args[i + 1]) return args[i + 1];
+    if (args[i].startsWith("--from=")) return args[i].slice("--from=".length);
+  }
+  const positional = args.filter((a) => !a.startsWith("-"));
+  if (positional[1] && !positional[1].startsWith("-")) return positional[1];
+  return ".loadout.json";
+}
+
+function runExport(args, flags) {
+  const root = cwd();
+  const catalog = loadCatalog();
+  const discover = flags.has("--discover");
+  const outPath = resolve(root, parseOutputPath(args, flags));
+  const manifest = buildManifest(catalog, root, { discover });
+  writeManifest(manifest, outPath);
+  console.log(c("bold", "\n📦 Loadout exported") + c("dim", `  → ${outPath}\n`));
+  console.log(c("dim", `Domains: ${manifest.domains.map((d) => d.title).join(", ")}`));
+  console.log(c("dim", `Items: ${manifest.items.map((i) => i.id).join(", ")}\n`));
+  console.log(c("dim", "Share with your team: npx claude-loadout apply -f .loadout.json\n"));
+}
+
+function runApplyManifest(args, flags) {
+  const root = cwd();
+  const catalog = loadCatalog();
+  const manifestPath = resolve(root, parseManifestPath(args));
+  if (flags.has("--dry-run") || flags.has("-d")) {
+    const ids = readManifestIds(manifestPath);
+    console.log(c("bold", "\nWould apply from") + c("dim", ` ${manifestPath}:\n`));
+    ids.forEach((id) => console.log(`  • ${id}`));
+    console.log("");
+    return;
+  }
+  const { receipt, skipped } = applyManifest(catalog, manifestPath, root);
+  if (skipped.length) {
+    console.log(c("yellow", "Skipped:"));
+    skipped.forEach((s) => console.log(`  • ${s}`));
+    console.log("");
+  }
+  printReceipt(receipt);
 }
 
 function runDoctor() {

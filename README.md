@@ -230,9 +230,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the entry schema.
 
 - [x] Publish `claude-loadout` to npm for `npx`
 - [x] `loadout doctor` — audit an existing setup and suggest what's missing
-- [ ] More domains (game dev, embedded, browser extensions, Rust systems)
-- [ ] Community-voted relevance signals
-- [ ] Team loadouts — share a project loadout via a single file
+- [x] Team loadouts — `export` / `apply -f .loadout.json` for shared manifests
+- [ ] More domains (game dev — done; embedded, browser extensions, Rust systems)
 
 ## License
 

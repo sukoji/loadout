@@ -6,6 +6,12 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.6] — 2026-07-03
+### Added
+- **`npx claude-loadout export`** — write a shareable `.loadout.json` team manifest from the current repo profile.
+- **`npx claude-loadout apply -f .loadout.json`** — apply a shared manifest (MCP + hooks; skills print install commands).
+- **`.github/workflows/publish.yml`** — `npm publish` on `v*` tags when `NPM_TOKEN` repo secret is set.
+
 ## [0.3.5] — 2026-07-03
 ### Added
 - **`game-dev` domain** — Godot (`project.godot`), Unity (`ProjectSettings`), Unreal (`.uproject`) signals.

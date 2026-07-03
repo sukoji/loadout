@@ -18,21 +18,24 @@ research utility — not marketing.
 5. **Research path works** — ✅ Jupyter + paper fixture tests in `test:recommend`.
 6. **Dev path works** — ✅ FastAPI + React fixture tests in `test:recommend`.
 7. **`loadout doctor`** — ✅ v0.3.2 read-only audit (tokens, hook deps, `.env` guard, gaps).
-8. **Distribution** — each iteration: commit → push → `npm publish` (patch bump) → git tag `vX.Y.Z`.
+8. **Distribution** — ✅ commit → push → `npm publish` + tag; optional CI publish via `publish.yml` + `NPM_TOKEN`.
 
-Until then: pick the highest-leverage unchecked item from [HANDOFF.md](HANDOFF.md) §6, ship one slice,
-run §5 verify, release, update §1 + this file’s checklist.
+Until all stop criteria hold: pick the highest-leverage item from [HANDOFF.md](HANDOFF.md) §6, ship one slice,
+run `npm test`, release, update this log.
 
 ## Iteration log
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.6 | 2026-07-03 | team loadout export/apply; CI publish on tag |
 | 0.3.5 | 2026-07-03 | game-dev domain; cross-agent MCP detectInstalled |
-| 0.3.3 | 2026-07-03 | FastAPI recommend tests; KO README parity; Windows doctor hints |
-| 0.3.2 | 2026-07-03 | `doctor`, MCP smoke tests, `--help`, non-interactive UX, CI hardening |
-| 0.3.1 | 2026-07-03 | Research domain; Exa/Tavily curated; Tier-2 noise filter; `test:recommend` |
+| 0.3.4 | 2026-07-03 | Windows Ruff hook; Jupyter research tests; CONTRIBUTING |
+| 0.3.3 | 2026-07-03 | FastAPI recommend tests; KO README parity |
+| 0.3.2 | 2026-07-03 | `doctor`, MCP smoke tests, `--help`, CI hardening |
+| 0.3.1 | 2026-07-03 | Research domain; Tier-2 noise filter; `test:recommend` |
 
 ## Next up (ordered)
 
-1. Expand curated research entries only after runtime verify
-2. Team loadouts / shared loadout file format
+1. Add `NPM_TOKEN` to GitHub repo secrets to enable tag-triggered CI publish
+2. Expand curated research entries only after runtime verify
+3. Codex/OpenClaw `detectInstalled` parity
