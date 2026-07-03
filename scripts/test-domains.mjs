@@ -38,5 +38,9 @@ for (const d of domains) {
 const json = JSON.parse(JSON.stringify(domains.map((d) => ({ id: d.id, title: d.title, loadout: d.loadout }))));
 assert("domains JSON round-trips", json.length === 10);
 
+const research = domains.find((d) => d.id === "research");
+assert("research loadout includes exa-research", research?.loadout?.includes("exa-research"));
+assert("research loadout includes tavily-research", research?.loadout?.includes("tavily-research"));
+
 if (failed) process.exit(1);
 console.log("\nAll domains catalog checks passed.");

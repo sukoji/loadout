@@ -127,6 +127,7 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `doctor` | Read-only audit: tokens, hook deps, cross-agent dupes, gaps |
 | `doctor --json` | Machine-readable audit with `summary` counts (exit 1 when fixes needed) |
 | `domains` | List catalog domains, signal hints, and loadout sizes |
+| `domains <id>` | Show one domain's loadout items |
 | `domains --json` | Domains as JSON |
 | `show <id>` | Show one catalog entry (config, install, homepage) |
 | `show <id> --json` | Entry as JSON |

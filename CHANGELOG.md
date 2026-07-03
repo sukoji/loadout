@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.29] — 2026-07-04
+### Added
+- **`domains <id>`** — show one domain's loadout items (with `--json`).
+- **`show`** — suggests similar catalog ids when the id is unknown.
+
 ## [0.3.28] — 2026-07-04
 ### Added
 - **`show <id>` / `show <id> --json`** — inspect one catalog entry (config, install commands, homepage).

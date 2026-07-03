@@ -31,7 +31,7 @@ async function main() {
   if (flags.has("--help") || flags.has("-h")) return printHelp();
   if (flags.has("--version") || flags.has("-V")) return console.log(PKG_VERSION);
   if (positional[0] === "doctor") return runDoctor(flags);
-  if (positional[0] === "domains") return runDomains(flags);
+  if (positional[0] === "domains") return runDomains(positional[1], flags);
   if (positional[0] === "show") return runShow(positional[1], flags);
   if (positional[0] === "export") return runExport(args, flags);
   if (positional[0] === "apply") return runApplyManifest(args, flags);
@@ -196,6 +196,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout doctor")}     Audit .mcp.json + hooks (read-only)`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor --json")}  Machine-readable audit (exit 1 on fixes)`);
   console.log(`  ${c("cyan", "npx claude-loadout domains")}    List catalog domains and loadout sizes`);
+  console.log(`  ${c("cyan", "npx claude-loadout domains research")}  Show one domain's loadout`);
   console.log(`  ${c("cyan", "npx claude-loadout domains --json")}  Domains as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout show context7")}  Show one catalog entry`);
   console.log(`  ${c("cyan", "npx claude-loadout show context7 --json")}  Entry as JSON`);
@@ -300,10 +301,16 @@ function runShow(id, flags = new Set()) {
     console.error(c("yellow", "Usage: npx claude-loadout show <id>"));
     exit(1);
   }
-  const { byId } = loadCatalog();
+  const { byId, all } = loadCatalog();
   const item = byId.get(id);
   if (!item) {
     console.error(c("yellow", `Unknown catalog id: ${id}`));
+    const q = id.toLowerCase();
+    const hints = all
+      .map((i) => i.id)
+      .filter((x) => x.includes(q) || q.includes(x) || x.split("-").some((p) => q.includes(p)))
+      .slice(0, 5);
+    if (hints.length) console.error(c("dim", `Did you mean: ${hints.join(", ")}?`));
     exit(1);
   }
   if (flags.has("--json")) {
@@ -328,8 +335,47 @@ function runShow(id, flags = new Set()) {
   console.log("");
 }
 
-function runDomains(flags = new Set()) {
-  const { domains } = loadCatalog();
+function runDomains(domainId, flags = new Set()) {
+  const { domains, byId } = loadCatalog();
+  if (domainId) {
+    const d = domains.find((x) => x.id === domainId);
+    if (!d) {
+      console.error(c("yellow", `Unknown domain: ${domainId}`));
+      console.error(c("dim", `Known: ${domains.map((x) => x.id).join(", ")}`));
+      exit(1);
+    }
+    const items = (d.loadout || []).map((id) => {
+      const item = byId.get(id) || byId.get(`${id}-win`);
+      return {
+        id,
+        name: item?.name || id,
+        type: item?.type || "unknown",
+        tier: item?.tier || "curated",
+      };
+    });
+    const payload = {
+      id: d.id,
+      title: d.title,
+      title_ko: d.title_ko,
+      blurb: d.blurb,
+      signals: d.signals || [],
+      items,
+    };
+    if (flags.has("--json")) {
+      console.log(JSON.stringify(payload, null, 2));
+      return;
+    }
+    console.log(c("bold", `\n📚 ${d.title}`) + c("dim", `  (${d.id})\n`));
+    if (d.blurb) console.log(`  ${d.blurb}\n`);
+    console.log(c("dim", `  signals: ${(d.signals || []).filter((s) => s !== "always").join(", ") || "(always)"}`));
+    console.log(c("bold", "\n  Loadout:\n"));
+    for (const it of items) {
+      console.log(`  ${c("cyan", it.id.padEnd(22))} ${it.name} ${c("dim", `[${it.type}]`)}`);
+    }
+    console.log(c("dim", `\n  Show one item: npx claude-loadout show ${items[0]?.id || "<id>"}\n`));
+    return;
+  }
+
   const rows = domains.map((d) => ({
     id: d.id,
     title: d.title,
@@ -346,7 +392,8 @@ function runDomains(flags = new Set()) {
     console.log(`  ${c("cyan", d.id.padEnd(14))} ${c("bold", d.title)}`);
     console.log(c("dim", `                 ${d.loadout.length} items · signals: ${d.signals.filter((s) => s !== "always").slice(0, 6).join(", ")}${d.signals.length > 7 ? "…" : ""}`));
   }
-  console.log(c("dim", "\nDocs: https://github.com/sukoji/loadout/tree/main/docs/domains\n"));
+  console.log(c("dim", "\nTip: npx claude-loadout domains research"));
+  console.log(c("dim", "Docs: https://github.com/sukoji/loadout/tree/main/docs/domains\n"));
 }
 
 function runDoctor(flags = new Set()) {

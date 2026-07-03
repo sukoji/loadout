@@ -26,6 +26,10 @@ assert("exa-research has install commands", Boolean(skill?.install?.commands?.le
 const missing = byId.get("definitely-not-a-real-id");
 assert("unknown id is absent", !missing);
 
+const allIds = [...byId.keys()];
+const hints = allIds.filter((x) => x.includes("context")).slice(0, 5);
+assert("fuzzy hint finds context7", hints.includes("context7"));
+
 const json = JSON.parse(JSON.stringify(item));
 assert("item JSON round-trips", json.id === "context7" && json.config);
 
