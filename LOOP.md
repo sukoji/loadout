@@ -29,7 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
-| 0.3.9 | 2026-07-03 | doctor duplicate MCP warning; test:doctor |
+| 0.3.10 | 2026-07-03 | export installed field; test:manifest |
 | 0.3.5 | 2026-07-03 | game-dev domain; cross-agent MCP detectInstalled |
 | 0.3.4 | 2026-07-03 | Windows Ruff hook; Jupyter research tests; CONTRIBUTING |
 | 0.3.3 | 2026-07-03 | FastAPI recommend tests; KO README parity |

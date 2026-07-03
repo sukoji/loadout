@@ -207,6 +207,9 @@ function runExport(args, flags) {
   writeManifest(manifest, outPath);
   console.log(c("bold", "\n📦 Loadout exported") + c("dim", `  → ${outPath}\n`));
   console.log(c("dim", `Domains: ${manifest.domains.map((d) => d.title).join(", ")}`));
+  if (manifest.installed?.length) {
+    console.log(c("dim", `Already installed (excluded): ${manifest.installed.join(", ")}`));
+  }
   console.log(c("dim", `Items: ${manifest.items.map((i) => i.id).join(", ")}\n`));
   console.log(c("dim", "Share with your team: npx claude-loadout apply -f .loadout.json\n"));
 }

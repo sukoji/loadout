@@ -7,11 +7,12 @@ import { apply } from "./apply.mjs";
 // Build a shareable team loadout manifest from the current project profile.
 export function buildManifest(catalog, root = process.cwd(), opts = {}) {
   const signals = scanProject(root);
-  const { domains, items } = recommend(catalog, signals, root, opts);
+  const { domains, items, installed } = recommend(catalog, signals, root, opts);
   return {
     version: 1,
     generatedAt: new Date().toISOString(),
     domains: domains.map((d) => ({ id: d.id, title: d.title })),
+    installed: [...installed],
     items: items.slice(0, 12).map(({ item, reason }) => ({
       id: item.id,
       name: item.name,
