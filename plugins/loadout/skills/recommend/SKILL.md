@@ -82,6 +82,16 @@ After applying, print a short receipt: what was written to which file, what toke
 and the exact next commands to run. Remind the user to restart Claude Code (or `/reload-plugins`) so new
 MCP servers and plugins load.
 
+## Other agents (Codex, Cursor, opencode, Gemini, OpenClaw)
+
+This skill configures **Claude Code**. MCP servers are portable to other agents; skills and hooks are not.
+If the user wants the same MCP servers set up for another agent, tell them to run
+`npx claude-loadout --target <codex|cursor|opencode|gemini|openclaw|all>` in the project — or, if asked,
+write that agent's config directly from the catalog's MCP `config` fields, using the correct file and shape:
+Codex `.codex/config.toml` (`[mcp_servers.NAME]`), Cursor `.cursor/mcp.json` (`mcpServers`), Gemini
+`.gemini/settings.json` (`mcpServers`), opencode `opencode.json` (`mcp.NAME`, `type: local`, `command` array,
+`environment`), OpenClaw `~/.openclaw/openclaw.json` (`mcp.servers.NAME`). Never write skills/hooks to these.
+
 ## Guardrails
 
 - Read config before writing it; produce a minimal, valid merge. If you can't safely merge, show the

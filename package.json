@@ -1,7 +1,7 @@
 {
   "name": "claude-loadout",
   "version": "0.1.0",
-  "description": "Profile your project and gear up Claude Code with the right skills, MCP servers, and hooks. A recommender + installer, not a list you read.",
+  "description": "Profile your project and gear up your coding agent with the right MCP servers, skills, and hooks. Claude Code, Codex, Cursor, opencode, Gemini CLI & OpenClaw. A recommender + installer, not a list you read.",
   "type": "module",
   "bin": {
     "loadout": "cli/index.js"
@@ -24,6 +24,13 @@
     "claude",
     "claude-code",
     "mcp",
+    "model-context-protocol",
+    "codex",
+    "cursor",
+    "opencode",
+    "gemini-cli",
+    "openclaw",
+    "ai-agents",
     "skills",
     "hooks",
     "recommender",

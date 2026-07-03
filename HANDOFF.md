@@ -24,6 +24,7 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
 | Catalog | ✅ 25 items (12 MCP, 7 skills, 6 hooks), 8 domains, `validate-catalog.mjs` = 0 warnings |
 | CLI (`node cli/index.js`) | ✅ zero-dep; profiles React & Python/ML correctly, writes valid `.mcp.json` + `.claude/settings.json`, idempotent (re-run skips installed). §5 `--dry-run` is read-only; reproduce the write/idempotency path with the optional test in §5. |
+| Cross-agent targets | ✅ `--target codex\|cursor\|gemini\|opencode\|openclaw\|all` writes each agent's MCP config in its verified format (TOML for Codex, JSON for the rest). Tested emitting all formats + HTTP handling. Skills/hooks stay Claude-only. Code: `cli/lib/targets.mjs`. |
 | Docs | ✅ `docs/domains/*.md` auto-generated, in sync with catalog |
 | CI | ✅ `.github/workflows/validate.yml` runs validate + docs-sync gate |
 
@@ -47,8 +48,9 @@ plugins/loadout/
   skills/browse/SKILL.md            ← read-only catalog browse
   catalog/*.json                    ← ⭐ CANONICAL SOURCE OF TRUTH (mcp, skills, hooks, domains)
 cli/
-  index.js                          ← CLI entry (scan→recommend→pick→apply), zero deps
+  index.js                          ← CLI entry (scan→recommend→pick→apply, --target), zero deps
   lib/{catalog,scan,recommend,apply}.mjs
+  lib/targets.mjs                   ← cross-agent adapters (codex/cursor/gemini/opencode/openclaw)
 scripts/
   validate-catalog.mjs              ← integrity checks (run before every commit)
   build-docs.mjs                    ← regenerates docs/domains/ from catalog
@@ -84,6 +86,14 @@ CONTRIBUTING.md                     ← catalog entry schema
 8. **Marketplace plugin `source` must be an explicit relative path** (`"source": "./plugins/loadout"`).
    The `metadata.pluginRoot` + bare `"source": "loadout"` form *validates* but **fails at install time**
    on current Claude Code with "source type your Claude Code version does not support." Don't reintroduce it.
+9. **Cross-agent config formats are verified against official docs** (see `cli/lib/targets.mjs` header comment).
+   Codex uses TOML `[mcp_servers.NAME]` and (stable) supports stdio only — HTTP MCPs are skipped with a note.
+   opencode combines command+args into ONE array and uses `environment` (not `env`). OpenClaw nests under
+   `mcp.servers` and uses `transport: streamable-http` for HTTP. Don't "simplify" these to the Claude shape.
+10. **`detectInstalled()` (recommend.mjs) only checks Claude config** (`.mcp.json`, `.claude/settings.json`).
+    For non-Claude targets it doesn't yet know what's already installed, so the recommend list may re-offer
+    MCP servers already in e.g. `.cursor/mcp.json`. Apply is still safe (JSON overwrite by key is idempotent;
+    Codex TOML skips existing tables). Making detection target-aware is a good follow-up task.
 
 ---
 

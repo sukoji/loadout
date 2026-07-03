@@ -10,6 +10,8 @@ It figures out which **MCP servers, hooks, and skills** actually fit your stack,
 ranked list with a reason for each, and **installs the ones you pick** — writing the config for you.
 One command instead of reading a 500-item "awesome" list and copy-pasting install commands by hand.
 
+**Works across agents:** full setup for Claude Code, and MCP servers for **Codex, Cursor, opencode, Gemini CLI & OpenClaw** too.
+
 [English](README.md) · [한국어](README.ko.md)
 
 ![status](https://img.shields.io/badge/status-alpha-orange)
@@ -97,6 +99,31 @@ npx claude-loadout --all      # apply the whole recommended loadout
 ```
 
 Zero dependencies, ~1s, nothing to install globally.
+
+## Works with your agent — not just Claude Code
+
+MCP servers are portable across today's agents; only the config file and format differ. Loadout writes
+the right one for each. Skills and hooks are Claude Code-native, so for other agents Loadout applies the
+MCP servers and tells you what's Claude-only.
+
+```bash
+npx claude-loadout --target codex        # writes ~/.codex-style .codex/config.toml
+npx claude-loadout --target cursor        # writes .cursor/mcp.json
+npx claude-loadout --target claude,cursor # apply to several at once
+npx claude-loadout --target all           # every supported agent
+npx claude-loadout --list-targets         # see them all
+```
+
+| Target (`--target`) | Agent | Config file | MCP format |
+| :-- | :-- | :-- | :-- |
+| `claude` *(default)* | Claude Code | `.mcp.json` + `.claude/settings.json` | `mcpServers` + skills/hooks |
+| `cursor` | Cursor | `.cursor/mcp.json` | `mcpServers` |
+| `gemini` | Gemini CLI | `.gemini/settings.json` | `mcpServers` |
+| `opencode` | opencode | `opencode.json` | `mcp` (`type: local`) |
+| `codex` | Codex CLI | `.codex/config.toml` | `[mcp_servers.*]` (TOML) |
+| `openclaw` | OpenClaw | `~/.openclaw/openclaw.json` | `mcp.servers` |
+
+If you don't pass `--target`, Loadout targets Claude Code and points out any other agents it detects in the project.
 
 ## Why this is different
 

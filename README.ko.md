@@ -10,6 +10,8 @@
 **고른 것만 설치**합니다 — 설정 파일까지 대신 작성해서요. 500개짜리 "awesome" 리스트를 읽고 설치 명령을 손으로
 복붙하는 대신, 명령어 하나로.
 
+**에이전트 횡단:** Claude Code는 풀 세팅, **Codex·Cursor·opencode·Gemini CLI·OpenClaw**에는 MCP 서버까지 적용.
+
 [English](README.md) · [한국어](README.ko.md)
 
 ![status](https://img.shields.io/badge/status-alpha-orange)
@@ -91,6 +93,30 @@ npx claude-loadout --all      # 추천 로드아웃 전체 적용
 ```
 
 의존성 0개, 약 1초, 전역 설치 불필요.
+
+## 내 에이전트에서 작동 — Claude Code 전용이 아님
+
+MCP 서버는 요즘 에이전트 전반에 이식 가능하고, 설정 파일과 형식만 다릅니다. Loadout이 각각에 맞는 걸 써줍니다.
+스킬·훅은 Claude Code 전용이라, 다른 에이전트에는 MCP 서버만 적용하고 Claude 전용인 건 알려줍니다.
+
+```bash
+npx claude-loadout --target codex        # .codex/config.toml 작성
+npx claude-loadout --target cursor        # .cursor/mcp.json 작성
+npx claude-loadout --target claude,cursor # 여러 개 동시 적용
+npx claude-loadout --target all           # 지원하는 모든 에이전트
+npx claude-loadout --list-targets         # 전체 목록 보기
+```
+
+| 타깃 (`--target`) | 에이전트 | 설정 파일 | MCP 형식 |
+| :-- | :-- | :-- | :-- |
+| `claude` *(기본)* | Claude Code | `.mcp.json` + `.claude/settings.json` | `mcpServers` + 스킬/훅 |
+| `cursor` | Cursor | `.cursor/mcp.json` | `mcpServers` |
+| `gemini` | Gemini CLI | `.gemini/settings.json` | `mcpServers` |
+| `opencode` | opencode | `opencode.json` | `mcp` (`type: local`) |
+| `codex` | Codex CLI | `.codex/config.toml` | `[mcp_servers.*]` (TOML) |
+| `openclaw` | OpenClaw | `~/.openclaw/openclaw.json` | `mcp.servers` |
+
+`--target`를 안 주면 Claude Code를 대상으로 하고, 프로젝트에서 감지된 다른 에이전트가 있으면 알려줍니다.
 
 ## 무엇이 다른가
 

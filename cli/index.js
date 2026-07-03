@@ -5,6 +5,7 @@ import { loadCatalog } from "./lib/catalog.mjs";
 import { scanProject } from "./lib/scan.mjs";
 import { recommend } from "./lib/recommend.mjs";
 import { apply } from "./lib/apply.mjs";
+import { applyToTarget, listTargets, detectTargets, TARGETS } from "./lib/targets.mjs";
 
 const C = {
   reset: "\x1b[0m", bold: "\x1b[1m", dim: "\x1b[2m",
@@ -14,21 +15,38 @@ const c = (color, s) => `${C[color]}${s}${C.reset}`;
 const KIND_LABEL = { mcp: "MCP server", hook: "Hook/setting", setting: "Hook/setting", skill: "Skill", reference: "Reference" };
 
 async function main() {
-  const flags = new Set(argv.slice(2).filter((a) => a.startsWith("-")));
+  const args = argv.slice(2);
+  const flags = new Set(args.filter((a) => a.startsWith("-")));
   const dryRun = flags.has("--dry-run") || flags.has("-d");
   const takeAll = flags.has("--all") || flags.has("-a") || flags.has("--yes") || flags.has("-y");
+
+  if (flags.has("--list-targets")) return printTargets();
+
+  const targets = parseTargets(args);
+  const invalid = targets.filter((t) => !TARGETS[t]);
+  if (invalid.length) {
+    console.error(c("yellow", `Unknown target(s): ${invalid.join(", ")}`) + c("dim", "  (run --list-targets)"));
+    exit(1);
+  }
+  // Skills and hooks are Claude-Code-native; other agents only take MCP servers.
+  const mcpOnly = !targets.includes("claude");
 
   const catalog = loadCatalog();
   const root = cwd();
 
-  console.log(c("bold", "\n🎯 Loadout") + c("dim", "  — gearing up Claude Code for this project\n"));
+  const targetLabels = targets.map((t) => TARGETS[t].label).join(", ");
+  console.log(c("bold", "\n🎯 Loadout") + c("dim", `  — gearing up ${targetLabels} for this project\n`));
 
   const signals = scanProject(root);
-  const { domains, items, installed } = recommend(catalog, signals, root);
+  let { domains, items, installed } = recommend(catalog, signals, root);
+  if (mcpOnly) items = items.filter((e) => e.item.type === "mcp");
 
   console.log(c("dim", "Detected: ") + describeSignals(signals));
   console.log(c("dim", "Best-fit domains: ") + domains.map((d) => c("magenta", d.title)).join(c("dim", ", ")));
+  const detected = detectTargets(root).filter((t) => !targets.includes(t));
+  if (detected.length) console.log(c("dim", `Also configured here: ${detected.map((t) => TARGETS[t].label).join(", ")} (target them with --target)`));
   if (installed.length) console.log(c("dim", `Already configured (skipped): ${installed.join(", ")}`));
+  if (mcpOnly) console.log(c("dim", "Non-Claude target → showing MCP servers only (skills/hooks are Claude Code-native)."));
   console.log("");
 
   if (!items.length) {
@@ -70,8 +88,40 @@ async function main() {
     return;
   }
 
-  const receipt = apply(picks.map((p) => p.item), root);
-  printReceipt(receipt);
+  const picked = picks.map((p) => p.item);
+  for (const t of targets) {
+    if (t === "claude") {
+      printReceipt(apply(picked, root));
+    } else {
+      const mcp = picked.filter((i) => i.type === "mcp");
+      printTargetReceipt(applyToTarget(t, mcp, root));
+    }
+  }
+}
+
+function parseTargets(args) {
+  const out = [];
+  for (let i = 0; i < args.length; i++) {
+    const a = args[i];
+    if (a === "--target" || a === "-t") {
+      const v = args[i + 1];
+      if (v && !v.startsWith("-")) { out.push(...v.split(",")); i++; }
+    } else if (a.startsWith("--target=")) {
+      out.push(...a.slice("--target=".length).split(","));
+    }
+  }
+  const ids = out.map((s) => s.trim().toLowerCase()).filter(Boolean);
+  if (ids.includes("all")) return Object.keys(TARGETS);
+  return ids.length ? [...new Set(ids)] : ["claude"];
+}
+
+function printTargets() {
+  console.log(c("bold", "\nSupported targets") + c("dim", "  (--target <id>, comma-separated, or 'all')\n"));
+  for (const t of listTargets()) {
+    const where = t.scope === "home" ? "~/" + t.file : t.file;
+    console.log(`  ${c("cyan", t.id.padEnd(9))} ${c("bold", t.label.padEnd(13))} ${c("dim", where)}`);
+  }
+  console.log(c("dim", "\nMCP servers apply to every target. Skills & hooks are Claude Code-native.\n"));
 }
 
 function parseSelection(answer, top) {
@@ -106,6 +156,21 @@ function printReceipt(r) {
     r.tokens.forEach((t) => console.log(`     ${t}`));
   }
   console.log(c("dim", "\nRestart Claude Code (or /reload-plugins) so new MCP servers load.\n"));
+}
+
+function printTargetReceipt(r) {
+  console.log(c("bold", `\n✅ ${r.label}:\n`));
+  if (r.added.length) console.log(`  ${c("cyan", r.file)}\n     + ${r.added.join(", ")}`);
+  if (r.skipped.length) {
+    console.log(c("dim", "  skipped:"));
+    r.skipped.forEach((s) => console.log(c("dim", `     - ${s}`)));
+  }
+  if (r.tokens.length) {
+    console.log(c("yellow", "\n⚠  Needs your attention:"));
+    r.tokens.forEach((t) => console.log(`     ${t}`));
+  }
+  if (!r.added.length && !r.skipped.length) console.log(c("dim", "  (no MCP servers to add)"));
+  console.log(c("dim", `\nRestart ${r.label} so new MCP servers load.\n`));
 }
 
 main().catch((err) => {

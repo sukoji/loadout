@@ -5,6 +5,12 @@ All notable changes to Loadout are documented here. Format loosely follows
 
 ## [Unreleased]
 ### Added
+- **Cross-agent targets.** MCP servers now apply to Codex (`.codex/config.toml`), Cursor
+  (`.cursor/mcp.json`), Gemini CLI (`.gemini/settings.json`), opencode (`opencode.json`), and OpenClaw
+  (`~/.openclaw/openclaw.json`) — not just Claude Code. New CLI flags: `--target <id[,id]>`,
+  `--target all`, `--list-targets`, plus detection of other agents configured in the project.
+  Config formats verified against each agent's official docs. Zero-dependency TOML emitter for Codex;
+  HTTP MCPs are skipped for Codex (stdio only) with a note. Skills/hooks stay Claude Code-native.
 - Designed SVG hero banner (`assets/banner.svg`) and clearer plain-language README intro.
 
 ### Fixed
