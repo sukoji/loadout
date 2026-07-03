@@ -6,13 +6,10 @@
     "name": "sukoji",
     "email": "tirgh2192@gmail.com"
   },
-  "metadata": {
-    "pluginRoot": "./plugins"
-  },
   "plugins": [
     {
       "name": "loadout",
-      "source": "loadout",
+      "source": "./plugins/loadout",
       "description": "Analyze your repo, recommend a domain-matched loadout of Claude Code extensions, and apply the ones you pick — MCP servers, hooks, settings, and skills.",
       "version": "0.1.0",
       "category": "workflow",
