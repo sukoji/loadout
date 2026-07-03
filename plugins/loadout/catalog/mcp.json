@@ -1,0 +1,185 @@
+[
+  {
+    "id": "filesystem",
+    "type": "mcp",
+    "name": "Filesystem",
+    "description": "Give Claude scoped read/write access to specific directories outside the project root — useful for cross-repo work, shared asset folders, or a downloads dir.",
+    "domains": ["general", "backend-api", "data-ml", "devops"],
+    "signals": ["always"],
+    "auth": false,
+    "official": true,
+    "homepage": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."]
+    }
+  },
+  {
+    "id": "git",
+    "type": "mcp",
+    "name": "Git",
+    "description": "Structured git operations (status, log, diff, blame, branch) as first-class tools instead of shell parsing. Handy for history-heavy tasks and safer diffs.",
+    "domains": ["general", "backend-api", "devops"],
+    "signals": [".git", "always"],
+    "auth": false,
+    "official": true,
+    "homepage": "https://github.com/modelcontextprotocol/servers/tree/main/src/git",
+    "config": {
+      "command": "uvx",
+      "args": ["mcp-server-git"]
+    }
+  },
+  {
+    "id": "fetch",
+    "type": "mcp",
+    "name": "Fetch",
+    "description": "Fetch a URL and convert it to clean markdown for the model. Lightweight web reading without a full browser.",
+    "domains": ["general", "docs-writing", "data-ml"],
+    "signals": ["always"],
+    "auth": false,
+    "official": true,
+    "homepage": "https://github.com/modelcontextprotocol/servers/tree/main/src/fetch",
+    "config": {
+      "command": "uvx",
+      "args": ["mcp-server-fetch"]
+    }
+  },
+  {
+    "id": "sequential-thinking",
+    "type": "mcp",
+    "name": "Sequential Thinking",
+    "description": "A scratchpad tool that lets the model plan and revise multi-step reasoning explicitly. Helps on complex, branching problems.",
+    "domains": ["general", "data-ml"],
+    "signals": ["always"],
+    "auth": false,
+    "official": true,
+    "homepage": "https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    }
+  },
+  {
+    "id": "memory",
+    "type": "mcp",
+    "name": "Memory (knowledge graph)",
+    "description": "A persistent knowledge-graph memory the model can write to and query across sessions. Good for long-running projects that accumulate facts.",
+    "domains": ["general"],
+    "signals": [],
+    "auth": false,
+    "official": true,
+    "homepage": "https://github.com/modelcontextprotocol/servers/tree/main/src/memory",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    }
+  },
+  {
+    "id": "context7",
+    "type": "mcp",
+    "name": "Context7 (up-to-date docs)",
+    "description": "Pulls version-accurate, up-to-date documentation and code examples for thousands of libraries straight into context — kills 'hallucinated API' bugs. Add 'use context7' to a prompt.",
+    "domains": ["frontend", "backend-api", "data-ml", "mobile", "general"],
+    "signals": ["package.json", "requirements.txt", "go.mod", "Cargo.toml", "always"],
+    "auth": false,
+    "official": false,
+    "homepage": "https://github.com/upstash/context7",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    }
+  },
+  {
+    "id": "playwright",
+    "type": "mcp",
+    "name": "Playwright (browser automation)",
+    "description": "Drive a real browser — navigate, click, fill, assert, screenshot — via structured accessibility snapshots (no pixel guessing). The standard for testing and verifying web UIs.",
+    "domains": ["frontend", "mobile", "qa"],
+    "signals": ["react", "next", "vue", "svelte", "vite", "playwright", "package.json"],
+    "auth": false,
+    "official": false,
+    "homepage": "https://github.com/microsoft/playwright-mcp",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    }
+  },
+  {
+    "id": "chrome-devtools",
+    "type": "mcp",
+    "name": "Chrome DevTools",
+    "description": "Inspect live pages through Chrome DevTools — performance traces, network requests, console, and DOM. Great for debugging real front-end behavior and Core Web Vitals.",
+    "domains": ["frontend"],
+    "signals": ["react", "next", "vue", "svelte", "vite"],
+    "auth": false,
+    "official": false,
+    "homepage": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"]
+    }
+  },
+  {
+    "id": "github",
+    "type": "mcp",
+    "name": "GitHub",
+    "description": "Read and act on GitHub — issues, PRs, code search, Actions, reviews — from inside the session. Uses GitHub's official hosted MCP server (OAuth on first use).",
+    "domains": ["general", "backend-api", "devops"],
+    "signals": [".github", "always"],
+    "auth": true,
+    "official": true,
+    "homepage": "https://github.com/github/github-mcp-server",
+    "config": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
+    }
+  },
+  {
+    "id": "sentry",
+    "type": "mcp",
+    "name": "Sentry",
+    "description": "Pull real error reports, stack traces, and issue context from Sentry so Claude can debug against production reality. Hosted MCP with OAuth.",
+    "domains": ["backend-api", "frontend", "devops"],
+    "signals": ["sentry"],
+    "auth": true,
+    "official": true,
+    "homepage": "https://docs.sentry.io/product/sentry-mcp/",
+    "config": {
+      "type": "http",
+      "url": "https://mcp.sentry.dev/mcp"
+    }
+  },
+  {
+    "id": "postgres",
+    "type": "mcp",
+    "name": "Postgres (read-only)",
+    "description": "Let Claude inspect a Postgres schema and run read-only queries so it writes migrations and queries against your real tables. Point it at a connection string.",
+    "domains": ["backend-api", "data-ml"],
+    "signals": ["postgres", "prisma", "drizzle", "psycopg", "pg"],
+    "auth": true,
+    "official": false,
+    "homepage": "https://github.com/crystaldba/postgres-mcp",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "postgresql://localhost/mydb"]
+    }
+  },
+  {
+    "id": "figma",
+    "type": "mcp",
+    "name": "Figma (Dev Mode)",
+    "description": "Turn Figma designs into accurate code — pull layout, tokens, and component structure from a frame instead of eyeballing a screenshot. Needs a Figma access token.",
+    "domains": ["frontend", "mobile"],
+    "signals": ["react", "next", "vue", "tailwind", "figma"],
+    "auth": true,
+    "official": false,
+    "homepage": "https://github.com/GLips/Figma-Context-MCP",
+    "config": {
+      "command": "npx",
+      "args": ["-y", "figma-developer-mcp", "--stdio"],
+      "env": {
+        "FIGMA_API_KEY": "<your-figma-token>"
+      }
+    }
+  }
+]

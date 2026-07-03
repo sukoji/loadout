@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "loadout",
+  "description": "Loadout — profile your project and gear up Claude Code with the right skills, MCP servers, and hooks. Not a list you read; a loadout you apply.",
+  "owner": {
+    "name": "sukoji",
+    "email": "tirgh2192@gmail.com"
+  },
+  "metadata": {
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "loadout",
+      "source": "loadout",
+      "description": "Analyze your repo, recommend a domain-matched loadout of Claude Code extensions, and apply the ones you pick — MCP servers, hooks, settings, and skills.",
+      "version": "0.1.0",
+      "category": "workflow",
+      "keywords": ["setup", "recommender", "mcp", "skills", "hooks", "onboarding", "curated"],
+      "homepage": "https://github.com/sukoji/loadout",
+      "license": "MIT",
+      "author": {
+        "name": "sukoji"
+      }
+    }
+  ]
+}

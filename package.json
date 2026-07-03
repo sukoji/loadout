@@ -1,0 +1,39 @@
+{
+  "name": "claude-loadout",
+  "version": "0.1.0",
+  "description": "Profile your project and gear up Claude Code with the right skills, MCP servers, and hooks. A recommender + installer, not a list you read.",
+  "type": "module",
+  "bin": {
+    "loadout": "cli/index.js"
+  },
+  "files": [
+    "cli",
+    "plugins/loadout/catalog",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node cli/index.js",
+    "validate": "node scripts/validate-catalog.mjs",
+    "build:docs": "node scripts/build-docs.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "mcp",
+    "skills",
+    "hooks",
+    "recommender",
+    "setup",
+    "cli"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/sukoji/loadout",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sukoji/loadout.git"
+  }
+}

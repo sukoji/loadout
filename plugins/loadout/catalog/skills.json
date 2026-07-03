@@ -1,0 +1,104 @@
+[
+  {
+    "id": "superpowers",
+    "type": "skill",
+    "name": "Superpowers",
+    "description": "A large, battle-tested framework of skills and subagents for planning, TDD, debugging, and disciplined execution. One of the most popular community skill packs; accepted into the official marketplace.",
+    "domains": ["general", "backend-api", "frontend", "data-ml"],
+    "signals": ["always"],
+    "homepage": "https://github.com/obra/superpowers",
+    "install": {
+      "type": "plugin",
+      "marketplace": "obra/superpowers",
+      "plugin": "superpowers",
+      "commands": [
+        "/plugin marketplace add obra/superpowers",
+        "/plugin install superpowers@superpowers"
+      ]
+    }
+  },
+  {
+    "id": "office-docs",
+    "type": "skill",
+    "name": "Office documents (pdf / docx / pptx / xlsx)",
+    "description": "Anthropic's official document skills: read and author real PDF, Word, PowerPoint, and Excel files — tables of contents, letterheads, charts, data merges. Ships in the official marketplace.",
+    "domains": ["docs-writing", "general", "data-ml"],
+    "signals": ["always"],
+    "homepage": "https://github.com/anthropics/skills",
+    "install": {
+      "type": "builtin",
+      "note": "Bundled with Claude Code as the pdf / docx / pptx / xlsx skills, and available in the official Anthropic skills marketplace. No install needed in most setups — just ask Claude to work with the file.",
+      "commands": []
+    }
+  },
+  {
+    "id": "code-review",
+    "type": "skill",
+    "name": "/code-review",
+    "description": "Built-in review of your working diff for correctness bugs and cleanup opportunities at a chosen effort level. Use before every push.",
+    "domains": ["general", "backend-api", "frontend", "data-ml", "devops"],
+    "signals": ["always"],
+    "homepage": "https://code.claude.com/docs/en/commands",
+    "install": {
+      "type": "builtin",
+      "note": "Ships with Claude Code. Run /code-review on your current changes.",
+      "commands": []
+    }
+  },
+  {
+    "id": "security-review",
+    "type": "skill",
+    "name": "/security-review",
+    "description": "Built-in security review of pending changes on the current branch — flags injection, authz gaps, secret handling, and unsafe patterns.",
+    "domains": ["security", "backend-api", "devops"],
+    "signals": ["always"],
+    "homepage": "https://code.claude.com/docs/en/commands",
+    "install": {
+      "type": "builtin",
+      "note": "Ships with Claude Code. Run /security-review before merging.",
+      "commands": []
+    }
+  },
+  {
+    "id": "init-claude-md",
+    "type": "skill",
+    "name": "/init (CLAUDE.md)",
+    "description": "Built-in codebase scan that writes a CLAUDE.md capturing build/test commands and conventions, so every future session starts already knowing your project.",
+    "domains": ["general", "backend-api", "frontend", "data-ml", "devops", "mobile"],
+    "signals": ["always"],
+    "homepage": "https://code.claude.com/docs/en/best-practices",
+    "install": {
+      "type": "builtin",
+      "note": "Ships with Claude Code. Run /init once per repo, then refine the generated file.",
+      "commands": []
+    }
+  },
+  {
+    "id": "skill-creator",
+    "type": "skill",
+    "name": "Skill Creator",
+    "description": "Anthropic's meta-skill for authoring, editing, and eval-testing your own skills — the fastest way to turn a repeated prompt into a reusable /command.",
+    "domains": ["general"],
+    "signals": [],
+    "homepage": "https://github.com/anthropics/skills",
+    "install": {
+      "type": "builtin",
+      "note": "Available in the official Anthropic skills marketplace as skill-creator.",
+      "commands": []
+    }
+  },
+  {
+    "id": "awesome-claude-code",
+    "type": "reference",
+    "name": "awesome-claude-code (discovery list)",
+    "description": "The canonical hand-curated index when you want to browse beyond this loadout. Treat it as a discovery list, not an install list.",
+    "domains": ["general"],
+    "signals": [],
+    "homepage": "https://github.com/hesreallyhim/awesome-claude-code",
+    "install": {
+      "type": "manual",
+      "note": "Reference only — browse and cherry-pick.",
+      "commands": []
+    }
+  }
+]

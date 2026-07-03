@@ -1,0 +1,136 @@
+[
+  {
+    "id": "format-js-on-edit",
+    "type": "hook",
+    "name": "Auto-format JS/TS on edit (Prettier)",
+    "description": "After Claude writes or edits a file, run Prettier on that exact file so the diff is always clean. Keeps you from reviewing formatting noise.",
+    "domains": ["frontend", "backend-api"],
+    "signals": ["package.json", "prettier", "react", "next", "vue", "svelte"],
+    "note": "Requires `jq` and `npx prettier` available. On Windows, run Claude Code from Git Bash/WSL for this shell form, or adapt the command.",
+    "settings": {
+      "hooks": {
+        "PostToolUse": [
+          {
+            "matcher": "Write|Edit",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "jq -r '.tool_input.file_path' | grep -Eq '\\.(js|jsx|ts|tsx|css|scss|json|md|html|vue|svelte)$' && jq -r '.tool_input.file_path' | xargs -r npx --no-install prettier --write 2>/dev/null; exit 0"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "lint-python-on-edit",
+    "type": "hook",
+    "name": "Auto-fix Python on edit (Ruff)",
+    "description": "After Claude edits a .py file, run `ruff --fix` and format on that file. Style stays consistent and lint errors get caught immediately, not at CI.",
+    "domains": ["data-ml", "backend-api"],
+    "signals": ["requirements.txt", "pyproject.toml", "ruff", "python"],
+    "note": "Requires `jq` and `ruff` installed.",
+    "settings": {
+      "hooks": {
+        "PostToolUse": [
+          {
+            "matcher": "Write|Edit",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "f=$(jq -r '.tool_input.file_path'); case \"$f\" in *.py) ruff check --fix \"$f\" 2>/dev/null; ruff format \"$f\" 2>/dev/null;; esac; exit 0"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "guard-dangerous-bash",
+    "type": "hook",
+    "name": "Block dangerous shell commands",
+    "description": "A PreToolUse guard that blocks catastrophic commands (recursive deletes of /, ~, or $HOME, and disk-wipe patterns) before they run. Cheap insurance for autonomous sessions.",
+    "domains": ["security", "general", "devops"],
+    "signals": ["always"],
+    "note": "Requires `jq`. Blocks via exit code 2. Tune the pattern to your needs.",
+    "settings": {
+      "hooks": {
+        "PreToolUse": [
+          {
+            "matcher": "Bash",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "c=$(jq -r '.tool_input.command'); echo \"$c\" | grep -Eq 'rm[[:space:]]+-[a-z]*r[a-z]*f?[[:space:]]+(/|~|\\$HOME|\\*)|mkfs|dd[[:space:]]+if=' && { echo 'loadout: blocked a dangerous command' >&2; exit 2; }; exit 0"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "protect-secrets",
+    "type": "hook",
+    "name": "Refuse to read secret files",
+    "description": "Blocks Read on .env / credential files so secrets never get pulled into context (and can't leak into logs or commits). Good default for any repo with real credentials.",
+    "domains": ["security", "backend-api"],
+    "signals": [".env", "always"],
+    "note": "Requires `jq`. Blocks via exit code 2.",
+    "settings": {
+      "hooks": {
+        "PreToolUse": [
+          {
+            "matcher": "Read",
+            "hooks": [
+              {
+                "type": "command",
+                "command": "f=$(jq -r '.tool_input.file_path'); echo \"$f\" | grep -Eq '(^|/)\\.env($|\\.)|\\.pem$|id_rsa|credentials(\\.json)?$' && { echo 'loadout: refusing to read a secret file' >&2; exit 2; }; exit 0"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "notify-on-stop",
+    "type": "hook",
+    "name": "Ping me when Claude finishes",
+    "description": "Rings the terminal bell (and prints a marker) when Claude stops responding, so you can tab away during long runs and come back when it's your turn.",
+    "domains": ["general"],
+    "signals": ["always"],
+    "note": "The bell works in most terminals. Swap in `osascript`/`notify-send`/`powershell` for a desktop toast.",
+    "settings": {
+      "hooks": {
+        "Stop": [
+          {
+            "hooks": [
+              {
+                "type": "command",
+                "command": "printf '\\a' ; echo 'loadout: Claude is waiting for you.'"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "statusline-git",
+    "type": "setting",
+    "name": "Status line: dir + git branch + model",
+    "description": "A compact status line showing the current directory, git branch, and active model. Small quality-of-life upgrade you notice every session.",
+    "domains": ["general"],
+    "signals": ["always"],
+    "note": "Requires `jq` and `git`. Reads the status JSON Claude Code pipes to the command on stdin.",
+    "settings": {
+      "statusLine": {
+        "type": "command",
+        "command": "input=$(cat); dir=$(echo \"$input\" | jq -r '.workspace.current_dir // .cwd' | sed \"s|$HOME|~|\"); model=$(echo \"$input\" | jq -r '.model.display_name // \"claude\"'); branch=$(git -C \"$(echo \"$input\" | jq -r '.cwd')\" branch --show-current 2>/dev/null); printf '%s  %s  %s' \"$(basename \"$dir\")\" \"${branch:+\\u2387 $branch}\" \"$model\""
+      }
+    }
+  }
+]

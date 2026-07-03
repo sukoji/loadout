@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "loadout",
+  "displayName": "Loadout",
+  "version": "0.1.0",
+  "description": "Profile your project and gear up Claude Code with the right skills, MCP servers, and hooks.",
+  "author": {
+    "name": "sukoji",
+    "email": "tirgh2192@gmail.com"
+  },
+  "homepage": "https://github.com/sukoji/loadout",
+  "repository": "https://github.com/sukoji/loadout",
+  "license": "MIT",
+  "keywords": ["setup", "recommender", "mcp", "skills", "hooks", "onboarding", "curated"]
+}

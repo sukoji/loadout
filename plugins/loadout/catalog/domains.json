@@ -1,0 +1,66 @@
+[
+  {
+    "id": "frontend",
+    "title": "Frontend / Web UI",
+    "title_ko": "프론트엔드 / 웹 UI",
+    "blurb": "React, Vue, Svelte, Next — anything that ships to a browser.",
+    "signals": ["react", "next", "vue", "svelte", "vite", "tailwind", "angular", "package.json"],
+    "loadout": ["context7", "playwright", "chrome-devtools", "figma", "format-js-on-edit", "superpowers", "code-review", "init-claude-md"]
+  },
+  {
+    "id": "backend-api",
+    "title": "Backend / API",
+    "title_ko": "백엔드 / API",
+    "blurb": "Servers, APIs, databases — Node, Python, Go, Rust, Java services.",
+    "signals": ["express", "fastify", "nestjs", "django", "flask", "fastapi", "go.mod", "Cargo.toml", "pom.xml", "prisma", "drizzle", "postgres"],
+    "loadout": ["context7", "postgres", "github", "sentry", "git", "format-js-on-edit", "guard-dangerous-bash", "protect-secrets", "security-review", "code-review", "superpowers", "init-claude-md"]
+  },
+  {
+    "id": "data-ml",
+    "title": "Data / ML / Notebooks",
+    "title_ko": "데이터 / 머신러닝 / 노트북",
+    "blurb": "Python data work, training pipelines, analysis, and reporting.",
+    "signals": ["requirements.txt", "pyproject.toml", "numpy", "pandas", "torch", "tensorflow", "scikit-learn", ".ipynb", "jupyter"],
+    "loadout": ["context7", "fetch", "sequential-thinking", "lint-python-on-edit", "office-docs", "code-review", "superpowers", "init-claude-md"]
+  },
+  {
+    "id": "devops",
+    "title": "DevOps / Infra",
+    "title_ko": "데브옵스 / 인프라",
+    "blurb": "CI/CD, Docker, Terraform, Kubernetes, cloud automation.",
+    "signals": ["Dockerfile", "docker-compose", ".github/workflows", "terraform", "*.tf", "k8s", "helm", "ansible"],
+    "loadout": ["git", "github", "filesystem", "guard-dangerous-bash", "protect-secrets", "security-review", "notify-on-stop", "statusline-git", "code-review"]
+  },
+  {
+    "id": "mobile",
+    "title": "Mobile",
+    "title_ko": "모바일",
+    "blurb": "iOS, Android, React Native, Flutter apps.",
+    "signals": ["react-native", "expo", "flutter", "pubspec.yaml", "swift", "kotlin", "*.xcodeproj", "build.gradle"],
+    "loadout": ["context7", "figma", "playwright", "code-review", "superpowers", "init-claude-md"]
+  },
+  {
+    "id": "security",
+    "title": "Security-sensitive",
+    "title_ko": "보안 민감 프로젝트",
+    "blurb": "Auth, payments, PII, or anything where a mistake is expensive.",
+    "signals": ["auth", "oauth", "jwt", "stripe", "payment", "crypto", ".env"],
+    "loadout": ["guard-dangerous-bash", "protect-secrets", "security-review", "git", "github", "code-review"]
+  },
+  {
+    "id": "docs-writing",
+    "title": "Docs / Writing / Office",
+    "title_ko": "문서 / 글쓰기 / 오피스",
+    "blurb": "Documentation, reports, and real Word/Excel/PDF/PPT deliverables.",
+    "signals": ["docs", "*.md", "mkdocs", "docusaurus", "*.docx", "*.xlsx"],
+    "loadout": ["office-docs", "fetch", "context7", "notify-on-stop"]
+  },
+  {
+    "id": "general",
+    "title": "General / Any project",
+    "title_ko": "일반 / 모든 프로젝트",
+    "blurb": "The always-useful baseline every repo benefits from.",
+    "signals": ["always"],
+    "loadout": ["init-claude-md", "code-review", "superpowers", "context7", "git", "guard-dangerous-bash", "notify-on-stop", "statusline-git"]
+  }
+]
