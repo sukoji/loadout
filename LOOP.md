@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.36 | 2026-07-04 | apply --ids from doctor suggestions |
 | 0.3.35 | 2026-07-04 | doctor JSON suggestions array |
 | 0.3.34 | 2026-07-04 | search --limit; curated homepage validate warn |
 | 0.3.33 | 2026-07-04 | `stats` catalog overview (tick 25) |

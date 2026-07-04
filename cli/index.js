@@ -9,7 +9,7 @@ import { scanProject } from "./lib/scan.mjs";
 import { recommend } from "./lib/recommend.mjs";
 import { apply } from "./lib/apply.mjs";
 import { doctor } from "./lib/doctor.mjs";
-import { buildManifest, writeManifest, applyManifest, readManifestIds, buildRecommendPreview, previewManifestApply } from "./lib/manifest.mjs";
+import { buildManifest, writeManifest, applyManifest, applyItems, readManifestIds, buildRecommendPreview, previewManifestApply, previewItemsApply } from "./lib/manifest.mjs";
 import { applyToTarget, listTargets, detectTargets, TARGETS } from "./lib/targets.mjs";
 import { searchCatalog } from "./lib/search.mjs";
 
@@ -212,6 +212,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout export")}     Write team loadout → .loadout.json`);
   console.log(`  ${c("cyan", "npx claude-loadout export --json")}  Print manifest JSON to stdout`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
+  console.log(`  ${c("cyan", "npx claude-loadout apply --ids playwright,context7")}  Apply specific catalog ids`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --dry-run --json")}  Preview apply as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --json")}  Apply and print receipts as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout --dry-run")}  Show recommendations only`);
@@ -267,31 +268,58 @@ function runExport(args, flags) {
   console.log(c("dim", "Share with your team: npx claude-loadout apply -f .loadout.json\n"));
 }
 
+function parseIds(args) {
+  const raw = parseFlagValue(args, "--ids");
+  if (!raw) return null;
+  return raw.split(",").map((s) => s.trim()).filter(Boolean);
+}
+
 function runApplyManifest(args, flags) {
   const root = cwd();
   const catalog = loadCatalog();
-  const manifestPath = resolve(root, parseManifestPath(args));
+  const idsFromFlag = parseIds(args);
   const targets = parseTargets(args);
   const invalid = targets.filter((t) => !TARGETS[t]);
   if (invalid.length) {
     console.error(c("yellow", `Unknown target(s): ${invalid.join(", ")}`) + c("dim", "  (run --list-targets)"));
     exit(1);
   }
+
+  let ids;
+  let manifestPath = null;
+  if (idsFromFlag?.length) {
+    ids = idsFromFlag;
+  } else {
+    manifestPath = resolve(root, parseManifestPath(args));
+    ids = readManifestIds(manifestPath);
+  }
+
+  const label = targets.map((t) => TARGETS[t].label).join(", ");
+  const source = manifestPath || `--ids ${ids.join(",")}`;
+
   if (flags.has("--dry-run") || flags.has("-d")) {
     if (flags.has("--json")) {
-      console.log(JSON.stringify(previewManifestApply(catalog, manifestPath, { targets }), null, 2));
+      console.log(JSON.stringify(
+        manifestPath
+          ? previewManifestApply(catalog, manifestPath, { targets })
+          : previewItemsApply(catalog, ids, { targets }),
+        null,
+        2,
+      ));
       return;
     }
-    const ids = readManifestIds(manifestPath);
-    const label = targets.map((t) => TARGETS[t].label).join(", ");
-    console.log(c("bold", "\nWould apply from") + c("dim", ` ${manifestPath}`) + c("dim", ` → ${label}:\n`));
+    console.log(c("bold", "\nWould apply from") + c("dim", ` ${source}`) + c("dim", ` → ${label}:\n`));
     ids.forEach((id) => console.log(`  • ${id}`));
     console.log("");
     return;
   }
-  const { receipts, skipped } = applyManifest(catalog, manifestPath, root, { targets });
+
+  const { receipts, skipped } = manifestPath
+    ? applyManifest(catalog, manifestPath, root, { targets })
+    : applyItems(catalog, ids, root, { targets });
+
   if (flags.has("--json")) {
-    console.log(JSON.stringify({ manifest: manifestPath, targets, skipped, receipts }, null, 2));
+    console.log(JSON.stringify({ manifest: manifestPath, ids, targets, skipped, receipts }, null, 2));
     return;
   }
   if (skipped.length) {

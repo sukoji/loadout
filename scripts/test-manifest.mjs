@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { loadCatalog } from "../cli/lib/catalog.mjs";
-import { buildManifest, writeManifest, applyManifest, previewManifestApply } from "../cli/lib/manifest.mjs";
+import { buildManifest, writeManifest, applyManifest, applyItems, previewManifestApply, previewItemsApply } from "../cli/lib/manifest.mjs";
 
 const catalog = loadCatalog();
 const dir = mkdtempSync(join(tmpdir(), "loadout-manifest-"));
@@ -90,6 +90,18 @@ try {
     assert("apply receipts serialize to JSON", applyJson.receipts.some((r) => r.type === "claude"));
   } finally {
     rmSync(minDir, { recursive: true, force: true });
+  }
+
+  const idsDir = mkdtempSync(join(tmpdir(), "loadout-manifest-ids-"));
+  try {
+    const preview = previewItemsApply(catalog, ["sequential-thinking", "not-a-real-id"], { targets: ["claude"] });
+    assert("preview --ids lists sequential-thinking", preview.items.some((i) => i.id === "sequential-thinking"));
+    assert("preview --ids skips unknown id", preview.skipped.some((s) => s.includes("not-a-real-id")));
+    const { receipts: idReceipts, skipped: idSkipped } = applyItems(catalog, ["memory"], idsDir, { targets: ["claude"] });
+    assert("apply --ids writes memory", idReceipts.find((r) => r.type === "claude")?.receipt?.mcp?.includes("memory"));
+    assert("apply --ids has no skips for known id", idSkipped.length === 0);
+  } finally {
+    rmSync(idsDir, { recursive: true, force: true });
   }
 } finally {
   rmSync(dir, { recursive: true, force: true });

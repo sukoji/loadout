@@ -121,6 +121,7 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `export` | Write team loadout manifest → `.loadout.json` (includes `installed` ids) |
 | `export --json` | Print manifest JSON to stdout |
 | `apply -f <file>` | Apply a shared team loadout |
+| `apply --ids id1,id2` | Apply specific catalog ids (e.g. from `doctor --json` suggestions) |
 | `apply -f <file> --target <id>` | Apply manifest MCPs to Cursor, Codex, etc. |
 | `apply -f <file> --dry-run --json` | Preview apply as JSON |
 | `apply -f <file> --json` | Apply and print receipts as JSON |

@@ -80,12 +80,12 @@ export function resolveManifestItems(catalog, ids) {
   return { items, skipped };
 }
 
-export function previewManifestApply(catalog, manifestPath, opts = {}) {
-  const ids = readManifestIds(manifestPath);
+export function previewItemsApply(catalog, ids, opts = {}) {
   const { items, skipped } = resolveManifestItems(catalog, ids);
   const targets = normalizeTargets(opts.targets);
   return {
-    manifest: resolve(manifestPath),
+    ids,
+    manifest: opts.manifestPath ? resolve(opts.manifestPath) : null,
     targets,
     items: items.map((i) => ({ id: i.id, name: i.name, type: i.type, tier: i.tier || "curated" })),
     skipped,
@@ -93,8 +93,11 @@ export function previewManifestApply(catalog, manifestPath, opts = {}) {
   };
 }
 
-export function applyManifest(catalog, manifestPath, root = process.cwd(), opts = {}) {
-  const ids = readManifestIds(manifestPath);
+export function previewManifestApply(catalog, manifestPath, opts = {}) {
+  return previewItemsApply(catalog, readManifestIds(manifestPath), { ...opts, manifestPath });
+}
+
+export function applyItems(catalog, ids, root = process.cwd(), opts = {}) {
   const { items, skipped } = resolveManifestItems(catalog, ids);
   const targets = normalizeTargets(opts.targets);
   const receipts = [];
@@ -117,7 +120,16 @@ export function applyManifest(catalog, manifestPath, root = process.cwd(), opts 
     }
   }
 
-  return { receipts, skipped, manifestPath: resolve(manifestPath) };
+  return {
+    receipts,
+    skipped,
+    ids,
+    manifestPath: opts.manifestPath ? resolve(opts.manifestPath) : null,
+  };
+}
+
+export function applyManifest(catalog, manifestPath, root = process.cwd(), opts = {}) {
+  return applyItems(catalog, readManifestIds(manifestPath), root, { ...opts, manifestPath });
 }
 
 function normalizeTargets(targets) {
