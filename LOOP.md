@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.45 | 2026-07-04 | dogfood guard-dangerous-bash + block-push-to-main |
 | 0.3.44 | 2026-07-04 | dogfood JS hooks; hook PATH deps are warnings |
 | 0.3.43 | 2026-07-04 | dogfood .mcp.json; smarter doctor tip |
 | 0.3.42 | 2026-07-04 | enable loadout-doctor workflow on this repo |
@@ -80,3 +81,4 @@ run `npm test`, release, update this log.
 14. `--mcp-only` / `--limit` + doctor `applyCommand*` — ✅ v0.3.39–0.3.40
 15. GitHub Actions doctor example — ✅ v0.3.41
 16. Dogfood `loadout-doctor` workflow on this repo — ✅ v0.3.42
+17. Dogfood `.mcp.json` + JS/security hooks — ✅ v0.3.43–0.3.45

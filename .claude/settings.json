@@ -19,6 +19,26 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "c=$(jq -r '.tool_input.command'); echo \"$c\" | grep -Eq 'rm[[:space:]]+-[a-z]*r[a-z]*f?[[:space:]]+(/|~|\\$HOME|\\*)|mkfs|dd[[:space:]]+if=' && { echo 'loadout: blocked a dangerous command' >&2; exit 2; }; exit 0"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "c=$(jq -r '.tool_input.command'); echo \"$c\" | grep -Eq 'git[[:space:]]+push' && b=$(git branch --show-current 2>/dev/null) && echo \"$b\" | grep -Eq '^(main|master)$' && { echo \"loadout: refusing to push directly to $b — use a branch + PR\" >&2; exit 2; }; exit 0"
+          }
+        ]
+      }
     ]
   }
 }

@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.45] — 2026-07-04
+### Added
+- **Dogfood** — `guard-dangerous-bash` and `block-push-to-main` hooks in project settings.
+
 ## [0.3.44] — 2026-07-04
 ### Added
 - **Dogfood** — Prettier + ESLint-on-edit hooks in `.claude/settings.json`.
