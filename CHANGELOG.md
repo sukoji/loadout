@@ -6,6 +6,12 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.47] — 2026-07-04
+### Added
+- **`doctor --fix`** — apply auto-writable suggestions (MCP + hooks) in one command; skills stay manual.
+- **`doctor --fix --mcp-only`** / **`--dry-run`** / **`--json`** — scoped fix, preview, and machine-readable receipts.
+- Doctor JSON **`fixCommand`** / **`fixCommandMcpOnly`** fields.
+
 ## [0.3.46] — 2026-07-04
 ### Changed
 - **Recommend** — domain-loadout items with specific signals (e.g. `protect-secrets` → `.env`) are skipped unless a signal matches.

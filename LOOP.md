@@ -1,6 +1,6 @@
 # LOOP — Loadout improvement until claims are earned
 
-**Status: ACTIVE** — Phase 1 stop criteria met at `v0.3.6`. Phase 2 (ticks 1–30) shipped browse/CI/profile/automation UX through `v0.3.38` (`apply --suggestions`). Remaining: optional `NPM_TOKEN` secret and runtime-verified research catalog growth.
+**Status: ACTIVE** — Phase 1 stop criteria met at `v0.3.6`. Phase 2 shipped browse/CI/profile/automation UX through `v0.3.47` (`doctor --fix`). Remaining: optional `NPM_TOKEN` secret and runtime-verified research catalog growth.
 
 **Cadence goal:** 견고함 · 완성도 · 최신성 · 보안성 · UX — users should set up agents without friction,
 and marketing should never outrun what the tool actually does.
@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.47 | 2026-07-04 | `doctor --fix` auto-applies MCP + hooks |
 | 0.3.46 | 2026-07-04 | require signal match for specific-signal loadout items |
 | 0.3.45 | 2026-07-04 | dogfood guard-dangerous-bash + block-push-to-main |
 | 0.3.44 | 2026-07-04 | dogfood JS hooks; hook PATH deps are warnings |
@@ -83,3 +84,5 @@ run `npm test`, release, update this log.
 15. GitHub Actions doctor example — ✅ v0.3.41
 16. Dogfood `loadout-doctor` workflow on this repo — ✅ v0.3.42
 17. Dogfood `.mcp.json` + JS/security hooks — ✅ v0.3.43–0.3.45
+18. Signal-gated loadout items (protect-secrets) — ✅ v0.3.46
+19. `doctor --fix` one-shot apply — ✅ v0.3.47

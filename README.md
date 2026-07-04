@@ -98,7 +98,8 @@ cd your-project
 npx claude-loadout            # interactive
 npx claude-loadout --dry-run  # just show the recommendation
 npx claude-loadout --all      # apply the whole recommended loadout
-npx claude-loadout doctor     # audit tokens, hook deps, security gaps (read-only)
+npx claude-loadout doctor     # audit tokens, hook deps, security gaps
+npx claude-loadout doctor --fix  # apply auto-writable suggestions (MCP + hooks)
 npx claude-loadout export     # team loadout → .loadout.json
 npx claude-loadout apply -f .loadout.json   # apply shared manifest
 npx claude-loadout --help     # full flag list
@@ -128,8 +129,11 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `apply -f <file> --target <id>` | Apply manifest MCPs to Cursor, Codex, etc. |
 | `apply -f <file> --dry-run --json` | Preview apply as JSON |
 | `apply -f <file> --json` | Apply and print receipts as JSON |
-| `doctor` | Read-only audit: tokens, hook deps, cross-agent dupes, gaps |
-| `doctor --json` | Audit JSON with `domains`, `signals`, `suggestions`, `applyCommand*`, and `summary` (exit 1 when fixes needed) |
+| `doctor` | Audit: tokens, hook deps, cross-agent dupes, gaps |
+| `doctor --fix` | Apply auto-writable suggestions (MCP + hooks); skills stay manual |
+| `doctor --fix --mcp-only` | Fix MCP servers only |
+| `doctor --fix --dry-run` | Preview what `--fix` would apply |
+| `doctor --json` | Audit JSON with `domains`, `signals`, `suggestions`, `fixCommand*`, `applyCommand*`, and `summary` (exit 1 when fixes needed) |
 | `domains` | List catalog domains, signal hints, and loadout sizes |
 | `domains <id>` | Show one domain's loadout items |
 | `domains --json` | Domains as JSON |

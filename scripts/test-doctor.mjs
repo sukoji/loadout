@@ -2,7 +2,8 @@
 import { mkdirSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { doctor } from "../cli/lib/doctor.mjs";
+import { readFileSync } from "node:fs";
+import { doctor, doctorFix } from "../cli/lib/doctor.mjs";
 
 const dir = mkdtempSync(join(tmpdir(), "loadout-doctor-"));
 let failed = 0;
@@ -72,6 +73,36 @@ try {
   assert("doctor can build applyCommandMcpOnly", mcpIds.includes("playwright"));
   const applyCmd = `npx claude-loadout apply --ids ${profiled.suggestions.map((s) => s.id).join(",")}`;
   assert("doctor can build applyCommandIds", applyCmd.includes("playwright"));
+
+  const dry = doctorFix(dir, { mcpOnly: true, dryRun: true });
+  assert("doctor --fix --dry-run lists playwright", dry.ids.includes("playwright"));
+  assert("doctor --fix --dry-run does not apply", dry.applied.length === 0);
+  const beforeMcp = JSON.parse(readFileSync(join(dir, ".mcp.json"), "utf8"));
+  assert("dry-run leaves mcp unchanged", !beforeMcp.mcpServers?.playwright);
+
+  const fixed = doctorFix(dir, { mcpOnly: true });
+  assert("doctor --fix applies playwright", fixed.applied.includes("playwright"));
+  const afterMcp = JSON.parse(readFileSync(join(dir, ".mcp.json"), "utf8"));
+  assert("playwright written to .mcp.json", Boolean(afterMcp.mcpServers?.playwright?.command));
+  assert("after fix, playwright not still suggested", !fixed.findings.suggestions.some((s) => s.id === "playwright"));
+
+  const again = doctorFix(dir, { mcpOnly: true });
+  assert("second --fix --mcp-only is no-op", again.applied.length === 0);
+
+  const hooksFix = doctorFix(dir);
+  const hooksBefore = (hooksFix.before.suggestions || []).filter((s) => s.type === "hook" || s.type === "setting");
+  if (hooksBefore.length) {
+    assert(
+      "doctor --fix applies remaining hooks",
+      hooksFix.applied.some((id) => hooksBefore.some((s) => s.id === id)),
+    );
+  } else {
+    assert("no auto hooks left (skills-only or complete)", hooksFix.applied.length === 0);
+    assert(
+      "remaining suggestions are manual-only",
+      hooksFix.manual.every((s) => s.type === "skill" || s.type === "reference"),
+    );
+  }
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

@@ -92,7 +92,8 @@ cd your-project
 npx claude-loadout            # 대화형
 npx claude-loadout --dry-run  # 추천만 보기
 npx claude-loadout --all      # 추천 로드아웃 전체 적용
-npx claude-loadout doctor     # 토큰·훅·보안 감사 (읽기 전용)
+npx claude-loadout doctor     # 토큰·훅·보안 감사
+npx claude-loadout doctor --fix  # 자동 적용 가능한 제안 적용 (MCP + 훅)
 npx claude-loadout export     # 팀 로드아웃 → .loadout.json
 npx claude-loadout apply -f .loadout.json   # 공유 manifest 적용
 npx claude-loadout --help     # 플래그 전체 목록
@@ -104,7 +105,8 @@ npx claude-loadout --help     # 플래그 전체 목록
 | `--json` | 추천 결과 JSON 출력 (CI용) |
 | `--all` / `-a` / `-y` | 상위 추천 전체 자동 적용 |
 | `--all --json` | 상위 추천 적용 후 receipt만 JSON 출력 |
-| `doctor` / `doctor --json` | 미입력 토큰, 훅 의존성, cross-agent 중복, `.env` 보호 훅 (`summary` 포함) |
+| `doctor` / `doctor --json` | 미입력 토큰, 훅 의존성, cross-agent 중복, `.env` 보호 훅 (`summary`, `fixCommand*` 포함) |
+| `doctor --fix` | 자동 적용 가능한 제안 적용 (MCP + 훅; 스킬은 수동) |
 | `domains` / `domains <id>` / `domains --json` | 도메인 목록 또는 한 도메인의 로드아웃 |
 | `show <id>` / `show <id> --json` | 카탈로그 항목 상세 (config, install, homepage) |
 | `search <query>` / `--type` / `--json` | id·이름·설명·시그널·도메인 검색 (`mcp`/`skill`/`hook` 필터) |

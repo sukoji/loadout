@@ -5,6 +5,9 @@ import { execSync } from "node:child_process";
 import { loadCatalog } from "./catalog.mjs";
 import { scanProject } from "./scan.mjs";
 import { recommend } from "./recommend.mjs";
+import { applyItems } from "./manifest.mjs";
+
+const AUTO_APPLY_TYPES = new Set(["mcp", "hook", "setting"]);
 
 const TOKEN_RE = /<your-[^>]+>/g;
 const HOOK_DEPS = {
@@ -74,6 +77,46 @@ export function doctor(root = process.cwd()) {
   }
 
   return findings;
+}
+
+/** Apply auto-writable doctor suggestions (MCP + hooks). Skills stay manual. */
+export function doctorFix(root = process.cwd(), opts = {}) {
+  const catalog = loadCatalog();
+  const mcpOnly = Boolean(opts.mcpOnly);
+  const dryRun = Boolean(opts.dryRun);
+  const limit = opts.limit ?? 5;
+  const before = doctor(root);
+  const suggestions = before.suggestions || [];
+  const auto = [];
+  const manual = [];
+  for (const s of suggestions) {
+    if (mcpOnly ? s.type === "mcp" : AUTO_APPLY_TYPES.has(s.type)) auto.push(s);
+    else manual.push(s);
+  }
+  const ids = auto.slice(0, limit).map((s) => s.id);
+  if (!ids.length || dryRun) {
+    return {
+      applied: [],
+      ids,
+      manual,
+      dryRun,
+      receipts: [],
+      skipped: [],
+      findings: before,
+      before,
+    };
+  }
+  const { receipts, skipped } = applyItems(catalog, ids, root, { targets: opts.targets });
+  return {
+    applied: ids,
+    ids,
+    manual,
+    dryRun: false,
+    receipts,
+    skipped,
+    findings: doctor(root),
+    before,
+  };
 }
 
 function auditMcpServers(mcpDoc, catalog, findings, file = ".mcp.json", mcpLocations) {
@@ -282,7 +325,7 @@ function auditGaps(root, catalog, findings) {
   }
   const names = top.map((e) => e.item.name).join("; ");
   findings.warn.push({
-    msg: `Loadout would still suggest: ${names} — run npx claude-loadout --dry-run to review`,
+    msg: `Loadout would still suggest: ${names} — run npx claude-loadout doctor --fix`,
   });
 }
 

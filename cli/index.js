@@ -8,7 +8,7 @@ import { loadCatalog } from "./lib/catalog.mjs";
 import { scanProject } from "./lib/scan.mjs";
 import { recommend } from "./lib/recommend.mjs";
 import { apply } from "./lib/apply.mjs";
-import { doctor } from "./lib/doctor.mjs";
+import { doctor, doctorFix } from "./lib/doctor.mjs";
 import { buildManifest, writeManifest, applyManifest, applyItems, readManifestIds, buildRecommendPreview, previewManifestApply, previewItemsApply } from "./lib/manifest.mjs";
 import { applyToTarget, listTargets, detectTargets, TARGETS } from "./lib/targets.mjs";
 import { searchCatalog } from "./lib/search.mjs";
@@ -196,7 +196,10 @@ function printHelp() {
   console.log(c("bold", "\n🎯 claude-loadout") + c("dim", " — project-aware agent setup\n"));
   console.log(c("bold", "Usage:\n"));
   console.log(`  ${c("cyan", "npx claude-loadout")}              Interactive recommend + apply (Claude Code)`);
-  console.log(`  ${c("cyan", "npx claude-loadout doctor")}     Audit .mcp.json + hooks (read-only)`);
+  console.log(`  ${c("cyan", "npx claude-loadout doctor")}     Audit .mcp.json + hooks`);
+  console.log(`  ${c("cyan", "npx claude-loadout doctor --fix")}  Apply auto-writable suggestions (MCP + hooks)`);
+  console.log(`  ${c("cyan", "npx claude-loadout doctor --fix --mcp-only")}  Fix: MCP servers only`);
+  console.log(`  ${c("cyan", "npx claude-loadout doctor --fix --dry-run")}  Preview what --fix would apply`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor --json")}  Machine-readable audit (exit 1 on fixes)`);
   console.log(`  ${c("cyan", "npx claude-loadout domains")}    List catalog domains and loadout sizes`);
   console.log(`  ${c("cyan", "npx claude-loadout domains research")}  Show one domain's loadout`);
@@ -569,40 +572,100 @@ function runDomains(domainId, flags = new Set()) {
 
 function runDoctor(flags = new Set()) {
   const root = cwd();
+  const doFix = flags.has("--fix");
+  const mcpOnly = flags.has("--mcp-only");
+  const dryRun = flags.has("--dry-run") || flags.has("-d");
+
+  if (doFix) {
+    const result = doctorFix(root, { mcpOnly, dryRun });
+    if (flags.has("--json")) {
+      console.log(JSON.stringify({
+        applied: result.applied,
+        ids: result.ids,
+        manual: result.manual,
+        dryRun: result.dryRun,
+        skipped: result.skipped,
+        receipts: result.receipts,
+        findings: result.findings,
+        summary: doctorSummary(result.findings),
+      }, null, 2));
+      if (result.findings.fix.length) exit(1);
+      return;
+    }
+    printDoctorFix(result, root);
+    if (result.findings.fix.length) exit(1);
+    return;
+  }
+
   const findings = doctor(root);
 
   if (flags.has("--json")) {
-    const suggestionIds = (findings.suggestions || []).map((s) => s.id).filter(Boolean);
-    const mcpIds = (findings.suggestions || [])
-      .filter((s) => s.type === "mcp")
-      .map((s) => s.id);
-    console.log(JSON.stringify({
-      ...findings,
-      applyCommand: suggestionIds.length
-        ? `npx claude-loadout apply --suggestions`
-        : null,
-      applyCommandMcpOnly: mcpIds.length
-        ? `npx claude-loadout apply --suggestions --mcp-only`
-        : null,
-      applyCommandIds: suggestionIds.length
-        ? `npx claude-loadout apply --ids ${suggestionIds.join(",")}`
-        : null,
-      summary: {
-        fix: findings.fix.length,
-        warn: findings.warn.length,
-        ok: findings.ok.length,
-        domains: findings.domains?.length || 0,
-        signals: findings.signals?.length || 0,
-        suggestions: findings.suggestions?.length || 0,
-      },
-    }, null, 2));
+    console.log(JSON.stringify(doctorJsonPayload(findings), null, 2));
     if (findings.fix.length) exit(1);
     return;
   }
 
   console.log(c("bold", "\n🩺 Loadout doctor") + c("dim", `  — auditing ${root}\n`));
-  const { ok, warn, fix } = findings;
+  printDoctorFindings(findings);
+  if (!findings.fix.length && !findings.warn.length) {
+    console.log(c("green", "Everything looks good.\n"));
+    return;
+  }
+  const suggestionIds = (findings.suggestions || []).map((s) => s.id).filter(Boolean);
+  const autoIds = (findings.suggestions || [])
+    .filter((s) => s.type === "mcp" || s.type === "hook" || s.type === "setting")
+    .map((s) => s.id);
+  const mcpSuggestionIds = (findings.suggestions || []).filter((s) => s.type === "mcp").map((s) => s.id);
+  if (autoIds.length) {
+    if (mcpSuggestionIds.length && mcpSuggestionIds.length === autoIds.length) {
+      console.log(c("dim", "Tip: npx claude-loadout doctor --fix --mcp-only"));
+    } else {
+      console.log(c("dim", "Tip: npx claude-loadout doctor --fix"));
+    }
+    console.log(c("dim", `     or: npx claude-loadout apply --ids ${suggestionIds.join(",")}\n`));
+  } else if (suggestionIds.length) {
+    console.log(c("dim", "Tip: remaining suggestions are skills — install via Claude Code plugin commands"));
+    console.log(c("dim", `     or: npx claude-loadout apply --ids ${suggestionIds.join(",")}\n`));
+  } else if (findings.fix.length) {
+    console.log(c("dim", "Tip: npx claude-loadout --dry-run to see recommended additions.\n"));
+  } else {
+    console.log("");
+  }
+  if (findings.fix.length) exit(1);
+}
 
+function doctorSummary(findings) {
+  return {
+    fix: findings.fix.length,
+    warn: findings.warn.length,
+    ok: findings.ok.length,
+    domains: findings.domains?.length || 0,
+    signals: findings.signals?.length || 0,
+    suggestions: findings.suggestions?.length || 0,
+  };
+}
+
+function doctorJsonPayload(findings) {
+  const suggestionIds = (findings.suggestions || []).map((s) => s.id).filter(Boolean);
+  const mcpIds = (findings.suggestions || []).filter((s) => s.type === "mcp").map((s) => s.id);
+  const autoIds = (findings.suggestions || [])
+    .filter((s) => s.type === "mcp" || s.type === "hook" || s.type === "setting")
+    .map((s) => s.id);
+  return {
+    ...findings,
+    applyCommand: suggestionIds.length ? `npx claude-loadout apply --suggestions` : null,
+    applyCommandMcpOnly: mcpIds.length ? `npx claude-loadout apply --suggestions --mcp-only` : null,
+    applyCommandIds: suggestionIds.length
+      ? `npx claude-loadout apply --ids ${suggestionIds.join(",")}`
+      : null,
+    fixCommand: autoIds.length ? `npx claude-loadout doctor --fix` : null,
+    fixCommandMcpOnly: mcpIds.length ? `npx claude-loadout doctor --fix --mcp-only` : null,
+    summary: doctorSummary(findings),
+  };
+}
+
+function printDoctorFindings(findings) {
+  const { ok, warn, fix } = findings;
   if (fix.length) {
     console.log(c("red", "Fix:"));
     fix.forEach((f) => console.log(`  • ${f.msg}${f.file ? c("dim", ` (${f.file})`) : ""}`));
@@ -618,25 +681,40 @@ function runDoctor(flags = new Set()) {
     ok.forEach((f) => console.log(`  • ${f.msg}`));
     console.log("");
   }
-  if (!fix.length && !warn.length) {
-    console.log(c("green", "Everything looks good.\n"));
-    return;
-  }
-  const suggestionIds = (findings.suggestions || []).map((s) => s.id).filter(Boolean);
-  const mcpSuggestionIds = (findings.suggestions || []).filter((s) => s.type === "mcp").map((s) => s.id);
-  if (suggestionIds.length) {
-    if (mcpSuggestionIds.length) {
-      console.log(c("dim", "Tip: npx claude-loadout apply --suggestions --mcp-only"));
+}
+
+function printDoctorFix(result, root) {
+  console.log(c("bold", "\n🩺 Loadout doctor --fix") + c("dim", `  — ${root}\n`));
+  if (result.dryRun) {
+    if (!result.ids.length) {
+      console.log(c("green", "Nothing auto-applicable to fix.\n"));
     } else {
-      console.log(c("dim", "Tip: npx claude-loadout apply --suggestions"));
+      console.log(c("bold", "Would apply:"));
+      result.ids.forEach((id) => console.log(`  • ${id}`));
+      console.log("");
     }
-    console.log(c("dim", `     or: npx claude-loadout apply --ids ${suggestionIds.join(",")}\n`));
-  } else if (fix.length) {
-    console.log(c("dim", "Tip: npx claude-loadout --dry-run to see recommended additions.\n"));
+  } else if (result.applied.length) {
+    for (const r of result.receipts) {
+      if (r.type === "claude" || r.type === "commands") printReceipt(r.receipt);
+      else printTargetReceipt(r.receipt);
+    }
   } else {
+    console.log(c("green", "Nothing auto-applicable to fix.\n"));
+  }
+  if (result.manual.length) {
+    console.log(c("dim", "Manual (skills/plugins — not auto-written):"));
+    result.manual.forEach((s) => console.log(c("dim", `  • ${s.id} (${s.type})`)));
     console.log("");
   }
-  if (fix.length) exit(1);
+  if (result.skipped?.length) {
+    console.log(c("yellow", "Skipped:"));
+    result.skipped.forEach((s) => console.log(`  • ${s}`));
+    console.log("");
+  }
+  if (!result.dryRun && result.applied.length) {
+    console.log(c("bold", "After fix:"));
+    printDoctorFindings(result.findings);
+  }
 }
 
 function parseSelection(answer, top) {

@@ -7,7 +7,7 @@ Loadout development without the original chat context. If a session dies mid-tas
 - **Local path:** `C:\Users\piai\Desktop\loadout`
 - **What it is:** A hybrid Claude Code **plugin marketplace + recommender**. It profiles a project and
   *applies* a domain-matched loadout of MCP servers / hooks / skills — instead of being one more list to read.
-- **Last updated:** 2026-07-04 (v0.3.46 loop — signal-gated protect-secrets)
+- **Last updated:** 2026-07-04 (v0.3.47 loop — doctor --fix)
 - **Owner GitHub account:** `sukoji` (a *user*, not an org — `gh api user` returns `sukoji`, even though
   `gh auth status` shows the label `jskh-201910840`). Token scopes: `repo`, `workflow`, `gist`, `read:org`.
 
@@ -20,11 +20,11 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | Area | State |
 | :-- | :-- |
 | First release shipped & pushed | ✅ on `origin/main`; tagged `v0.1.0` |
-| Published to npm | ✅ `claude-loadout@0.3.46` live. Local `npm publish` uses `~/.npmrc` token. **`prepublishOnly` runs `npm test`.** GitHub Actions `publish` workflow needs repo secret `NPM_TOKEN` — without it the job warns and skips. See CONTRIBUTING § Release. CI: `loadout-doctor.yml`. Dogfood: `.mcp.json` + Prettier/ESLint/security hooks. |
+| Published to npm | ✅ `claude-loadout@0.3.47` live. Local `npm publish` uses `~/.npmrc` token. **`prepublishOnly` runs `npm test`.** GitHub Actions `publish` workflow needs repo secret `NPM_TOKEN` — without it the job warns and skips. See CONTRIBUTING § Release. CI: `loadout-doctor.yml`. Dogfood: `.mcp.json` + Prettier/ESLint/security hooks. `doctor --fix` applies MCP + hooks. |
 | Plugin marketplace | ✅ **end-to-end verified from GitHub**: `/plugin marketplace add sukoji/loadout` → `/plugin install loadout@loadout` → `claude plugin details` lists Skills (2): browse, recommend. (Install-blocking bug fixed — see gotcha #8.) |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
 | Catalog | ✅ **3 tiers, 281 items**: 37 curated + 242 official + 2 community. **9 domains** incl. `research`. `npm run test:recommend` guards ranking quality. |
-| CLI (`node cli/index.js`) | ✅ `doctor`, `--help`, non-interactive guard; `npm test` (validate + test:recommend + test:detect-installed + test:doctor + verify:mcp). |
+| CLI (`node cli/index.js`) | ✅ `doctor` / `doctor --fix`, browse (`domains`/`show`/`search`/`stats`), `apply --suggestions`, `--help`; `npm test` covers validate + recommend + scan + doctor + manifest + verify:mcp. |
 | Cross-agent targets | ✅ `--target codex\|cursor\|gemini\|opencode\|openclaw\|all` writes each agent's MCP config in its verified format (TOML for Codex, JSON for the rest). Tested emitting all formats + HTTP handling. Skills/hooks stay Claude-only. Code: `cli/lib/targets.mjs`. |
 | Docs | ✅ `docs/domains/*.md` auto-generated, in sync with catalog |
 | CI | ✅ full `npm test` + docs-sync + `loadout-doctor` profile artifact on every push |
