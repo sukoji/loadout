@@ -4,7 +4,7 @@
     "title": "Frontend / Web UI",
     "title_ko": "프론트엔드 / 웹 UI",
     "blurb": "React, Vue, Svelte, Next, Astro, Remix — anything that ships to a browser.",
-    "signals": ["react", "next", "vue", "svelte", "sveltekit", "astro", "remix", "nuxt", "solid", "qwik", "bun", "vite", "tailwind", "angular", "package.json", "tsconfig.json"],
+    "signals": ["react", "next", "vue", "svelte", "sveltekit", "astro", "remix", "nuxt", "solid", "qwik", "bun", "deno", "vite", "tailwind", "angular", "package.json", "tsconfig.json"],
     "loadout": ["context7", "playwright", "chrome-devtools", "figma", "format-js-on-edit", "eslint-fix-on-edit", "superpowers", "code-review", "init-claude-md"]
   },
   {
@@ -60,7 +60,7 @@
     "title": "Docs / Writing / Office",
     "title_ko": "문서 / 글쓰기 / 오피스",
     "blurb": "Documentation, reports, and real Word/Excel/PDF/PPT deliverables.",
-    "signals": ["docs", "mkdocs", "docusaurus", ".docx", ".xlsx"],
+    "signals": ["docs", "mkdocs", "docusaurus", "vitepress", ".docx", ".xlsx"],
     "loadout": ["office-docs", "notion", "fetch", "firecrawl", "brave-search", "context7", "notify-on-stop"]
   },
   {

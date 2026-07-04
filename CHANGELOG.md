@@ -6,6 +6,13 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.62] — 2026-07-05
+### Added
+- **Deno frontend** — `deno` matches the frontend domain; Playwright/Chrome DevTools catalog signals include all modern JS frameworks.
+- **VitePress docs scan** — detects `vitepress.config.*` and the `vitepress` package; docs-writing domain matches `vitepress`.
+### Fixed
+- **`vitepress` package** no longer falsely adds a `vite` signal (was routing VitePress repos to frontend instead of docs).
+
 ## [0.3.61] — 2026-07-05
 ### Added
 - **Frontend scan** — Nuxt (`nuxt.config.*`, `nuxt` / `@nuxt/*`), Solid (`solid-js`, `@solidjs/*`), Qwik (`@builder.io/qwik`), Bun (`bun.lock`, `bunfig.toml`).

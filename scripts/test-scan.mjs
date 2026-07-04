@@ -167,8 +167,23 @@ try {
     writeFileSync(join(denoDir, "deno.json"), "{}\n");
     const denoSignals = scanProject(denoDir);
     assert("scan adds deno from deno.json", denoSignals.has("deno"));
+    const denoTop = topIds(denoSignals);
+    assert("deno project surfaces playwright", denoTop.includes("playwright"), denoTop.join(", "));
   } finally {
     rmSync(denoDir, { recursive: true, force: true });
+  }
+
+  const vitepressDir = mkdtempSync(join(tmpdir(), "loadout-scan-vitepress-"));
+  try {
+    writeFileSync(join(vitepressDir, "vitepress.config.ts"), "export default {};\n");
+    writeFileSync(join(vitepressDir, "package.json"), JSON.stringify({ devDependencies: { vitepress: "1" } }));
+    const vpSignals = scanProject(vitepressDir);
+    assert("scan adds vitepress from vitepress.config", vpSignals.has("vitepress"));
+    assert("scan adds vitepress from package.json", vpSignals.has("vitepress"));
+    const vpTop = topIds(vpSignals);
+    assert("vitepress project surfaces office-docs or notion", vpTop.includes("office-docs") || vpTop.includes("notion"), vpTop.join(", "));
+  } finally {
+    rmSync(vitepressDir, { recursive: true, force: true });
   }
 
   const nestDir = mkdtempSync(join(tmpdir(), "loadout-scan-nest-"));

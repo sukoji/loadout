@@ -67,6 +67,10 @@ const qwik = new Set(["always", "package.json", "qwik", ".git"]);
 assert("Qwik includes playwright", topNames(qwik).includes("playwright"), topNames(qwik).join(", "));
 const bun = new Set(["always", "package.json", "bun", ".git"]);
 assert("Bun includes playwright", topNames(bun).includes("playwright"), topNames(bun).join(", "));
+const deno = new Set(["always", "deno", ".git"]);
+assert("Deno includes playwright", topNames(deno).includes("playwright"), topNames(deno).join(", "));
+const vitepress = new Set(["always", "package.json", "vitepress", "docs", ".git"]);
+assert("VitePress includes office-docs or notion", topNames(vitepress).some((id) => id === "office-docs" || id === "notion"), topNames(vitepress).join(", "));
 
 // Jupyter + numpy research repo (LOOP #5).
 const jupyterResearch = new Set([

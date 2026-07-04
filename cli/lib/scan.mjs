@@ -37,7 +37,7 @@ export function scanProject(root = process.cwd()) {
         if (name === "solid-js" || name.startsWith("@solidjs/")) add("solid");
         if (name.includes("qwik") || name.startsWith("@builder.io/qwik")) add("qwik");
         if (name.includes("tailwind")) add("tailwind");
-        if (name.includes("vite")) add("vite");
+        if (name === "vite" || (name.includes("vite") && name !== "vitepress")) add("vite");
         if (name.includes("express")) add("express");
         if (name.includes("fastify")) add("fastify");
         if (name.includes("nest")) add("nestjs");
@@ -54,6 +54,7 @@ export function scanProject(root = process.cwd()) {
         if (name.includes("supabase")) add("supabase");
         if (name.includes("mongoose") || name.includes("mongodb")) add("mongodb");
         if (name.includes("docusaurus")) add("docusaurus");
+        if (name === "vitepress") add("vitepress");
         if (
           name.includes("passport") ||
           name.includes("next-auth") ||
@@ -116,6 +117,9 @@ export function scanProject(root = process.cwd()) {
     "nuxt.config.ts": "nuxt",
     "nuxt.config.js": "nuxt",
     "nuxt.config.mjs": "nuxt",
+    "vitepress.config.ts": "vitepress",
+    "vitepress.config.js": "vitepress",
+    "vitepress.config.mjs": "vitepress",
     "angular.json": "angular",
     "nest-cli.json": "nestjs",
     "build.gradle": "build.gradle",
