@@ -20,10 +20,8 @@ jobs:
         with:
           node-version: 20
       - name: Profile with Loadout doctor
-        run: npx --yes claude-loadout@latest doctor --json | tee loadout-profile.json
-      # Optional: fail only when core setup is incomplete (ignores optional plugins)
-      # - name: Require healthy profile
-      #   run: jq -e '.summary.healthy == true' loadout-profile.json
+        # --require-healthy fails when core setup is incomplete (optional plugins are OK)
+        run: npx --yes claude-loadout@latest doctor --json --require-healthy | tee loadout-profile.json
       # Optional: auto-apply MCP suggestions (uncomment to write .mcp.json in CI)
       # - name: Apply MCP suggestions
       #   run: npx --yes claude-loadout@latest doctor --fix --mcp-only

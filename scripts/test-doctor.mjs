@@ -1,9 +1,16 @@
 #!/usr/bin/env node
-import { mkdirSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
-import { join } from "node:path";
+import { mkdirSync, mkdtempSync, writeFileSync, rmSync, readFileSync } from "node:fs";
+import { join, dirname } from "node:path";
 import { tmpdir } from "node:os";
-import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
 import { doctor, doctorFix, hookDepsMissing, summarizeDoctor } from "../cli/lib/doctor.mjs";
+
+const CLI = join(dirname(fileURLToPath(import.meta.url)), "../cli/index.js");
+
+function runDoctorCli(cwd, args = []) {
+  return spawnSync(process.execPath, [CLI, "doctor", ...args], { cwd, encoding: "utf8" });
+}
 
 const dir = mkdtempSync(join(tmpdir(), "loadout-doctor-"));
 let failed = 0;
@@ -88,6 +95,8 @@ try {
         !bare.suggestions.some((s) => s.id === "statusline-git"),
       );
     }
+    const bareReq = runDoctorCli(bareDir, ["--json", "--require-healthy"]);
+    assert("require-healthy fails bare setup", bareReq.status !== 0);
   } finally {
     rmSync(bareDir, { recursive: true, force: true });
   }
@@ -126,6 +135,8 @@ try {
     const matureSum = summarizeDoctor(mature);
     assert("mature summary is healthy", matureSum.healthy === true);
     assert("mature summary is optionalOnly", matureSum.optionalOnly === true);
+    const matureReq = runDoctorCli(matureDir, ["--json", "--require-healthy"]);
+    assert("require-healthy passes mature setup", matureReq.status === 0);
   } finally {
     rmSync(matureDir, { recursive: true, force: true });
   }

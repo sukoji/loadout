@@ -203,6 +203,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout doctor --fix --dry-run")}  Preview what --fix would apply`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor --json")}  Machine-readable audit (exit 1 on fixes)`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor --quiet")}  Warnings/fixes only (skip OK lines)`);
+  console.log(`  ${c("cyan", "npx claude-loadout doctor --require-healthy")}  Exit 1 unless summary.healthy`);
   console.log(`  ${c("cyan", "npx claude-loadout domains")}    List catalog domains and loadout sizes`);
   console.log(`  ${c("cyan", "npx claude-loadout domains research")}  Show one domain's loadout`);
   console.log(`  ${c("cyan", "npx claude-loadout domains --json")}  Domains as JSON`);
@@ -603,11 +604,11 @@ function runDoctor(flags = new Set()) {
         findings: result.findings,
         summary: summarizeDoctor(result.findings),
       }, null, 2));
-      if (result.findings.fix.length) exit(1);
+      exitDoctor(result.findings, flags);
       return;
     }
     printDoctorFix(result, root);
-    if (result.findings.fix.length) exit(1);
+    exitDoctor(result.findings, flags);
     return;
   }
 
@@ -616,7 +617,7 @@ function runDoctor(flags = new Set()) {
 
   if (flags.has("--json")) {
     console.log(JSON.stringify(doctorJsonPayload(findings), null, 2));
-    if (findings.fix.length) exit(1);
+    exitDoctor(findings, flags);
     return;
   }
 
@@ -624,6 +625,7 @@ function runDoctor(flags = new Set()) {
   printDoctorFindings(findings, { quiet });
   if (!findings.fix.length && !findings.warn.length) {
     console.log(c("green", "Everything looks good.\n"));
+    exitDoctor(findings, flags);
     return;
   }
   const suggestionIds = (findings.suggestions || []).map((s) => s.id).filter(Boolean);
@@ -651,7 +653,13 @@ function runDoctor(flags = new Set()) {
   } else {
     console.log("");
   }
+  exitDoctor(findings, flags);
+}
+
+/** Exit 1 on hard fixes, or when --require-healthy and setup is not healthy. */
+function exitDoctor(findings, flags) {
   if (findings.fix.length) exit(1);
+  if (flags.has("--require-healthy") && !summarizeDoctor(findings).healthy) exit(1);
 }
 
 function doctorJsonPayload(findings) {

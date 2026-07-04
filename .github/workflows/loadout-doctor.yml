@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: 20
       - name: Profile with Loadout doctor
-        run: node cli/index.js doctor --json | tee loadout-profile.json
+        run: node cli/index.js doctor --json --require-healthy | tee loadout-profile.json
       - name: Upload profile
         uses: actions/upload-artifact@v4
         with:

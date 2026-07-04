@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.56] — 2026-07-04
+### Added
+- **`doctor --require-healthy`** — exit 1 unless `summary.healthy` (optional plugins still pass).
+- Dogfood `--require-healthy` in `loadout-doctor.yml` and `examples/ci-doctor.yml`.
+
 ## [0.3.55] — 2026-07-04
 ### Added
 - **Doctor JSON `summary.healthy` / `summary.optionalOnly`** — CI can treat optional plugins as complete (`jq -e '.summary.healthy'`).

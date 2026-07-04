@@ -137,6 +137,7 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `doctor --fix --dry-run` | Preview what `--fix` would apply |
 | `doctor --json` | Audit JSON with `domains`, `signals`, `suggestions`, `fixCommand*`, `applyCommand*`, and `summary` (`healthy` / `optionalOnly`; exit 1 when fixes needed) |
 | `doctor --quiet` | Warnings and fixes only (skip OK lines) |
+| `doctor --require-healthy` | Exit 1 unless `summary.healthy` (optional plugins still count as healthy) |
 | `domains` | List catalog domains, signal hints, and loadout sizes |
 | `domains <id>` | Show one domain's loadout items |
 | `domains --json` | Domains as JSON |
