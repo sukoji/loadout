@@ -366,6 +366,13 @@ function enrichSuggestionsFromFindings(findings, catalog) {
   if (extra.length) findings.suggestions = [...extra, ...(findings.suggestions || [])];
 }
 
+/** Built-in Claude Code commands are always available — not install gaps (except one-shot /init). */
+function isDoctorGap(item) {
+  const install = item.install || {};
+  if (install.type === "builtin") return item.id === "init-claude-md";
+  return true;
+}
+
 function auditGaps(root, catalog, findings) {
   const signals = scanProject(root);
   const { domains, items } = recommend(catalog, signals, root);
@@ -381,7 +388,8 @@ function auditGaps(root, catalog, findings) {
   if (interesting.length) {
     findings.ok.push({ msg: `Detected signals: ${interesting.join(", ")}${findings.signals.length > 10 ? "…" : ""}` });
   }
-  const top = items.slice(0, 5);
+  const gaps = items.filter((e) => isDoctorGap(e.item));
+  const top = gaps.slice(0, 5);
   findings.suggestions = top.map(({ item, reason }) => ({
     id: item.id,
     name: item.name,

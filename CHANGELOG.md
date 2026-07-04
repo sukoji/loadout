@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.52] — 2026-07-04
+### Fixed
+- **`doctor` gaps** — built-in Claude Code skills (`/code-review`, `/security-review`, office-docs, …) are no longer treated as incomplete setup. One-shot `/init` still surfaces when `CLAUDE.md` is missing.
+
 ## [0.3.51] — 2026-07-04
 ### Added
 - **`--hooks-only`** — filter for `apply --suggestions`, `apply --ids`, and `doctor --fix` (hooks/settings only; mirrors `--mcp-only`).

@@ -70,6 +70,17 @@ try {
   assert("doctor suggestions is an array", Array.isArray(profiled.suggestions));
   assert("doctor suggestions include playwright for react/next", profiled.suggestions.some((s) => s.id === "playwright"));
   assert("doctor suggestions include protect-secrets when .env present", profiled.suggestions.some((s) => s.id === "protect-secrets"));
+  assert("doctor does not treat builtin /code-review as a gap", !profiled.suggestions.some((s) => s.id === "code-review"));
+  assert("doctor does not treat builtin /security-review as a gap", !profiled.suggestions.some((s) => s.id === "security-review"));
+
+  const bareDir = mkdtempSync(join(tmpdir(), "loadout-doctor-bare-"));
+  try {
+    const bare = doctor(bareDir);
+    assert("doctor still suggests /init when CLAUDE.md is missing", bare.suggestions.some((s) => s.id === "init-claude-md"));
+    assert("doctor omits /code-review on bare repo too", !bare.suggestions.some((s) => s.id === "code-review"));
+  } finally {
+    rmSync(bareDir, { recursive: true, force: true });
+  }
 
   const mcpIds = profiled.suggestions.filter((s) => s.type === "mcp").map((s) => s.id);
   assert("doctor can build applyCommandMcpOnly", mcpIds.includes("playwright"));
@@ -112,10 +123,7 @@ try {
     "superpowers guide has install commands",
     skillGuide.find((s) => s.id === "superpowers")?.commands?.length > 0,
   );
-  assert(
-    "builtin skill guide has a note",
-    skillGuide.some((s) => s.id === "code-review" && s.note),
-  );
+  assert("doctor --fix skill guide omits builtins", !skillGuide.some((s) => s.id === "code-review"));
 
   // Dry-run with no MCP/hooks left still surfaces skill install steps.
   const guideOnly = doctorFix(dir, { dryRun: true });
