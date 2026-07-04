@@ -1,0 +1,24 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | grep -Eq '\\.(js|jsx|ts|tsx|css|scss|json|md|html|vue|svelte)$' && jq -r '.tool_input.file_path' | xargs -r npx --no-install prettier --write 2>/dev/null; exit 0"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path'); case \"$f\" in *.js|*.jsx|*.ts|*.tsx) npx --no-install eslint --fix \"$f\" 2>/dev/null;; esac; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}

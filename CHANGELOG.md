@@ -6,6 +6,13 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.44] — 2026-07-04
+### Added
+- **Dogfood** — Prettier + ESLint-on-edit hooks in `.claude/settings.json`.
+
+### Changed
+- **`doctor`** — missing hook PATH tools (`jq`, `prettier`, …) are warnings, not hard fixes (hooks no-op).
+
 ## [0.3.43] — 2026-07-04
 ### Added
 - **Dogfood** — this repo now ships a project `.mcp.json` (context7, git, playwright, github, filesystem).

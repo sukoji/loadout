@@ -229,7 +229,8 @@ function auditHooks(settingsDoc, findings) {
 
   for (const bin of needed) {
     if (!commandExists(bin)) {
-      findings.fix.push({
+      // Missing tools are warnings: hooks no-op rather than corrupt config.
+      findings.warn.push({
         msg: `"${bin}" not found on PATH — hooks that need it will no-op or fail`,
         file: ".claude/settings.json",
       });
