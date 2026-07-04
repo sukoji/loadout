@@ -58,6 +58,7 @@ export function doctor(root = process.cwd()) {
   auditHooks(settingsDoc, findings);
   auditSecurity(hasEnv, settingsDoc, findings);
   auditGaps(root, catalog, findings);
+  enrichSuggestionsFromFindings(findings, catalog);
 
   if (process.platform === "win32") {
     const blob = JSON.stringify(settingsDoc || {}).toLowerCase();
@@ -86,13 +87,30 @@ export function doctorFix(root = process.cwd(), opts = {}) {
   const dryRun = Boolean(opts.dryRun);
   const limit = opts.limit ?? 5;
   const before = doctor(root);
-  const suggestions = before.suggestions || [];
+  const seen = new Set();
   const auto = [];
   const manual = [];
-  for (const s of suggestions) {
-    if (mcpOnly ? s.type === "mcp" : AUTO_APPLY_TYPES.has(s.type)) auto.push(s);
-    else manual.push(s);
+
+  // Security / gap findings with catalog ids take priority over ranked suggestions.
+  for (const f of [...(before.fix || []), ...(before.warn || [])]) {
+    if (!f.id || seen.has(f.id)) continue;
+    const item = catalog.byId.get(f.id);
+    if (!item) continue;
+    if (mcpOnly ? item.type !== "mcp" : !AUTO_APPLY_TYPES.has(item.type)) continue;
+    seen.add(f.id);
+    auto.push({ id: item.id, name: item.name, type: item.type, tier: item.tier || "curated", reason: f.msg });
   }
+
+  for (const s of before.suggestions || []) {
+    if (seen.has(s.id)) continue;
+    if (mcpOnly ? s.type === "mcp" : AUTO_APPLY_TYPES.has(s.type)) {
+      seen.add(s.id);
+      auto.push(s);
+    } else {
+      manual.push(s);
+    }
+  }
+
   const ids = auto.slice(0, limit).map((s) => s.id);
   if (!ids.length || dryRun) {
     return {
@@ -290,10 +308,31 @@ function auditSecurity(hasEnv, settingsDoc, findings) {
     findings.ok.push({ msg: "Secret-file guard hook appears configured (.env present)" });
   } else {
     findings.warn.push({
+      id: "protect-secrets",
       msg: ".env exists but no protect-secrets hook — consider adding it so credentials stay out of context",
       file: ".claude/settings.json",
     });
   }
+}
+
+/** Surface catalog ids attached to fix/warn findings (e.g. protect-secrets) in suggestions. */
+function enrichSuggestionsFromFindings(findings, catalog) {
+  const existing = new Set((findings.suggestions || []).map((s) => s.id));
+  const extra = [];
+  for (const f of [...(findings.fix || []), ...(findings.warn || [])]) {
+    if (!f.id || existing.has(f.id)) continue;
+    const item = catalog.byId.get(f.id);
+    if (!item) continue;
+    existing.add(f.id);
+    extra.push({
+      id: item.id,
+      name: item.name,
+      type: item.type,
+      tier: item.tier || "curated",
+      reason: f.msg,
+    });
+  }
+  if (extra.length) findings.suggestions = [...extra, ...(findings.suggestions || [])];
 }
 
 function auditGaps(root, catalog, findings) {

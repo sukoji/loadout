@@ -77,6 +77,6 @@
     "title_ko": "일반 / 모든 프로젝트",
     "blurb": "The always-useful baseline every repo benefits from.",
     "signals": ["always"],
-    "loadout": ["init-claude-md", "code-review", "superpowers", "context7", "git", "guard-dangerous-bash", "block-push-to-main", "notify-on-stop", "statusline-git"]
+    "loadout": ["init-claude-md", "code-review", "superpowers", "context7", "git", "guard-dangerous-bash", "protect-secrets", "block-push-to-main", "notify-on-stop", "statusline-git"]
   }
 ]

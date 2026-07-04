@@ -48,6 +48,7 @@ try {
   assert("flags placeholder API key", hasMsg(fix, "CONTEXT7_API_KEY") || hasMsg(fix, "context7"));
   assert("warns duplicate context7 across agents", hasMsg(warn, 'MCP "context7" appears in'));
   assert("warns .env without protect-secrets", hasMsg(warn, "protect-secrets"));
+  assert("protect-secrets warn carries catalog id", warn.some((f) => f.id === "protect-secrets"));
   assert("reports Claude MCP servers", hasMsg(ok, "MCP server(s) in .mcp.json"));
   assert("reports Cursor MCP servers", hasMsg(ok, "Cursor:"));
 
@@ -68,6 +69,7 @@ try {
   assert("doctor reports detected signals", profiled.ok.some((f) => f.msg.includes("Detected signals")));
   assert("doctor suggestions is an array", Array.isArray(profiled.suggestions));
   assert("doctor suggestions include playwright for react/next", profiled.suggestions.some((s) => s.id === "playwright"));
+  assert("doctor suggestions include protect-secrets when .env present", profiled.suggestions.some((s) => s.id === "protect-secrets"));
 
   const mcpIds = profiled.suggestions.filter((s) => s.type === "mcp").map((s) => s.id);
   assert("doctor can build applyCommandMcpOnly", mcpIds.includes("playwright"));
@@ -90,19 +92,15 @@ try {
   assert("second --fix --mcp-only is no-op", again.applied.length === 0);
 
   const hooksFix = doctorFix(dir);
-  const hooksBefore = (hooksFix.before.suggestions || []).filter((s) => s.type === "hook" || s.type === "setting");
-  if (hooksBefore.length) {
-    assert(
-      "doctor --fix applies remaining hooks",
-      hooksFix.applied.some((id) => hooksBefore.some((s) => s.id === id)),
-    );
-  } else {
-    assert("no auto hooks left (skills-only or complete)", hooksFix.applied.length === 0);
-    assert(
-      "remaining suggestions are manual-only",
-      hooksFix.manual.every((s) => s.type === "skill" || s.type === "reference"),
-    );
-  }
+  assert("doctor --fix prioritizes protect-secrets", hooksFix.applied.includes("protect-secrets"));
+  assert(
+    "after fix, protect-secrets warn cleared",
+    !hooksFix.findings.warn.some((f) => f.id === "protect-secrets"),
+  );
+  assert(
+    "after fix, protect-secrets not still suggested",
+    !hooksFix.findings.suggestions.some((s) => s.id === "protect-secrets"),
+  );
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

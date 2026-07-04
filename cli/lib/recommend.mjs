@@ -122,9 +122,17 @@ function rankEntries(a, b) {
   // Prefer items from the signal-matched domain over general always-on defaults.
   const domainA = a.domain && a.domain !== "general" ? 2 : 0;
   const domainB = b.domain && b.domain !== "general" ? 2 : 0;
-  const scoreA = a.strength + tierA + Number(a.alwaysUseful) + domainA;
-  const scoreB = b.strength + tierB + Number(b.alwaysUseful) + domainB;
+  // Narrow, fully-matched signals (e.g. protect-secrets ↔ .env) outrank broad multi-signal fits.
+  const scoreA = a.strength + tierA + Number(a.alwaysUseful) + domainA + precisionBonus(a);
+  const scoreB = b.strength + tierB + Number(b.alwaysUseful) + domainB + precisionBonus(b);
   return scoreB - scoreA;
+}
+
+function precisionBonus(entry) {
+  if (entry.alwaysUseful || entry.strength === 0) return 0;
+  const specific = (entry.item.signals || []).filter((s) => s !== "always");
+  if (specific.length > 0 && specific.length <= 2 && entry.strength === specific.length) return 5;
+  return 0;
 }
 
 function capOfficialTier(items, limit) {

@@ -6,6 +6,14 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.48] — 2026-07-04
+### Fixed
+- **`protect-secrets`** — now in the general loadout (still `.env`-gated), so frontend/mobile/etc. repos with credentials get it even when the security domain isn't top-ranked.
+- **`doctor --fix`** — prioritizes catalog ids attached to fix/warn findings (e.g. missing `protect-secrets`).
+
+### Changed
+- **Ranking** — narrow, fully-matched signals (≤2) get a precision boost so surgical hooks aren't buried by broad multi-signal items.
+
 ## [0.3.47] — 2026-07-04
 ### Added
 - **`doctor --fix`** — apply auto-writable suggestions (MCP + hooks) in one command; skills stay manual.

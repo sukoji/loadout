@@ -12,6 +12,7 @@ _Signals that map here: baseline (always)_
 ## Hooks & settings
 
 - **Block dangerous shell commands** — A PreToolUse guard that blocks catastrophic commands (recursive deletes of /, ~, or $HOME, and disk-wipe patterns) before they run. Cheap insurance for autonomous sessions.
+- **Refuse to read secret files** — Blocks Read on .env / credential files so secrets never get pulled into context (and can't leak into logs or commits). Good default for any repo with real credentials.
 - **Block direct push to main/master** — A PreToolUse guard that blocks `git push` while you're on main or master, nudging you toward a feature branch + PR. Stops accidental direct pushes during autonomous runs.
 - **Ping me when Claude finishes** — Rings the terminal bell (and prints a marker) when Claude stops responding, so you can tab away during long runs and come back when it's your turn.
 - **Status line: dir + git branch + model** — A compact status line showing the current directory, git branch, and active model. Small quality-of-life upgrade you notice every session.

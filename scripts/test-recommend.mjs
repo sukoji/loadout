@@ -119,6 +119,12 @@ const devopsNoEnv = new Set(["always", "dockerfile", "terraform", ".github/workf
 const devopsNoEnvTop = topNames(devopsNoEnv);
 assert("DevOps without .env excludes protect-secrets", !devopsNoEnvTop.includes("protect-secrets"), devopsNoEnvTop.join(", "));
 
+// .env alone (via general loadout) surfaces protect-secrets even when security isn't top domain.
+const frontendEnv = new Set(["always", "react", "next", "package.json", ".env"]);
+const frontendEnvTop = topNames(frontendEnv);
+assert("Frontend with .env includes protect-secrets", frontendEnvTop.includes("protect-secrets"), frontendEnvTop.join(", "));
+assert("Frontend without .env excludes protect-secrets", !topNames(new Set(["always", "react", "next", "package.json"])).includes("protect-secrets"));
+
 const officialInPool = recommend(catalog, mlResearch, CLEAN_ROOT).items.filter((e) => e.item.tier === "official").length;
 assert("Official tier capped in pool", officialInPool <= 2, String(officialInPool));
 
