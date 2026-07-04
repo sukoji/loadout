@@ -96,6 +96,12 @@ assert("Jupyter research includes exa-research", jrTop.includes("exa-research"),
 assert("Jupyter research excludes mongodb", !jrTop.includes("mongodb"), jrTop.join(", "));
 assert("Jupyter research includes fetch or firecrawl", jrTop.includes("fetch") || jrTop.includes("firecrawl"), jrTop.join(", "));
 
+const torchMl = new Set(["always", "requirements.txt", "torch", "numpy", "python", ".git"]);
+const torchTop = topNames(torchMl);
+assert("Torch data-ml includes context7", torchTop.includes("context7"), torchTop.join(", "));
+assert("Torch data-ml excludes playwright", !torchTop.includes("playwright"), torchTop.join(", "));
+assert("Torch data-ml excludes mongodb", !torchTop.includes("mongodb"), torchTop.join(", "));
+
 // FastAPI backend should get API-appropriate tools, not frontend noise.
 const fastapi = new Set(["always", "requirements.txt", "pyproject.toml", "fastapi", "python", ".git", "postgres"]);
 const beTop = topNames(fastapi);
@@ -214,6 +220,11 @@ const expo = new Set(["always", "package.json", "expo", "react-native", ".git"])
 const expoTop = topNames(expo);
 assert("Expo includes context7", expoTop.includes("context7"), expoTop.join(", "));
 assert("Expo excludes postgres by default", !expoTop.includes("postgres"), expoTop.join(", "));
+const reactNative = new Set(["always", "package.json", "react-native", ".git"]);
+const rnTop = topNames(reactNative);
+assert("React Native includes context7", rnTop.includes("context7"), rnTop.join(", "));
+assert("React Native includes figma or playwright", rnTop.includes("figma") || rnTop.includes("playwright"), rnTop.join(", "));
+assert("React Native excludes postgres by default", !rnTop.includes("postgres"), rnTop.join(", "));
 
 // DevOps / infra.
 const devops = new Set(["always", "dockerfile", "terraform", "helm", "k8s", ".github/workflows", ".git"]);
@@ -221,6 +232,11 @@ const dvTop = topNames(devops);
 assert("DevOps includes git or github", dvTop.includes("git") || dvTop.includes("github"), dvTop.join(", "));
 assert("DevOps includes guard-dangerous-bash", dvTop.includes("guard-dangerous-bash"), dvTop.join(", "));
 assert("DevOps excludes playwright", !dvTop.includes("playwright"), dvTop.join(", "));
+const ansible = new Set(["always", "ansible", "dockerfile", "terraform", ".github/workflows", ".git"]);
+const ansibleTop = topNames(ansible);
+assert("Ansible includes git or github", ansibleTop.includes("git") || ansibleTop.includes("github"), ansibleTop.join(", "));
+assert("Ansible includes guard-dangerous-bash", ansibleTop.includes("guard-dangerous-bash"), ansibleTop.join(", "));
+assert("Ansible excludes playwright", !ansibleTop.includes("playwright"), ansibleTop.join(", "));
 
 // Docs / writing.
 const docsWriting = new Set(["always", "docs", "mkdocs", "docusaurus", ".docx"]);

@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.74] — 2026-07-05
+### Added
+- **Regression tests** — Ansible devops, React Native mobile, PyTorch data-ml, and Godot scan fixtures.
+
 ## [0.3.73] — 2026-07-05
 ### Added
 - **Regression tests** — Vue frontend (Playwright), Unity (`ProjectSettings/ProjectVersion.txt`), and Unreal (`.uproject`) scan + recommend fixtures.

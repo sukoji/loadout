@@ -574,11 +574,24 @@ try {
     rmSync(unrealDir, { recursive: true, force: true });
   }
 
+  const godotDir = mkdtempSync(join(tmpdir(), "loadout-scan-godot-"));
+  try {
+    writeFileSync(join(godotDir, "project.godot"), "; Engine configuration file.\n");
+    const godotSignals = scanProject(godotDir);
+    assert("scan adds godot from project.godot", godotSignals.has("godot"));
+    const godotTop = topIds(godotSignals);
+    assert("godot project surfaces context7", godotTop.includes("context7"), godotTop.join(", "));
+    assert("godot project includes guard-dangerous-bash", godotTop.includes("guard-dangerous-bash"), godotTop.join(", "));
+  } finally {
+    rmSync(godotDir, { recursive: true, force: true });
+  }
+
   const devopsDir = mkdtempSync(join(tmpdir(), "loadout-scan-devops-"));
   try {
     writeFileSync(join(devopsDir, "Dockerfile"), "FROM alpine\n");
     writeFileSync(join(devopsDir, "main.tf"), "resource \"null_resource\" \"x\" {}\n");
     writeFileSync(join(devopsDir, "Chart.yaml"), "name: demo\n");
+    writeFileSync(join(devopsDir, "ansible.cfg"), "[defaults]\ninventory = hosts\n");
     mkdirSync(join(devopsDir, "k8s"), { recursive: true });
     writeFileSync(join(devopsDir, "k8s", "deploy.yaml"), "apiVersion: v1\n");
     const dvSignals = scanProject(devopsDir);
@@ -586,6 +599,7 @@ try {
     assert("scan adds terraform from .tf", dvSignals.has("terraform"));
     assert("scan adds helm from Chart.yaml", dvSignals.has("helm"));
     assert("scan adds k8s from k8s/ directory", dvSignals.has("k8s"));
+    assert("scan adds ansible from ansible.cfg", dvSignals.has("ansible"));
     const dvTop = topIds(dvSignals);
     assert("devops project surfaces github or git", dvTop.includes("github") || dvTop.includes("git"), dvTop.join(", "));
   } finally {
