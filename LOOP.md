@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.42 | 2026-07-04 | enable loadout-doctor workflow on this repo |
 | 0.3.41 | 2026-07-04 | examples/ci-doctor.yml GitHub Actions template |
 | 0.3.40 | 2026-07-04 | doctor JSON applyCommand fields |
 | 0.3.39 | 2026-07-04 | apply --suggestions --mcp-only / --limit |
@@ -76,3 +77,4 @@ run `npm test`, release, update this log.
 13. `apply --suggestions` one-shot apply — ✅ v0.3.38
 14. `--mcp-only` / `--limit` + doctor `applyCommand*` — ✅ v0.3.39–0.3.40
 15. GitHub Actions doctor example — ✅ v0.3.41
+16. Dogfood `loadout-doctor` workflow on this repo — ✅ v0.3.42

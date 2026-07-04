@@ -1,6 +1,8 @@
 # Copy into your repo as .github/workflows/loadout.yml (or merge the job).
 # Profiles the project and fails only on hard doctor "fix" items (missing tokens, etc.).
 # To auto-apply MCP gaps, uncomment the apply step (writes .mcp.json / agent configs).
+#
+# This repo dogfoods the same job in .github/workflows/loadout-doctor.yml (uses local CLI).
 
 name: loadout
 

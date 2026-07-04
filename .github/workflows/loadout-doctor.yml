@@ -1,0 +1,23 @@
+# Dogfood Loadout doctor on this repo (see examples/ci-doctor.yml for the template).
+name: loadout-doctor
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Profile with Loadout doctor
+        run: node cli/index.js doctor --json | tee loadout-profile.json
+      - name: Upload profile
+        uses: actions/upload-artifact@v4
+        with:
+          name: loadout-profile
+          path: loadout-profile.json

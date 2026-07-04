@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.42] — 2026-07-04
+### Added
+- **`.github/workflows/loadout-doctor.yml`** — dogfoods `doctor --json` on this repo (artifact upload).
+
 ## [0.3.41] — 2026-07-04
 ### Added
 - **`examples/ci-doctor.yml`** — copy-paste GitHub Actions job for `doctor --json` (+ optional apply).
