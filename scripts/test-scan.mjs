@@ -292,6 +292,36 @@ try {
     rmSync(laravelDir, { recursive: true, force: true });
   }
 
+  const springDir = mkdtempSync(join(tmpdir(), "loadout-scan-spring-"));
+  try {
+    writeFileSync(
+      join(springDir, "pom.xml"),
+      "<project><dependencies><dependency><artifactId>spring-boot-starter-web</artifactId></dependency></dependencies></project>\n",
+    );
+    writeFileSync(join(springDir, "application.properties"), "server.port=8080\n");
+    const springSignals = scanProject(springDir);
+    assert("scan adds spring from pom.xml", springSignals.has("spring"));
+    assert("scan adds spring from application.properties", springSignals.has("spring"));
+    const springTop = topIds(springSignals);
+    assert("spring project surfaces context7", springTop.includes("context7"), springTop.join(", "));
+    assert("spring project excludes playwright", !springTop.includes("playwright"), springTop.join(", "));
+  } finally {
+    rmSync(springDir, { recursive: true, force: true });
+  }
+
+  const axumDir = mkdtempSync(join(tmpdir(), "loadout-scan-axum-"));
+  try {
+    writeFileSync(join(axumDir, "Cargo.toml"), '[dependencies]\naxum = "0.7"\ntokio = { version = "1", features = ["full"] }\n');
+    const axumSignals = scanProject(axumDir);
+    assert("scan adds axum from Cargo.toml", axumSignals.has("axum"));
+    assert("scan adds Cargo.toml signal", axumSignals.has("cargo.toml"));
+    const axumTop = topIds(axumSignals);
+    assert("axum project surfaces context7", axumTop.includes("context7"), axumTop.join(", "));
+    assert("axum project excludes playwright", !axumTop.includes("playwright"), axumTop.join(", "));
+  } finally {
+    rmSync(axumDir, { recursive: true, force: true });
+  }
+
   const flutterDir = mkdtempSync(join(tmpdir(), "loadout-scan-flutter-"));
   try {
     writeFileSync(join(flutterDir, "pubspec.yaml"), "name: demo\nflutter:\n  assets: []\n");

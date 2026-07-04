@@ -114,6 +114,28 @@ export function scanProject(root = process.cwd()) {
   }
   if (has("artisan")) add("laravel");
 
+  // Java / Spring Boot
+  if (has("pom.xml")) {
+    const pom = read("pom.xml").toLowerCase();
+    if (pom.includes("spring-boot")) add("spring");
+  }
+  for (const f of ["build.gradle", "build.gradle.kts"]) {
+    if (has(f)) {
+      const gradle = read(f).toLowerCase();
+      if (gradle.includes("spring-boot") || gradle.includes("org.springframework.boot")) add("spring");
+    }
+  }
+  for (const f of ["application.properties", "application.yml", "application.yaml"]) {
+    if (has(f)) add("spring");
+  }
+
+  // Rust web frameworks (Cargo.toml also sets generic backend signal via fileSignals below)
+  if (has("Cargo.toml")) {
+    const cargo = read("Cargo.toml").toLowerCase();
+    if (cargo.includes("axum")) add("axum");
+    if (cargo.includes("actix")) add("actix");
+  }
+
   // Other ecosystems
   const fileSignals = {
     "go.mod": "go.mod",

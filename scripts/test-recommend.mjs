@@ -115,6 +115,13 @@ const laravel = new Set(["always", "laravel", "symfony", ".git"]);
 assert("Laravel includes context7", topNames(laravel).includes("context7"), topNames(laravel).join(", "));
 assert("Laravel includes guard-dangerous-bash", topNames(laravel).includes("guard-dangerous-bash"), topNames(laravel).join(", "));
 assert("Laravel excludes playwright", !topNames(laravel).includes("playwright"), topNames(laravel).join(", "));
+const spring = new Set(["always", "spring", "pom.xml", ".git"]);
+assert("Spring includes context7", topNames(spring).includes("context7"), topNames(spring).join(", "));
+assert("Spring includes guard-dangerous-bash", topNames(spring).includes("guard-dangerous-bash"), topNames(spring).join(", "));
+assert("Spring excludes playwright", !topNames(spring).includes("playwright"), topNames(spring).join(", "));
+const axum = new Set(["always", "axum", "Cargo.toml", ".git"]);
+assert("Axum includes context7", topNames(axum).includes("context7"), topNames(axum).join(", "));
+assert("Axum excludes playwright", !topNames(axum).includes("playwright"), topNames(axum).join(", "));
 
 // Godot game project.
 const godot = new Set(["always", "godot", "project.godot", ".git"]);

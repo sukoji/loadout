@@ -6,6 +6,12 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.66] — 2026-07-05
+### Added
+- **Java backend scan** — Spring Boot from `pom.xml`, Gradle (`spring-boot`), and `application.properties` / `.yml`.
+- **Rust backend scan** — `axum` and `actix` from `Cargo.toml`.
+- **Backend domain** — matches `spring`, `axum`, and `actix`.
+
 ## [0.3.65] — 2026-07-05
 ### Added
 - **PHP backend scan** — Laravel (`laravel/framework`, `laravel/*`, `artisan`) and Symfony (`symfony/*`) from `composer.json`.
