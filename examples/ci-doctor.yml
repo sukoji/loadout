@@ -1,0 +1,29 @@
+# Copy into your repo as .github/workflows/loadout.yml (or merge the job).
+# Profiles the project and fails only on hard doctor "fix" items (missing tokens, etc.).
+# To auto-apply MCP gaps, uncomment the apply step (writes .mcp.json / agent configs).
+
+name: loadout
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Profile with Loadout doctor
+        run: npx --yes claude-loadout@latest doctor --json | tee loadout-profile.json
+      - name: Upload profile
+        uses: actions/upload-artifact@v4
+        with:
+          name: loadout-profile
+          path: loadout-profile.json
+      # Optional: apply top MCP suggestions (commits must be handled by your workflow)
+      # - name: Apply MCP suggestions
+      #   run: npx --yes claude-loadout@latest apply --suggestions --mcp-only --json

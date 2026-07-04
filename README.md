@@ -153,6 +153,8 @@ npx claude-loadout doctor --json > profile.json
 npx claude-loadout apply --suggestions --mcp-only --json
 ```
 
+Copy-paste GitHub Actions job: [examples/ci-doctor.yml](examples/ci-doctor.yml).
+
 **Non-interactive shells** (CI, pipes): use `--dry-run`, `--json`, `--all`, or `--all --json` — otherwise Loadout prints recommendations and exits without hanging on input.
 
 ### What auto-applies vs what you do

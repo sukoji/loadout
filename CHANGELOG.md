@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.41] — 2026-07-04
+### Added
+- **`examples/ci-doctor.yml`** — copy-paste GitHub Actions job for `doctor --json` (+ optional apply).
+
 ## [0.3.40] — 2026-07-04
 ### Added
 - **`doctor --json`** — `applyCommand`, `applyCommandMcpOnly`, and `applyCommandIds` ready-to-run strings for CI.

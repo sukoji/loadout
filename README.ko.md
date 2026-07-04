@@ -134,6 +134,8 @@ npx claude-loadout doctor --json > profile.json
 npx claude-loadout apply --suggestions --mcp-only --json
 ```
 
+GitHub Actions 예제: [examples/ci-doctor.yml](examples/ci-doctor.yml).
+
 ## 내 에이전트에서 작동 — Claude Code 전용이 아님
 
 MCP 서버는 요즘 에이전트 전반에 이식 가능하고, 설정 파일과 형식만 다릅니다. Loadout이 각각에 맞는 걸 써줍니다.
