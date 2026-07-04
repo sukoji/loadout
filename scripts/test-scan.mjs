@@ -412,6 +412,36 @@ try {
     rmSync(laravelDir, { recursive: true, force: true });
   }
 
+  const symfonyDir = mkdtempSync(join(tmpdir(), "loadout-scan-symfony-"));
+  try {
+    writeFileSync(
+      join(symfonyDir, "composer.json"),
+      JSON.stringify({ require: { "symfony/framework-bundle": "^7.0", "symfony/http-kernel": "^7.0" } }),
+    );
+    const symfonySignals = scanProject(symfonyDir);
+    assert("scan adds symfony from composer.json (standalone)", symfonySignals.has("symfony"));
+    assert("standalone symfony omits laravel", !symfonySignals.has("laravel"));
+    const symfonyTop = topIds(symfonySignals);
+    assert("symfony project surfaces context7", symfonyTop.includes("context7"), symfonyTop.join(", "));
+    assert("symfony project excludes playwright", !symfonyTop.includes("playwright"), symfonyTop.join(", "));
+  } finally {
+    rmSync(symfonyDir, { recursive: true, force: true });
+  }
+
+  const mlflowDir = mkdtempSync(join(tmpdir(), "loadout-scan-mlflow-"));
+  try {
+    writeFileSync(join(mlflowDir, "requirements.txt"), "mlflow>=2.0\npandas\n");
+    writeFileSync(join(mlflowDir, "train.ipynb"), '{"nbformat": 4}\n');
+    const mlflowSignals = scanProject(mlflowDir);
+    assert("scan adds mlflow from requirements.txt", mlflowSignals.has("mlflow"));
+    assert("scan adds jupyter from notebook file", mlflowSignals.has("jupyter"));
+    const mlflowTop = topIds(mlflowSignals);
+    assert("mlflow project surfaces exa-research", mlflowTop.includes("exa-research"), mlflowTop.join(", "));
+    assert("mlflow project excludes playwright", !mlflowTop.includes("playwright"), mlflowTop.join(", "));
+  } finally {
+    rmSync(mlflowDir, { recursive: true, force: true });
+  }
+
   const springDir = mkdtempSync(join(tmpdir(), "loadout-scan-spring-"));
   try {
     writeFileSync(

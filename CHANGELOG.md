@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.76] — 2026-07-05
+### Added
+- **Regression tests** — MLflow research and standalone Symfony backend scan/recommend fixtures.
+
 ## [0.3.75] — 2026-07-05
 ### Added
 - **Regression tests** — plain Svelte frontend, Nx monorepo devops, and Weights & Biases research fixtures.

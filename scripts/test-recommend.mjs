@@ -51,6 +51,10 @@ const wandbResearch = new Set(["always", "wandb", "requirements.txt", "python", 
 const wandbTop = topNames(wandbResearch);
 assert("W&B research includes exa-research", wandbTop.includes("exa-research"), wandbTop.join(", "));
 assert("W&B research excludes playwright", !wandbTop.includes("playwright"), wandbTop.join(", "));
+const mlflowResearch = new Set(["always", "mlflow", "requirements.txt", "python", ".ipynb", "jupyter", ".git"]);
+const mlflowTop = topNames(mlflowResearch);
+assert("MLflow research includes exa-research", mlflowTop.includes("exa-research"), mlflowTop.join(", "));
+assert("MLflow research excludes playwright", !mlflowTop.includes("playwright"), mlflowTop.join(", "));
 
 // Frontend repo should still prioritize browser tooling.
 const frontend = new Set(["always", "package.json", "react", "next", ".git"]);
@@ -171,6 +175,10 @@ const laravel = new Set(["always", "laravel", "symfony", ".git"]);
 assert("Laravel includes context7", topNames(laravel).includes("context7"), topNames(laravel).join(", "));
 assert("Laravel includes guard-dangerous-bash", topNames(laravel).includes("guard-dangerous-bash"), topNames(laravel).join(", "));
 assert("Laravel excludes playwright", !topNames(laravel).includes("playwright"), topNames(laravel).join(", "));
+const symfony = new Set(["always", "symfony", ".git"]);
+assert("Symfony includes context7", topNames(symfony).includes("context7"), topNames(symfony).join(", "));
+assert("Symfony includes guard-dangerous-bash", topNames(symfony).includes("guard-dangerous-bash"), topNames(symfony).join(", "));
+assert("Symfony excludes playwright", !topNames(symfony).includes("playwright"), topNames(symfony).join(", "));
 const spring = new Set(["always", "spring", "pom.xml", ".git"]);
 assert("Spring includes context7", topNames(spring).includes("context7"), topNames(spring).join(", "));
 assert("Spring includes guard-dangerous-bash", topNames(spring).includes("guard-dangerous-bash"), topNames(spring).join(", "));
