@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.57] — 2026-07-04
+### Added
+- **Monorepo scan** — detects `pnpm-workspace.yaml`, `turbo.json`, `nx.json`, `lerna.json`, `rush.json`, `package.json` workspaces, and `packages/*/package.json`.
+- **DevOps domain** — matches `monorepo` / `turbo` / `nx` so multi-package repos surface filesystem, git, and github.
+
 ## [0.3.56] — 2026-07-04
 ### Added
 - **`doctor --require-healthy`** — exit 1 unless `summary.healthy` (optional plugins still pass).

@@ -2,7 +2,7 @@
 
 > CI/CD, Docker, Terraform, Kubernetes, cloud automation.
 
-_Signals that map here: `Dockerfile`, `docker-compose`, `.github/workflows`, `terraform`, `*.tf`, `k8s`, `helm`, `ansible`_
+_Signals that map here: `Dockerfile`, `docker-compose`, `.github/workflows`, `terraform`, `*.tf`, `k8s`, `helm`, `ansible`, `monorepo`, `turbo`, `nx`_
 
 ## MCP servers
 

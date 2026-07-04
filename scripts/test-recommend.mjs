@@ -119,6 +119,12 @@ const devopsNoEnv = new Set(["always", "dockerfile", "terraform", ".github/workf
 const devopsNoEnvTop = topNames(devopsNoEnv);
 assert("DevOps without .env excludes protect-secrets", !devopsNoEnvTop.includes("protect-secrets"), devopsNoEnvTop.join(", "));
 
+// Monorepo markers match devops tooling (filesystem / git / github).
+const monorepo = new Set(["always", "monorepo", "turbo", "package.json", ".git"]);
+const monoTop = topNames(monorepo);
+assert("Monorepo includes filesystem or git", monoTop.includes("filesystem") || monoTop.includes("git"), monoTop.join(", "));
+assert("Monorepo includes github or git", monoTop.includes("github") || monoTop.includes("git"), monoTop.join(", "));
+
 // .env alone (via general loadout) surfaces protect-secrets even when security isn't top domain.
 const frontendEnv = new Set(["always", "react", "next", "package.json", ".env"]);
 const frontendEnvTop = topNames(frontendEnv);

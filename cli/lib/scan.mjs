@@ -21,6 +21,7 @@ export function scanProject(root = process.cwd()) {
     add("package.json");
     try {
       const pkg = JSON.parse(read("package.json"));
+      if (pkg.workspaces) add("monorepo");
       const deps = { ...pkg.dependencies, ...pkg.devDependencies };
       for (const name of Object.keys(deps)) {
         add(name);
@@ -104,9 +105,30 @@ export function scanProject(root = process.cwd()) {
     "Chart.yaml": "helm",
     "Chart.yml": "helm",
     "ansible.cfg": "ansible",
+    "pnpm-workspace.yaml": "monorepo",
+    "turbo.json": "monorepo",
+    "nx.json": "monorepo",
+    "lerna.json": "monorepo",
+    "rush.json": "monorepo",
   };
   for (const [file, sig] of Object.entries(fileSignals)) {
     if (has(file)) add(sig);
+  }
+  // Named monorepo tools (also set monorepo above).
+  if (has("turbo.json")) add("turbo");
+  if (has("nx.json")) add("nx");
+  if (has("lerna.json")) add("lerna");
+  if (has("pnpm-workspace.yaml")) add("pnpm-workspace");
+  // packages/ with at least one package.json child is a common monorepo layout.
+  if (isDir(root, "packages")) {
+    try {
+      const kids = readdirSync(resolve(root, "packages"), { withFileTypes: true });
+      if (kids.some((e) => e.isDirectory() && existsSync(resolve(root, "packages", e.name, "package.json")))) {
+        add("monorepo");
+      }
+    } catch {
+      /* ignore */
+    }
   }
   if (has("pubspec.yaml")) {
     const pub = read("pubspec.yaml").toLowerCase();

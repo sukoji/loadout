@@ -36,7 +36,7 @@
     "title": "DevOps / Infra",
     "title_ko": "데브옵스 / 인프라",
     "blurb": "CI/CD, Docker, Terraform, Kubernetes, cloud automation.",
-    "signals": ["Dockerfile", "docker-compose", ".github/workflows", "terraform", "*.tf", "k8s", "helm", "ansible"],
+    "signals": ["Dockerfile", "docker-compose", ".github/workflows", "terraform", "*.tf", "k8s", "helm", "ansible", "monorepo", "turbo", "nx"],
     "loadout": ["git", "github", "filesystem", "block-push-to-main", "gofmt-on-edit", "guard-dangerous-bash", "protect-secrets", "security-review", "notify-on-stop", "statusline-git", "code-review"]
   },
   {

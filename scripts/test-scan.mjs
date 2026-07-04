@@ -113,6 +113,34 @@ try {
     rmSync(devopsDir, { recursive: true, force: true });
   }
 
+  const monoDir = mkdtempSync(join(tmpdir(), "loadout-scan-mono-"));
+  try {
+    writeFileSync(join(monoDir, "pnpm-workspace.yaml"), "packages:\n  - packages/*\n");
+    writeFileSync(join(monoDir, "turbo.json"), "{}\n");
+    mkdirSync(join(monoDir, "packages", "app"), { recursive: true });
+    writeFileSync(join(monoDir, "packages", "app", "package.json"), JSON.stringify({ name: "app" }));
+    const monoSignals = scanProject(monoDir);
+    assert("scan adds monorepo from pnpm-workspace.yaml", monoSignals.has("monorepo"));
+    assert("scan adds turbo from turbo.json", monoSignals.has("turbo"));
+    assert("scan adds pnpm-workspace signal", monoSignals.has("pnpm-workspace"));
+    const monoTop = topIds(monoSignals);
+    assert("monorepo project surfaces filesystem or git", monoTop.includes("filesystem") || monoTop.includes("git"), monoTop.join(", "));
+  } finally {
+    rmSync(monoDir, { recursive: true, force: true });
+  }
+
+  const workspacesDir = mkdtempSync(join(tmpdir(), "loadout-scan-ws-"));
+  try {
+    writeFileSync(
+      join(workspacesDir, "package.json"),
+      JSON.stringify({ name: "root", workspaces: ["packages/*"] }),
+    );
+    const wsSignals = scanProject(workspacesDir);
+    assert("scan adds monorepo from package.json workspaces", wsSignals.has("monorepo"));
+  } finally {
+    rmSync(workspacesDir, { recursive: true, force: true });
+  }
+
   const docsDir = mkdtempSync(join(tmpdir(), "loadout-scan-docs-"));
   try {
     mkdirSync(join(docsDir, "docs"), { recursive: true });
