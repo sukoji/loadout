@@ -6,7 +6,7 @@ Generated from the canonical catalog — do not edit by hand (run `npm run build
 | Domain | For | Items |
 | :-- | :-- | :-- |
 | [Frontend / Web UI](frontend.md) | React, Vue, Svelte, Next, Astro, Remix — anything that ships to a browser. | 9 |
-| [Backend / API](backend-api.md) | Servers, APIs, databases — Node, Python, Go, Rust, Java services. | 17 |
+| [Backend / API](backend-api.md) | Servers, APIs, databases — Node, Python, Go, Rust, Java, Elixir services. | 17 |
 | [Data / ML / Notebooks](data-ml.md) | Python data work, training pipelines, analysis, and reporting. | 11 |
 | [Research / Academic](research.md) | Literature review, notebooks, papers, and experiment repos — when discovery and writing matter as much as code. | 10 |
 | [DevOps / Infra](devops.md) | CI/CD, Docker, Terraform, Kubernetes, cloud automation. | 11 |

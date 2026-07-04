@@ -6,6 +6,13 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.68] — 2026-07-05
+### Added
+- **Elixir backend scan** — Phoenix from `mix.exs` and `config/config.exs`; `elixir` from `mix.exs`.
+- **Python backend scan** — Django from `manage.py` (in addition to requirements/pyproject).
+- **Backend domain** — matches `phoenix` and `elixir`.
+- **Regression tests** — Fiber, Echo, Actix, Django, and Phoenix scan + recommend fixtures.
+
 ## [0.3.67] — 2026-07-05
 ### Added
 - **Ruby backend scan** — Rails from `Gemfile` and `config/application.rb`.

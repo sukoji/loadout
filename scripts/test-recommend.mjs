@@ -122,6 +122,17 @@ assert("Spring excludes playwright", !topNames(spring).includes("playwright"), t
 const axum = new Set(["always", "axum", "Cargo.toml", ".git"]);
 assert("Axum includes context7", topNames(axum).includes("context7"), topNames(axum).join(", "));
 assert("Axum excludes playwright", !topNames(axum).includes("playwright"), topNames(axum).join(", "));
+const actix = new Set(["always", "actix", "Cargo.toml", ".git"]);
+assert("Actix includes context7", topNames(actix).includes("context7"), topNames(actix).join(", "));
+assert("Actix excludes playwright", !topNames(actix).includes("playwright"), topNames(actix).join(", "));
+const django = new Set(["always", "django", "requirements.txt", "python", ".git"]);
+assert("Django includes context7", topNames(django).includes("context7"), topNames(django).join(", "));
+assert("Django includes guard-dangerous-bash", topNames(django).includes("guard-dangerous-bash"), topNames(django).join(", "));
+assert("Django excludes playwright", !topNames(django).includes("playwright"), topNames(django).join(", "));
+const phoenix = new Set(["always", "phoenix", "elixir", ".git"]);
+assert("Phoenix includes context7", topNames(phoenix).includes("context7"), topNames(phoenix).join(", "));
+assert("Phoenix includes guard-dangerous-bash", topNames(phoenix).includes("guard-dangerous-bash"), topNames(phoenix).join(", "));
+assert("Phoenix excludes playwright", !topNames(phoenix).includes("playwright"), topNames(phoenix).join(", "));
 const rails = new Set(["always", "rails", ".git"]);
 assert("Rails includes context7", topNames(rails).includes("context7"), topNames(rails).join(", "));
 assert("Rails includes guard-dangerous-bash", topNames(rails).includes("guard-dangerous-bash"), topNames(rails).join(", "));
@@ -129,6 +140,12 @@ assert("Rails excludes playwright", !topNames(rails).includes("playwright"), top
 const gin = new Set(["always", "gin", "go.mod", ".git"]);
 assert("Gin includes context7", topNames(gin).includes("context7"), topNames(gin).join(", "));
 assert("Gin excludes playwright", !topNames(gin).includes("playwright"), topNames(gin).join(", "));
+const fiber = new Set(["always", "fiber", "go.mod", ".git"]);
+assert("Fiber includes context7", topNames(fiber).includes("context7"), topNames(fiber).join(", "));
+assert("Fiber excludes playwright", !topNames(fiber).includes("playwright"), topNames(fiber).join(", "));
+const echo = new Set(["always", "echo", "go.mod", ".git"]);
+assert("Echo includes context7", topNames(echo).includes("context7"), topNames(echo).join(", "));
+assert("Echo excludes playwright", !topNames(echo).includes("playwright"), topNames(echo).join(", "));
 
 // Godot game project.
 const godot = new Set(["always", "godot", "project.godot", ".git"]);

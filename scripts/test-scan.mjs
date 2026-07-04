@@ -322,6 +322,51 @@ try {
     rmSync(axumDir, { recursive: true, force: true });
   }
 
+  const actixDir = mkdtempSync(join(tmpdir(), "loadout-scan-actix-"));
+  try {
+    writeFileSync(join(actixDir, "Cargo.toml"), '[dependencies]\nactix-web = "4"\ntokio = { version = "1", features = ["full"] }\n');
+    const actixSignals = scanProject(actixDir);
+    assert("scan adds actix from Cargo.toml", actixSignals.has("actix"));
+    const actixTop = topIds(actixSignals);
+    assert("actix project surfaces context7", actixTop.includes("context7"), actixTop.join(", "));
+    assert("actix project excludes playwright", !actixTop.includes("playwright"), actixTop.join(", "));
+  } finally {
+    rmSync(actixDir, { recursive: true, force: true });
+  }
+
+  const djangoDir = mkdtempSync(join(tmpdir(), "loadout-scan-django-"));
+  try {
+    writeFileSync(join(djangoDir, "requirements.txt"), "django>=5.0\n");
+    writeFileSync(join(djangoDir, "manage.py"), "#!/usr/bin/env python\n");
+    const djangoSignals = scanProject(djangoDir);
+    assert("scan adds django from requirements.txt", djangoSignals.has("django"));
+    assert("scan adds django from manage.py", djangoSignals.has("django"));
+    const djangoTop = topIds(djangoSignals);
+    assert("django project surfaces context7", djangoTop.includes("context7"), djangoTop.join(", "));
+    assert("django project excludes playwright", !djangoTop.includes("playwright"), djangoTop.join(", "));
+  } finally {
+    rmSync(djangoDir, { recursive: true, force: true });
+  }
+
+  const phoenixDir = mkdtempSync(join(tmpdir(), "loadout-scan-phoenix-"));
+  try {
+    mkdirSync(join(phoenixDir, "config"), { recursive: true });
+    writeFileSync(
+      join(phoenixDir, "mix.exs"),
+      'defmodule Demo.MixProject do\n  use Mix.Project\n  def deps do\n    [{:phoenix, "~> 1.7"}]\n  end\nend\n',
+    );
+    writeFileSync(join(phoenixDir, "config/config.exs"), "import Config\n");
+    const phoenixSignals = scanProject(phoenixDir);
+    assert("scan adds phoenix from mix.exs", phoenixSignals.has("phoenix"));
+    assert("scan adds elixir from mix.exs", phoenixSignals.has("elixir"));
+    assert("scan adds phoenix from config/config.exs", phoenixSignals.has("phoenix"));
+    const phoenixTop = topIds(phoenixSignals);
+    assert("phoenix project surfaces context7", phoenixTop.includes("context7"), phoenixTop.join(", "));
+    assert("phoenix project excludes playwright", !phoenixTop.includes("playwright"), phoenixTop.join(", "));
+  } finally {
+    rmSync(phoenixDir, { recursive: true, force: true });
+  }
+
   const railsDir = mkdtempSync(join(tmpdir(), "loadout-scan-rails-"));
   try {
     mkdirSync(join(railsDir, "config"), { recursive: true });
@@ -351,6 +396,36 @@ try {
     assert("gin project excludes playwright", !ginTop.includes("playwright"), ginTop.join(", "));
   } finally {
     rmSync(ginDir, { recursive: true, force: true });
+  }
+
+  const fiberDir = mkdtempSync(join(tmpdir(), "loadout-scan-fiber-"));
+  try {
+    writeFileSync(
+      join(fiberDir, "go.mod"),
+      "module example.com/demo\n\ngo 1.22\n\nrequire github.com/gofiber/fiber/v2 v2.52.0\n",
+    );
+    const fiberSignals = scanProject(fiberDir);
+    assert("scan adds fiber from go.mod", fiberSignals.has("fiber"));
+    const fiberTop = topIds(fiberSignals);
+    assert("fiber project surfaces context7", fiberTop.includes("context7"), fiberTop.join(", "));
+    assert("fiber project excludes playwright", !fiberTop.includes("playwright"), fiberTop.join(", "));
+  } finally {
+    rmSync(fiberDir, { recursive: true, force: true });
+  }
+
+  const echoDir = mkdtempSync(join(tmpdir(), "loadout-scan-echo-"));
+  try {
+    writeFileSync(
+      join(echoDir, "go.mod"),
+      "module example.com/demo\n\ngo 1.22\n\nrequire github.com/labstack/echo/v4 v4.12.0\n",
+    );
+    const echoSignals = scanProject(echoDir);
+    assert("scan adds echo from go.mod", echoSignals.has("echo"));
+    const echoTop = topIds(echoSignals);
+    assert("echo project surfaces context7", echoTop.includes("context7"), echoTop.join(", "));
+    assert("echo project excludes playwright", !echoTop.includes("playwright"), echoTop.join(", "));
+  } finally {
+    rmSync(echoDir, { recursive: true, force: true });
   }
 
   const flutterDir = mkdtempSync(join(tmpdir(), "loadout-scan-flutter-"));

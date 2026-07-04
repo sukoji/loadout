@@ -98,6 +98,15 @@ export function scanProject(root = process.cwd()) {
       if (py.includes(lib)) add(lib);
     }
   }
+  if (has("manage.py")) add("django");
+
+  // Elixir / Phoenix
+  if (has("mix.exs")) {
+    add("elixir");
+    const mix = read("mix.exs").toLowerCase();
+    if (mix.includes("phoenix")) add("phoenix");
+  }
+  if (has("config/config.exs")) add("phoenix");
 
   // PHP / Composer
   if (has("composer.json")) {
