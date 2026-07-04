@@ -110,7 +110,7 @@ npx claude-loadout --help     # 플래그 전체 목록
 | `search <query>` / `--type` / `--json` | id·이름·설명·시그널·도메인 검색 (`mcp`/`skill`/`hook` 필터) |
 | `stats` / `stats --json` | 카탈로그 규모 (도메인·티어·타입 카운트) |
 | `export` / `export --json` | 팀 manifest 작성 또는 JSON 출력 |
-| `apply -f <file>` / `--ids` / `--suggestions` | 공유 loadout, 특정 id, 또는 상위 추천 일괄 적용 |
+| `apply -f` / `--ids` / `--suggestions` | 공유 loadout·특정 id·상위 추천 (`--mcp-only`, `--limit` 지원) |
 | `--discover` | 미검증 커뮤니티 스킬 추가 노출 |
 | `--target <id>` | `cursor`, `codex`, `gemini` 등 에이전트별 MCP 설정 작성 |
 | `--list-targets` | 지원 에이전트·설정 파일 경로 목록 |
@@ -130,7 +130,7 @@ npx claude-loadout --help     # 플래그 전체 목록
 
 ```bash
 npx claude-loadout doctor --json > profile.json   # domains, signals, suggestions
-npx claude-loadout apply --suggestions --json     # 상위 gap 한 번에 적용
+npx claude-loadout apply --suggestions --mcp-only --json   # MCP gap만 적용
 ```
 
 ## 내 에이전트에서 작동 — Claude Code 전용이 아님

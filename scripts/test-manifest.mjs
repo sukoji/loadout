@@ -109,8 +109,14 @@ try {
   try {
     writeFileSync(join(sugDir, "package.json"), JSON.stringify({ dependencies: { react: "18", next: "14" } }));
     const signals = new Set(["always", "package.json", "react", "next", ".git"]);
-    const sugIds = recommend(catalog, signals, sugDir).items.slice(0, 5).map((e) => e.item.id);
+    const sugItems = recommend(catalog, signals, sugDir).items;
+    const sugIds = sugItems.slice(0, 5).map((e) => e.item.id);
     assert("suggestions include playwright for react/next", sugIds.includes("playwright"));
+    const mcpOnlyIds = sugItems.filter((e) => e.item.type === "mcp").slice(0, 5).map((e) => e.item.id);
+    assert("suggestions --mcp-only are all mcp", mcpOnlyIds.every((id) => catalog.byId.get(id)?.type === "mcp"));
+    assert("suggestions --mcp-only still includes playwright", mcpOnlyIds.includes("playwright"));
+    const limited = sugItems.slice(0, 2).map((e) => e.item.id);
+    assert("suggestions --limit 2 caps count", limited.length === 2);
     const { receipts: sugReceipts } = applyItems(catalog, sugIds.filter((id) => id === "playwright"), sugDir);
     assert("apply --suggestions path writes playwright", sugReceipts.find((r) => r.type === "claude")?.receipt?.mcp?.includes("playwright"));
   } finally {

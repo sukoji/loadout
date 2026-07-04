@@ -10,7 +10,7 @@
       "name": "loadout",
       "source": "./plugins/loadout",
       "description": "Analyze your repo, recommend a domain-matched loadout of Claude Code extensions, and apply the ones you pick — MCP servers, hooks, settings, and skills.",
-      "version": "0.3.38",
+      "version": "0.3.39",
       "category": "workflow",
       "keywords": ["setup", "recommender", "mcp", "skills", "hooks", "onboarding", "curated"],
       "homepage": "https://github.com/sukoji/loadout",

@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.39] — 2026-07-04
+### Added
+- **`apply --suggestions --mcp-only`** — apply only MCP server suggestions (skip skills/hooks).
+- **`apply --suggestions --limit N`** — cap how many suggestions to apply (default 5).
+
 ## [0.3.38] — 2026-07-04
 ### Added
 - **`apply --suggestions`** — apply the top recommendations for the current repo in one non-interactive step.

@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.39 | 2026-07-04 | apply --suggestions --mcp-only / --limit |
 | 0.3.38 | 2026-07-04 | `apply --suggestions` one-shot (tick 30) |
 | 0.3.37 | 2026-07-04 | doctor apply --ids tip; CI recipe docs |
 | 0.3.36 | 2026-07-04 | apply --ids from doctor suggestions |

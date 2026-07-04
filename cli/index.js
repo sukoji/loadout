@@ -214,6 +214,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
   console.log(`  ${c("cyan", "npx claude-loadout apply --ids playwright,context7")}  Apply specific catalog ids`);
   console.log(`  ${c("cyan", "npx claude-loadout apply --suggestions")}  Apply top doctor suggestions`);
+  console.log(`  ${c("cyan", "npx claude-loadout apply --suggestions --mcp-only")}  Suggestions: MCP servers only`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --dry-run --json")}  Preview apply as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --json")}  Apply and print receipts as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout --dry-run")}  Show recommendations only`);
@@ -275,10 +276,13 @@ function parseIds(args) {
   return raw.split(",").map((s) => s.trim()).filter(Boolean);
 }
 
-function suggestionIds(catalog, root) {
+function suggestionIds(catalog, root, opts = {}) {
   const signals = scanProject(root);
   const { items } = recommend(catalog, signals, root);
-  return items.slice(0, 5).map((e) => e.item.id);
+  const limit = opts.limit ?? 5;
+  let list = items;
+  if (opts.mcpOnly) list = list.filter((e) => e.item.type === "mcp");
+  return list.slice(0, limit).map((e) => e.item.id);
 }
 
 function runApplyManifest(args, flags) {
@@ -286,6 +290,9 @@ function runApplyManifest(args, flags) {
   const catalog = loadCatalog();
   const idsFromFlag = parseIds(args);
   const useSuggestions = flags.has("--suggestions");
+  const mcpOnly = flags.has("--mcp-only");
+  const limitRaw = parseFlagValue(args, "--limit", "-n");
+  const limit = limitRaw ? Math.max(1, parseInt(limitRaw, 10) || 5) : 5;
   const targets = parseTargets(args);
   const invalid = targets.filter((t) => !TARGETS[t]);
   if (invalid.length) {
@@ -298,10 +305,13 @@ function runApplyManifest(args, flags) {
   let sourceLabel = null;
   if (idsFromFlag?.length) {
     ids = idsFromFlag;
+    if (mcpOnly) {
+      ids = ids.filter((id) => catalog.byId.get(id)?.type === "mcp");
+    }
     sourceLabel = `--ids ${ids.join(",")}`;
   } else if (useSuggestions) {
-    ids = suggestionIds(catalog, root);
-    sourceLabel = `--suggestions (${ids.join(",") || "none"})`;
+    ids = suggestionIds(catalog, root, { limit, mcpOnly });
+    sourceLabel = `--suggestions${mcpOnly ? " --mcp-only" : ""} (${ids.join(",") || "none"})`;
     if (!ids.length) {
       if (flags.has("--json")) {
         console.log(JSON.stringify({ ids: [], targets, skipped: [], receipts: [], note: "no suggestions" }, null, 2));

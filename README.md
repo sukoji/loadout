@@ -123,6 +123,8 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `apply -f <file>` | Apply a shared team loadout |
 | `apply --ids id1,id2` | Apply specific catalog ids (e.g. from `doctor --json` suggestions) |
 | `apply --suggestions` | Apply top recommendations for this repo (no manifest file) |
+| `apply --suggestions --mcp-only` | Suggestions: MCP servers only (skip skills/hooks) |
+| `apply --suggestions --limit N` | Cap how many suggestions to apply (default 5) |
 | `apply -f <file> --target <id>` | Apply manifest MCPs to Cursor, Codex, etc. |
 | `apply -f <file> --dry-run --json` | Preview apply as JSON |
 | `apply -f <file> --json` | Apply and print receipts as JSON |
@@ -147,7 +149,7 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 
 ```bash
 npx claude-loadout doctor --json > profile.json   # domains, signals, suggestions
-npx claude-loadout apply --suggestions --json     # apply top gaps in one step
+npx claude-loadout apply --suggestions --mcp-only --json   # apply top MCP gaps only
 # or: npx claude-loadout apply --ids playwright,context7 --json
 ```
 
