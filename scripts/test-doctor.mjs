@@ -65,6 +65,8 @@ try {
   assert("doctor domains array includes frontend", profiled.domains.some((d) => d.id === "frontend"));
   assert("doctor signals include react", profiled.signals.includes("react"));
   assert("doctor reports detected signals", profiled.ok.some((f) => f.msg.includes("Detected signals")));
+  assert("doctor suggestions is an array", Array.isArray(profiled.suggestions));
+  assert("doctor suggestions include playwright for react/next", profiled.suggestions.some((s) => s.id === "playwright"));
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

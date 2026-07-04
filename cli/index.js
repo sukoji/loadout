@@ -520,6 +520,7 @@ function runDoctor(flags = new Set()) {
         ok: findings.ok.length,
         domains: findings.domains?.length || 0,
         signals: findings.signals?.length || 0,
+        suggestions: findings.suggestions?.length || 0,
       },
     }, null, 2));
     if (findings.fix.length) exit(1);

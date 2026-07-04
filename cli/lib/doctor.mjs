@@ -19,7 +19,7 @@ const HOOK_DEPS = {
 
 export function doctor(root = process.cwd()) {
   const catalog = loadCatalog();
-  const findings = { ok: [], warn: [], fix: [], domains: [], signals: [] };
+  const findings = { ok: [], warn: [], fix: [], domains: [], signals: [], suggestions: [] };
 
   const mcpPath = resolve(root, ".mcp.json");
   const settingsPath = resolve(root, ".claude", "settings.json");
@@ -268,6 +268,13 @@ function auditGaps(root, catalog, findings) {
     findings.ok.push({ msg: `Detected signals: ${interesting.join(", ")}${findings.signals.length > 10 ? "…" : ""}` });
   }
   const top = items.slice(0, 5);
+  findings.suggestions = top.map(({ item, reason }) => ({
+    id: item.id,
+    name: item.name,
+    type: item.type,
+    tier: item.tier || "curated",
+    reason,
+  }));
   if (!top.length) {
     findings.ok.push({ msg: "Recommendation engine has no gaps — setup looks complete for this repo" });
     return;
