@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.49] — 2026-07-04
+### Added
+- **`doctor --fix` skill install guide** — prints exact Claude Code commands/notes for remaining skills (never auto-written).
+- Doctor JSON **`skills`** array with `commands` / `note` / `homepage` for each skill suggestion.
+
 ## [0.3.48] — 2026-07-04
 ### Fixed
 - **`protect-secrets`** — now in the general loadout (still `.env`-gated), so frontend/mobile/etc. repos with credentials get it even when the security domain isn't top-ranked.

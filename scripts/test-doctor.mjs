@@ -101,6 +101,24 @@ try {
     "after fix, protect-secrets not still suggested",
     !hooksFix.findings.suggestions.some((s) => s.id === "protect-secrets"),
   );
+
+  const skillGuide = hooksFix.skills || [];
+  assert("doctor --fix returns skill install guide", skillGuide.some((s) => s.id === "superpowers"));
+  assert(
+    "superpowers guide has install commands",
+    skillGuide.find((s) => s.id === "superpowers")?.commands?.length > 0,
+  );
+  assert(
+    "builtin skill guide has a note",
+    skillGuide.some((s) => s.id === "code-review" && s.note),
+  );
+
+  // Dry-run with no MCP/hooks left still surfaces skill install steps.
+  const guideOnly = doctorFix(dir, { dryRun: true });
+  assert(
+    "dry-run skill guide when skills remain",
+    guideOnly.skills.some((s) => s.commands?.length || s.note),
+  );
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

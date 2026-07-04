@@ -8,7 +8,7 @@ import { loadCatalog } from "./lib/catalog.mjs";
 import { scanProject } from "./lib/scan.mjs";
 import { recommend } from "./lib/recommend.mjs";
 import { apply } from "./lib/apply.mjs";
-import { doctor, doctorFix } from "./lib/doctor.mjs";
+import { doctor, doctorFix, skillInstallGuide } from "./lib/doctor.mjs";
 import { buildManifest, writeManifest, applyManifest, applyItems, readManifestIds, buildRecommendPreview, previewManifestApply, previewItemsApply } from "./lib/manifest.mjs";
 import { applyToTarget, listTargets, detectTargets, TARGETS } from "./lib/targets.mjs";
 import { searchCatalog } from "./lib/search.mjs";
@@ -197,7 +197,7 @@ function printHelp() {
   console.log(c("bold", "Usage:\n"));
   console.log(`  ${c("cyan", "npx claude-loadout")}              Interactive recommend + apply (Claude Code)`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor")}     Audit .mcp.json + hooks`);
-  console.log(`  ${c("cyan", "npx claude-loadout doctor --fix")}  Apply auto-writable suggestions (MCP + hooks)`);
+  console.log(`  ${c("cyan", "npx claude-loadout doctor --fix")}  Apply MCP/hooks + print skill install steps`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor --fix --mcp-only")}  Fix: MCP servers only`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor --fix --dry-run")}  Preview what --fix would apply`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor --json")}  Machine-readable audit (exit 1 on fixes)`);
@@ -583,6 +583,7 @@ function runDoctor(flags = new Set()) {
         applied: result.applied,
         ids: result.ids,
         manual: result.manual,
+        skills: result.skills,
         dryRun: result.dryRun,
         skipped: result.skipped,
         receipts: result.receipts,
@@ -624,7 +625,7 @@ function runDoctor(flags = new Set()) {
     }
     console.log(c("dim", `     or: npx claude-loadout apply --ids ${suggestionIds.join(",")}\n`));
   } else if (suggestionIds.length) {
-    console.log(c("dim", "Tip: remaining suggestions are skills — install via Claude Code plugin commands"));
+    console.log(c("dim", "Tip: npx claude-loadout doctor --fix  (prints skill install steps)"));
     console.log(c("dim", `     or: npx claude-loadout apply --ids ${suggestionIds.join(",")}\n`));
   } else if (findings.fix.length) {
     console.log(c("dim", "Tip: npx claude-loadout --dry-run to see recommended additions.\n"));
@@ -648,17 +649,16 @@ function doctorSummary(findings) {
 function doctorJsonPayload(findings) {
   const suggestionIds = (findings.suggestions || []).map((s) => s.id).filter(Boolean);
   const mcpIds = (findings.suggestions || []).filter((s) => s.type === "mcp").map((s) => s.id);
-  const autoIds = (findings.suggestions || [])
-    .filter((s) => s.type === "mcp" || s.type === "hook" || s.type === "setting")
-    .map((s) => s.id);
+  const skills = skillInstallGuide(loadCatalog(), findings.suggestions || []);
   return {
     ...findings,
+    skills,
     applyCommand: suggestionIds.length ? `npx claude-loadout apply --suggestions` : null,
     applyCommandMcpOnly: mcpIds.length ? `npx claude-loadout apply --suggestions --mcp-only` : null,
     applyCommandIds: suggestionIds.length
       ? `npx claude-loadout apply --ids ${suggestionIds.join(",")}`
       : null,
-    fixCommand: autoIds.length ? `npx claude-loadout doctor --fix` : null,
+    fixCommand: suggestionIds.length ? `npx claude-loadout doctor --fix` : null,
     fixCommandMcpOnly: mcpIds.length ? `npx claude-loadout doctor --fix --mcp-only` : null,
     summary: doctorSummary(findings),
   };
@@ -687,7 +687,7 @@ function printDoctorFix(result, root) {
   console.log(c("bold", "\n🩺 Loadout doctor --fix") + c("dim", `  — ${root}\n`));
   if (result.dryRun) {
     if (!result.ids.length) {
-      console.log(c("green", "Nothing auto-applicable to fix.\n"));
+      console.log(c("green", "Nothing auto-applicable to write.\n"));
     } else {
       console.log(c("bold", "Would apply:"));
       result.ids.forEach((id) => console.log(`  • ${id}`));
@@ -698,14 +698,12 @@ function printDoctorFix(result, root) {
       if (r.type === "claude" || r.type === "commands") printReceipt(r.receipt);
       else printTargetReceipt(r.receipt);
     }
+  } else if (!result.skills?.length) {
+    console.log(c("green", "Nothing to fix — setup looks complete.\n"));
   } else {
-    console.log(c("green", "Nothing auto-applicable to fix.\n"));
+    console.log(c("green", "Nothing auto-applicable to write (MCP/hooks already set).\n"));
   }
-  if (result.manual.length) {
-    console.log(c("dim", "Manual (skills/plugins — not auto-written):"));
-    result.manual.forEach((s) => console.log(c("dim", `  • ${s.id} (${s.type})`)));
-    console.log("");
-  }
+  printSkillInstallGuide(result.skills);
   if (result.skipped?.length) {
     console.log(c("yellow", "Skipped:"));
     result.skipped.forEach((s) => console.log(`  • ${s}`));
@@ -715,6 +713,22 @@ function printDoctorFix(result, root) {
     console.log(c("bold", "After fix:"));
     printDoctorFindings(result.findings);
   }
+}
+
+function printSkillInstallGuide(skills) {
+  if (!skills?.length) return;
+  console.log(c("bold", "Skills (run in Claude Code — not auto-written):"));
+  for (const s of skills) {
+    console.log(`  ${c("cyan", s.name)}`);
+    if (s.commands?.length) {
+      s.commands.forEach((cmd) => console.log(`     ${c("green", cmd)}`));
+    } else if (s.note) {
+      console.log(c("dim", `     ${s.note}`));
+    } else if (s.homepage) {
+      console.log(c("dim", `     ${s.homepage}`));
+    }
+  }
+  console.log("");
 }
 
 function parseSelection(answer, top) {

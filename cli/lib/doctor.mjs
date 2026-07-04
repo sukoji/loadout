@@ -80,7 +80,26 @@ export function doctor(root = process.cwd()) {
   return findings;
 }
 
-/** Apply auto-writable doctor suggestions (MCP + hooks). Skills stay manual. */
+/** Install steps for skill/reference suggestions (never auto-written). */
+export function skillInstallGuide(catalog, suggestions = []) {
+  const out = [];
+  for (const s of suggestions) {
+    if (s.type !== "skill" && s.type !== "reference") continue;
+    const item = catalog.byId.get(s.id);
+    if (!item) continue;
+    const install = item.install || {};
+    out.push({
+      id: item.id,
+      name: item.name,
+      commands: install.commands || [],
+      note: install.note || null,
+      homepage: item.homepage || null,
+    });
+  }
+  return out;
+}
+
+/** Apply auto-writable doctor suggestions (MCP + hooks). Skills stay manual (install guide only). */
 export function doctorFix(root = process.cwd(), opts = {}) {
   const catalog = loadCatalog();
   const mcpOnly = Boolean(opts.mcpOnly);
@@ -111,12 +130,14 @@ export function doctorFix(root = process.cwd(), opts = {}) {
     }
   }
 
+  const skills = skillInstallGuide(catalog, manual);
   const ids = auto.slice(0, limit).map((s) => s.id);
   if (!ids.length || dryRun) {
     return {
       applied: [],
       ids,
       manual,
+      skills,
       dryRun,
       receipts: [],
       skipped: [],
@@ -129,6 +150,7 @@ export function doctorFix(root = process.cwd(), opts = {}) {
     applied: ids,
     ids,
     manual,
+    skills,
     dryRun: false,
     receipts,
     skipped,
@@ -363,8 +385,11 @@ function auditGaps(root, catalog, findings) {
     return;
   }
   const names = top.map((e) => e.item.name).join("; ");
+  const hasAuto = top.some((e) => AUTO_APPLY_TYPES.has(e.item.type));
   findings.warn.push({
-    msg: `Loadout would still suggest: ${names} — run npx claude-loadout doctor --fix`,
+    msg: hasAuto
+      ? `Loadout would still suggest: ${names} — run npx claude-loadout doctor --fix`
+      : `Loadout would still suggest: ${names} — run npx claude-loadout doctor --fix for skill install steps`,
   });
 }
 

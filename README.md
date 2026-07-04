@@ -130,7 +130,7 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `apply -f <file> --dry-run --json` | Preview apply as JSON |
 | `apply -f <file> --json` | Apply and print receipts as JSON |
 | `doctor` | Audit: tokens, hook deps, cross-agent dupes, gaps |
-| `doctor --fix` | Apply auto-writable suggestions (MCP + hooks); skills stay manual |
+| `doctor --fix` | Apply auto-writable suggestions (MCP + hooks) and print skill install steps |
 | `doctor --fix --mcp-only` | Fix MCP servers only |
 | `doctor --fix --dry-run` | Preview what `--fix` would apply |
 | `doctor --json` | Audit JSON with `domains`, `signals`, `suggestions`, `fixCommand*`, `applyCommand*`, and `summary` (exit 1 when fixes needed) |

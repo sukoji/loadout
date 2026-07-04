@@ -106,7 +106,7 @@ npx claude-loadout --help     # 플래그 전체 목록
 | `--all` / `-a` / `-y` | 상위 추천 전체 자동 적용 |
 | `--all --json` | 상위 추천 적용 후 receipt만 JSON 출력 |
 | `doctor` / `doctor --json` | 미입력 토큰, 훅 의존성, cross-agent 중복, `.env` 보호 훅 (`summary`, `fixCommand*` 포함) |
-| `doctor --fix` | 자동 적용 가능한 제안 적용 (MCP + 훅; 스킬은 수동) |
+| `doctor --fix` | 자동 적용 가능한 제안 적용 (MCP + 훅) + 스킬 설치 명령 출력 |
 | `domains` / `domains <id>` / `domains --json` | 도메인 목록 또는 한 도메인의 로드아웃 |
 | `show <id>` / `show <id> --json` | 카탈로그 항목 상세 (config, install, homepage) |
 | `search <query>` / `--type` / `--json` | id·이름·설명·시그널·도메인 검색 (`mcp`/`skill`/`hook` 필터) |
