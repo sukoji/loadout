@@ -33,7 +33,12 @@ export function recommend({ domains, byId, all = [] }, signals, root = process.c
 
   const scored = domains
     .map((d) => {
-      const matched = d.signals.filter((s) => s !== "always" && signals.has(s.toLowerCase()));
+      const matched = d.signals.filter(
+        (s) =>
+          s !== "always" &&
+          !WEAK_OFFICIAL_SIGNALS.has(s.toLowerCase()) &&
+          signals.has(s.toLowerCase()),
+      );
       const isGeneral = d.signals.includes("always");
       return { domain: d, score: matched.length, isGeneral, matched };
     })

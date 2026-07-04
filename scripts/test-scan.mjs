@@ -199,6 +199,47 @@ try {
     rmSync(nestDir, { recursive: true, force: true });
   }
 
+  const honoDir = mkdtempSync(join(tmpdir(), "loadout-scan-hono-"));
+  try {
+    writeFileSync(
+      join(honoDir, "package.json"),
+      JSON.stringify({ dependencies: { hono: "4", "@hono/node-server": "1" } }),
+    );
+    const honoSignals = scanProject(honoDir);
+    assert("scan adds hono from hono package", honoSignals.has("hono"));
+    assert("scan adds hono from @hono packages", honoSignals.has("hono"));
+    const honoTop = topIds(honoSignals);
+    assert("hono project surfaces context7", honoTop.includes("context7"), honoTop.join(", "));
+    assert("hono project excludes playwright", !honoTop.includes("playwright"), honoTop.join(", "));
+  } finally {
+    rmSync(honoDir, { recursive: true, force: true });
+  }
+
+  const elysiaDir = mkdtempSync(join(tmpdir(), "loadout-scan-elysia-"));
+  try {
+    writeFileSync(join(elysiaDir, "package.json"), JSON.stringify({ dependencies: { elysia: "1" } }));
+    const elysiaSignals = scanProject(elysiaDir);
+    assert("scan adds elysia from package", elysiaSignals.has("elysia"));
+    const elysiaTop = topIds(elysiaSignals);
+    assert("elysia project surfaces guard-dangerous-bash", elysiaTop.includes("guard-dangerous-bash"), elysiaTop.join(", "));
+  } finally {
+    rmSync(elysiaDir, { recursive: true, force: true });
+  }
+
+  const trpcDir = mkdtempSync(join(tmpdir(), "loadout-scan-trpc-"));
+  try {
+    writeFileSync(
+      join(trpcDir, "package.json"),
+      JSON.stringify({ dependencies: { "@trpc/server": "11", "@trpc/client": "11" } }),
+    );
+    const trpcSignals = scanProject(trpcDir);
+    assert("scan adds trpc from @trpc packages", trpcSignals.has("trpc"));
+    const trpcTop = topIds(trpcSignals);
+    assert("trpc project surfaces context7", trpcTop.includes("context7"), trpcTop.join(", "));
+  } finally {
+    rmSync(trpcDir, { recursive: true, force: true });
+  }
+
   const flutterDir = mkdtempSync(join(tmpdir(), "loadout-scan-flutter-"));
   try {
     writeFileSync(join(flutterDir, "pubspec.yaml"), "name: demo\nflutter:\n  assets: []\n");

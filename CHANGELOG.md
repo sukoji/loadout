@@ -6,6 +6,13 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.63] — 2026-07-05
+### Added
+- **Backend scan** — Hono (`hono`, `@hono/*`), Elysia (`elysia`, `@elysiajs/*`), tRPC (`@trpc/*`).
+- **Backend domain** — matches `hono`, `elysia`, `trpc` for API-appropriate loadouts (context7, guard-dangerous-bash, not Playwright).
+### Fixed
+- **Domain scoring** — weak signals like `package.json` and `.git` no longer inflate frontend/devops domain matches, so backend-only repos stop getting Playwright.
+
 ## [0.3.62] — 2026-07-05
 ### Added
 - **Deno frontend** — `deno` matches the frontend domain; Playwright/Chrome DevTools catalog signals include all modern JS frameworks.

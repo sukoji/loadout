@@ -1,6 +1,6 @@
 # LOOP — Loadout improvement until claims are earned
 
-**Status: ACTIVE** — Phase 1 stop criteria met at `v0.3.6`. Phase 2 shipped browse/CI/profile/automation UX through `v0.3.62` (Deno frontend + VitePress docs scan). Remaining: optional `NPM_TOKEN` secret and runtime-verified research catalog growth.
+**Status: ACTIVE** — Phase 1 stop criteria met at `v0.3.6`. Phase 2 shipped browse/CI/profile/automation UX through `v0.3.63` (Hono/Elysia/tRPC backend scan). Remaining: optional `NPM_TOKEN` secret and runtime-verified research catalog growth.
 
 **Cadence goal:** 견고함 · 완성도 · 최신성 · 보안성 · UX — users should set up agents without friction,
 and marketing should never outrun what the tool actually does.
@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.63 | 2026-07-05 | Hono/Elysia/tRPC backend scan; weak domain signals |
 | 0.3.62 | 2026-07-05 | Deno frontend domain; VitePress docs scan |
 | 0.3.61 | 2026-07-05 | Nuxt/Solid/Qwik/Bun frontend scan |
 | 0.3.60 | 2026-07-05 | `signals` includes matched domains |
@@ -116,3 +117,4 @@ run `npm test`, release, update this log.
 32. `signals` includes matched domains — ✅ v0.3.60
 33. Nuxt/Solid/Qwik/Bun frontend scan — ✅ v0.3.61
 34. Deno frontend domain; VitePress docs scan — ✅ v0.3.62
+35. Hono/Elysia/tRPC backend scan — ✅ v0.3.63

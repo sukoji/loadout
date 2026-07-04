@@ -40,6 +40,9 @@ export function scanProject(root = process.cwd()) {
         if (name === "vite" || (name.includes("vite") && name !== "vitepress")) add("vite");
         if (name.includes("express")) add("express");
         if (name.includes("fastify")) add("fastify");
+        if (name === "hono" || name.startsWith("@hono/")) add("hono");
+        if (name === "elysia" || name.startsWith("@elysiajs/")) add("elysia");
+        if (name.startsWith("@trpc/") || name === "trpc") add("trpc");
         if (name.includes("nest")) add("nestjs");
         if (name.includes("angular") || name.startsWith("@angular/")) add("angular");
         if (name.includes("prisma")) add("prisma");

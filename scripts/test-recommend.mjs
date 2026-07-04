@@ -96,6 +96,16 @@ assert("FastAPI includes postgres", beTop.includes("postgres"), beTop.join(", ")
 assert("FastAPI includes guard-dangerous-bash", beTop.includes("guard-dangerous-bash"), beTop.join(", "));
 assert("FastAPI excludes playwright", !beTop.includes("playwright"), beTop.join(", "));
 
+const hono = new Set(["always", "package.json", "hono", ".git"]);
+const honoTop = topNames(hono);
+assert("Hono includes context7", honoTop.includes("context7"), honoTop.join(", "));
+assert("Hono includes guard-dangerous-bash", honoTop.includes("guard-dangerous-bash"), honoTop.join(", "));
+assert("Hono excludes playwright", !honoTop.includes("playwright"), honoTop.join(", "));
+const elysia = new Set(["always", "package.json", "elysia", ".git"]);
+assert("Elysia includes context7", topNames(elysia).includes("context7"), topNames(elysia).join(", "));
+const trpc = new Set(["always", "package.json", "trpc", ".git"]);
+assert("tRPC includes context7", topNames(trpc).includes("context7"), topNames(trpc).join(", "));
+
 // Godot game project.
 const godot = new Set(["always", "godot", "project.godot", ".git"]);
 const gdTop = topNames(godot);
