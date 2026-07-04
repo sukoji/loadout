@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.50] — 2026-07-04
+### Fixed
+- **`detectInstalled`** — treats existing `CLAUDE.md` (or `.claude/CLAUDE.md`) as `/init` already done, so `init-claude-md` is not re-suggested.
+
 ## [0.3.49] — 2026-07-04
 ### Added
 - **`doctor --fix` skill install guide** — prints exact Claude Code commands/notes for remaining skills (never auto-written).

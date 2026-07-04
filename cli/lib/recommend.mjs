@@ -219,6 +219,15 @@ function detectInstalled(root) {
     }
   }
 
+  // /init already done when a project CLAUDE.md exists (root or .claude/).
+  if (
+    existsSync(resolve(root, "CLAUDE.md")) ||
+    existsSync(resolve(root, "claude.md")) ||
+    existsSync(resolve(root, ".claude", "CLAUDE.md"))
+  ) {
+    installed.add("init-claude-md");
+  }
+
   return installed;
 }
 

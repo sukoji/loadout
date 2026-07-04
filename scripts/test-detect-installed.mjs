@@ -83,6 +83,29 @@ try {
   } finally {
     rmSync(hooksDir, { recursive: true, force: true });
   }
+
+  const initDir = mkdtempSync(join(tmpdir(), "loadout-init-"));
+  try {
+    writeFileSync(join(initDir, "package.json"), JSON.stringify({ name: "x" }));
+    writeFileSync(join(initDir, "CLAUDE.md"), "# Project\n");
+    const withClaude = recommend(catalog, new Set(["always", "package.json"]), initDir);
+    assert("installed includes init-claude-md when CLAUDE.md exists", withClaude.installed.includes("init-claude-md"));
+    assert(
+      "init-claude-md not re-recommended when CLAUDE.md exists",
+      !withClaude.items.some((e) => e.item.id === "init-claude-md"),
+    );
+
+    const bareDir = mkdtempSync(join(tmpdir(), "loadout-bare-"));
+    try {
+      writeFileSync(join(bareDir, "package.json"), JSON.stringify({ name: "y" }));
+      const bare = recommend(catalog, new Set(["always", "package.json"]), bareDir);
+      assert("init-claude-md recommended without CLAUDE.md", bare.items.some((e) => e.item.id === "init-claude-md"));
+    } finally {
+      rmSync(bareDir, { recursive: true, force: true });
+    }
+  } finally {
+    rmSync(initDir, { recursive: true, force: true });
+  }
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }
