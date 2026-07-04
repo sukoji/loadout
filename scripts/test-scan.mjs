@@ -290,6 +290,22 @@ try {
     rmSync(mongoDir, { recursive: true, force: true });
   }
 
+  const sentryDir = mkdtempSync(join(tmpdir(), "loadout-scan-sentry-"));
+  try {
+    writeFileSync(
+      join(sentryDir, "package.json"),
+      JSON.stringify({ dependencies: { express: "4", "@sentry/node": "8" } }),
+    );
+    const sentrySignals = scanProject(sentryDir);
+    assert("scan adds sentry from package.json", sentrySignals.has("sentry"));
+    assert("scan adds express from package.json", sentrySignals.has("express"));
+    const sentryTop = topIds(sentrySignals);
+    assert("sentry project surfaces sentry mcp", sentryTop.includes("sentry"), sentryTop.join(", "));
+    assert("sentry project excludes playwright", !sentryTop.includes("playwright"), sentryTop.join(", "));
+  } finally {
+    rmSync(sentryDir, { recursive: true, force: true });
+  }
+
   const honoDir = mkdtempSync(join(tmpdir(), "loadout-scan-hono-"));
   try {
     writeFileSync(

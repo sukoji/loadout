@@ -52,6 +52,10 @@ assert("Paper repo includes tavily-research", paperTop.includes("tavily-research
 const frontend = new Set(["always", "package.json", "react", "next", ".git"]);
 const feTop = topNames(frontend);
 assert("Frontend includes playwright", feTop.includes("playwright"), feTop.join(", "));
+const tailwind = new Set(["always", "package.json", "react", "tailwind", ".git"]);
+assert("Tailwind includes playwright", topNames(tailwind).includes("playwright"), topNames(tailwind).join(", "));
+const vite = new Set(["always", "package.json", "vite", ".git"]);
+assert("Vite includes playwright", topNames(vite).includes("playwright"), topNames(vite).join(", "));
 
 const astro = new Set(["always", "package.json", "astro", ".git"]);
 assert("Astro includes playwright", topNames(astro).includes("playwright"), topNames(astro).join(", "));
@@ -129,6 +133,10 @@ const mongodb = new Set(["always", "package.json", "express", "mongoose", "mongo
 assert("MongoDB includes context7", topNames(mongodb).includes("context7"), topNames(mongodb).join(", "));
 assert("MongoDB includes mongodb mcp", topNames(mongodb).includes("mongodb"), topNames(mongodb).join(", "));
 assert("MongoDB excludes playwright", !topNames(mongodb).includes("playwright"), topNames(mongodb).join(", "));
+const sentry = new Set(["always", "package.json", "express", "sentry", ".git"]);
+assert("Sentry includes context7", topNames(sentry).includes("context7"), topNames(sentry).join(", "));
+assert("Sentry includes sentry mcp", topNames(sentry).includes("sentry"), topNames(sentry).join(", "));
+assert("Sentry excludes playwright", !topNames(sentry).includes("playwright"), topNames(sentry).join(", "));
 
 const hono = new Set(["always", "package.json", "hono", ".git"]);
 const honoTop = topNames(hono);
@@ -217,6 +225,7 @@ const security = new Set(["always", "auth", "jwt", "stripe", ".env", ".git"]);
 const secTop = topNames(security);
 assert("Security includes protect-secrets", secTop.includes("protect-secrets"), secTop.join(", "));
 assert("Security includes guard-dangerous-bash", secTop.includes("guard-dangerous-bash"), secTop.join(", "));
+assert("Security includes stripe mcp", secTop.includes("stripe"), secTop.join(", "));
 
 // protect-secrets requires .env — do not push it on plain devops repos.
 const devopsNoEnv = new Set(["always", "dockerfile", "terraform", ".github/workflows", ".git"]);

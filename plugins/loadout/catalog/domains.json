@@ -12,7 +12,7 @@
     "title": "Backend / API",
     "title_ko": "백엔드 / API",
     "blurb": "Servers, APIs, databases — Node, Python, Go, Rust, Java, Elixir services.",
-    "signals": ["express", "fastify", "hono", "elysia", "trpc", "nestjs", "django", "flask", "fastapi", "laravel", "symfony", "spring", "axum", "actix", "rails", "gin", "fiber", "echo", "phoenix", "elixir", "go.mod", "Cargo.toml", "pom.xml", "prisma", "drizzle", "supabase", "mongodb", "mongoose", "postgres", "graphql", "redis"],
+    "signals": ["express", "fastify", "hono", "elysia", "trpc", "nestjs", "django", "flask", "fastapi", "laravel", "symfony", "spring", "axum", "actix", "rails", "gin", "fiber", "echo", "phoenix", "elixir", "go.mod", "Cargo.toml", "pom.xml", "prisma", "drizzle", "supabase", "mongodb", "mongoose", "sentry", "postgres", "graphql", "redis"],
     "loadout": ["context7", "postgres", "supabase", "mongodb", "stripe", "github", "sentry", "git", "format-js-on-edit", "eslint-fix-on-edit", "gofmt-on-edit", "guard-dangerous-bash", "protect-secrets", "security-review", "code-review", "superpowers", "init-claude-md"]
   },
   {

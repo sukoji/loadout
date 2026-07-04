@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.72] — 2026-07-05
+### Added
+- **Backend domain** — matches `sentry` for observability-appropriate loadouts.
+- **Regression tests** — Sentry (Express + `@sentry/node`), Stripe security, and Tailwind/Vite frontend fixtures.
+
 ## [0.3.71] — 2026-07-05
 ### Added
 - **Backend domain** — matches `mongodb` and `mongoose` for NoSQL-appropriate loadouts.
