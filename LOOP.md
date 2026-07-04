@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.37 | 2026-07-04 | doctor apply --ids tip; CI recipe docs |
 | 0.3.36 | 2026-07-04 | apply --ids from doctor suggestions |
 | 0.3.35 | 2026-07-04 | doctor JSON suggestions array |
 | 0.3.34 | 2026-07-04 | search --limit; curated homepage validate warn |
@@ -67,3 +68,4 @@ run `npm test`, release, update this log.
 9. `search <query>` catalog search — ✅ v0.3.30
 10. `search --type` + doctor domains/signals profile — ✅ v0.3.31–0.3.32
 11. `stats` catalog overview — ✅ v0.3.33
+12. doctor → apply --ids automation loop — ✅ v0.3.35–0.3.37

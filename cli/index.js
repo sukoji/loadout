@@ -577,11 +577,16 @@ function runDoctor(flags = new Set()) {
     console.log(c("green", "Everything looks good.\n"));
     return;
   }
-  if (fix.length) {
+  const suggestionIds = (findings.suggestions || []).map((s) => s.id).filter(Boolean);
+  if (suggestionIds.length) {
+    console.log(c("dim", `Tip: npx claude-loadout apply --ids ${suggestionIds.join(",")}`));
+    console.log(c("dim", "     (or --dry-run / doctor --json for CI)\n"));
+  } else if (fix.length) {
     console.log(c("dim", "Tip: npx claude-loadout --dry-run to see recommended additions.\n"));
-    exit(1);
+  } else {
+    console.log("");
   }
-  console.log("");
+  if (fix.length) exit(1);
 }
 
 function parseSelection(answer, top) {

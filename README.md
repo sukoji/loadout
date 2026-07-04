@@ -142,6 +142,14 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 **Team loadouts:** run `export` in a reference repo, commit `.loadout.json`, then teammates run
 `apply -f .loadout.json` (add `--target cursor` for non-Claude agents).
 
+**CI automation:** profile a repo and apply gaps without prompts:
+
+```bash
+npx claude-loadout doctor --json > profile.json   # domains, signals, suggestions
+npx claude-loadout apply --ids playwright,context7 --json
+# or apply every suggestion id from profile.json in your script
+```
+
 **Non-interactive shells** (CI, pipes): use `--dry-run`, `--json`, `--all`, or `--all --json` — otherwise Loadout prints recommendations and exits without hanging on input.
 
 ### What auto-applies vs what you do

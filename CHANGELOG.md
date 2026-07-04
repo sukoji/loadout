@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.37] — 2026-07-04
+### Added
+- **`doctor`** — prints a ready-to-run `apply --ids …` tip when suggestions exist.
+- README CI recipe for `doctor --json` → `apply --ids`.
+
 ## [0.3.36] — 2026-07-04
 ### Added
 - **`apply --ids id1,id2`** — apply specific catalog items without a manifest file (pairs with `doctor --json` suggestions).

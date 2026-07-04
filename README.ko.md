@@ -126,6 +126,13 @@ npx claude-loadout --help     # 플래그 전체 목록
 
 `npx claude-loadout doctor`로 미입력 토큰·누락된 PATH 도구를 언제든 점검할 수 있습니다.
 
+**CI 자동화:** 프롬프트 없이 프로필을 보고 gap을 적용합니다.
+
+```bash
+npx claude-loadout doctor --json > profile.json   # domains, signals, suggestions
+npx claude-loadout apply --ids playwright,context7 --json
+```
+
 ## 내 에이전트에서 작동 — Claude Code 전용이 아님
 
 MCP 서버는 요즘 에이전트 전반에 이식 가능하고, 설정 파일과 형식만 다릅니다. Loadout이 각각에 맞는 걸 써줍니다.
