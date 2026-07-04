@@ -96,6 +96,26 @@ assert("FastAPI includes postgres", beTop.includes("postgres"), beTop.join(", ")
 assert("FastAPI includes guard-dangerous-bash", beTop.includes("guard-dangerous-bash"), beTop.join(", "));
 assert("FastAPI excludes playwright", !beTop.includes("playwright"), beTop.join(", "));
 
+const express = new Set(["always", "package.json", "express", ".git"]);
+assert("Express includes context7", topNames(express).includes("context7"), topNames(express).join(", "));
+assert("Express includes guard-dangerous-bash", topNames(express).includes("guard-dangerous-bash"), topNames(express).join(", "));
+assert("Express excludes playwright", !topNames(express).includes("playwright"), topNames(express).join(", "));
+const nestjs = new Set(["always", "package.json", "nestjs", ".git"]);
+assert("NestJS includes context7", topNames(nestjs).includes("context7"), topNames(nestjs).join(", "));
+assert("NestJS includes guard-dangerous-bash", topNames(nestjs).includes("guard-dangerous-bash"), topNames(nestjs).join(", "));
+assert("NestJS excludes playwright", !topNames(nestjs).includes("playwright"), topNames(nestjs).join(", "));
+const fastify = new Set(["always", "package.json", "fastify", ".git"]);
+assert("Fastify includes context7", topNames(fastify).includes("context7"), topNames(fastify).join(", "));
+assert("Fastify excludes playwright", !topNames(fastify).includes("playwright"), topNames(fastify).join(", "));
+const flask = new Set(["always", "requirements.txt", "flask", "python", ".git"]);
+assert("Flask includes context7", topNames(flask).includes("context7"), topNames(flask).join(", "));
+assert("Flask includes guard-dangerous-bash", topNames(flask).includes("guard-dangerous-bash"), topNames(flask).join(", "));
+assert("Flask excludes playwright", !topNames(flask).includes("playwright"), topNames(flask).join(", "));
+const prisma = new Set(["always", "package.json", "nestjs", "prisma", "postgres", ".git"]);
+assert("Prisma includes context7", topNames(prisma).includes("context7"), topNames(prisma).join(", "));
+assert("Prisma includes postgres", topNames(prisma).includes("postgres"), topNames(prisma).join(", "));
+assert("Prisma excludes playwright", !topNames(prisma).includes("playwright"), topNames(prisma).join(", "));
+
 const hono = new Set(["always", "package.json", "hono", ".git"]);
 const honoTop = topNames(hono);
 assert("Hono includes context7", honoTop.includes("context7"), honoTop.join(", "));

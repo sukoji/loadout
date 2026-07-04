@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.69] — 2026-07-05
+### Added
+- **Backend regression tests** — Express, NestJS, Fastify, Flask, and Prisma scan + recommend fixtures lock API-appropriate loadouts (context7/postgres, no Playwright).
+
 ## [0.3.68] — 2026-07-05
 ### Added
 - **Elixir backend scan** — Phoenix from `mix.exs` and `config/config.exs`; `elixir` from `mix.exs`.

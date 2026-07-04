@@ -195,8 +195,49 @@ try {
     assert("scan adds fastify from package.json", nestSignals.has("fastify"));
     const nestTop = topIds(nestSignals);
     assert("nestjs project surfaces postgres or context7", nestTop.includes("postgres") || nestTop.includes("context7"), nestTop.join(", "));
+    assert("nestjs project excludes playwright", !nestTop.includes("playwright"), nestTop.join(", "));
   } finally {
     rmSync(nestDir, { recursive: true, force: true });
+  }
+
+  const expressDir = mkdtempSync(join(tmpdir(), "loadout-scan-express-"));
+  try {
+    writeFileSync(join(expressDir, "package.json"), JSON.stringify({ dependencies: { express: "4" } }));
+    const expressSignals = scanProject(expressDir);
+    assert("scan adds express from package.json", expressSignals.has("express"));
+    const expressTop = topIds(expressSignals);
+    assert("express project surfaces context7", expressTop.includes("context7"), expressTop.join(", "));
+    assert("express project excludes playwright", !expressTop.includes("playwright"), expressTop.join(", "));
+  } finally {
+    rmSync(expressDir, { recursive: true, force: true });
+  }
+
+  const flaskDir = mkdtempSync(join(tmpdir(), "loadout-scan-flask-"));
+  try {
+    writeFileSync(join(flaskDir, "requirements.txt"), "flask>=3.0\n");
+    const flaskSignals = scanProject(flaskDir);
+    assert("scan adds flask from requirements.txt", flaskSignals.has("flask"));
+    const flaskTop = topIds(flaskSignals);
+    assert("flask project surfaces context7", flaskTop.includes("context7"), flaskTop.join(", "));
+    assert("flask project excludes playwright", !flaskTop.includes("playwright"), flaskTop.join(", "));
+  } finally {
+    rmSync(flaskDir, { recursive: true, force: true });
+  }
+
+  const prismaDir = mkdtempSync(join(tmpdir(), "loadout-scan-prisma-"));
+  try {
+    writeFileSync(
+      join(prismaDir, "package.json"),
+      JSON.stringify({ dependencies: { "@nestjs/core": "10", "@prisma/client": "5", prisma: "5" } }),
+    );
+    const prismaSignals = scanProject(prismaDir);
+    assert("scan adds prisma from package.json", prismaSignals.has("prisma"));
+    assert("scan adds nestjs from package.json", prismaSignals.has("nestjs"));
+    const prismaTop = topIds(prismaSignals);
+    assert("prisma project surfaces postgres", prismaTop.includes("postgres"), prismaTop.join(", "));
+    assert("prisma project excludes playwright", !prismaTop.includes("playwright"), prismaTop.join(", "));
+  } finally {
+    rmSync(prismaDir, { recursive: true, force: true });
   }
 
   const honoDir = mkdtempSync(join(tmpdir(), "loadout-scan-hono-"));
