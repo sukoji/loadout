@@ -234,6 +234,9 @@ export function scanProject(root = process.cwd()) {
   for (const f of ["vite.config.ts", "vite.config.js", "vite.config.mjs"]) {
     if (has(f)) add("vite");
   }
+  for (const f of ["drizzle.config.ts", "drizzle.config.js", "drizzle.config.mjs"]) {
+    if (has(f)) add("drizzle");
+  }
   // SvelteKit projects use svelte.config.* plus @sveltejs/kit (handled above).
   if (has("svelte.config.js") || has("svelte.config.ts")) {
     const svelteCfg = read("svelte.config.js") + read("svelte.config.ts");

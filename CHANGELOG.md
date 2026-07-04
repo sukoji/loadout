@@ -6,6 +6,12 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.70] — 2026-07-05
+### Added
+- **Drizzle scan** — `drizzle.config.ts` / `.js` / `.mjs` plus package deps.
+- **Backend domain** — matches `supabase` for BaaS-appropriate loadouts.
+- **Regression tests** — Drizzle and Supabase scan + recommend fixtures.
+
 ## [0.3.69] — 2026-07-05
 ### Added
 - **Backend regression tests** — Express, NestJS, Fastify, Flask, and Prisma scan + recommend fixtures lock API-appropriate loadouts (context7/postgres, no Playwright).

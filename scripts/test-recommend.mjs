@@ -115,6 +115,14 @@ const prisma = new Set(["always", "package.json", "nestjs", "prisma", "postgres"
 assert("Prisma includes context7", topNames(prisma).includes("context7"), topNames(prisma).join(", "));
 assert("Prisma includes postgres", topNames(prisma).includes("postgres"), topNames(prisma).join(", "));
 assert("Prisma excludes playwright", !topNames(prisma).includes("playwright"), topNames(prisma).join(", "));
+const drizzle = new Set(["always", "package.json", "drizzle", "postgres", ".git"]);
+assert("Drizzle includes context7", topNames(drizzle).includes("context7"), topNames(drizzle).join(", "));
+assert("Drizzle includes postgres", topNames(drizzle).includes("postgres"), topNames(drizzle).join(", "));
+assert("Drizzle excludes playwright", !topNames(drizzle).includes("playwright"), topNames(drizzle).join(", "));
+const supabase = new Set(["always", "package.json", "supabase", "postgres", ".git"]);
+assert("Supabase includes context7", topNames(supabase).includes("context7"), topNames(supabase).join(", "));
+assert("Supabase includes supabase mcp", topNames(supabase).includes("supabase"), topNames(supabase).join(", "));
+assert("Supabase excludes playwright", !topNames(supabase).includes("playwright"), topNames(supabase).join(", "));
 
 const hono = new Set(["always", "package.json", "hono", ".git"]);
 const honoTop = topNames(hono);

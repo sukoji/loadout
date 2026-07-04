@@ -240,6 +240,39 @@ try {
     rmSync(prismaDir, { recursive: true, force: true });
   }
 
+  const drizzleDir = mkdtempSync(join(tmpdir(), "loadout-scan-drizzle-"));
+  try {
+    writeFileSync(
+      join(drizzleDir, "package.json"),
+      JSON.stringify({ dependencies: { "drizzle-orm": "0.30", postgres: "3" } }),
+    );
+    writeFileSync(join(drizzleDir, "drizzle.config.ts"), "export default {};\n");
+    const drizzleSignals = scanProject(drizzleDir);
+    assert("scan adds drizzle from package.json", drizzleSignals.has("drizzle"));
+    assert("scan adds drizzle from drizzle.config.ts", drizzleSignals.has("drizzle"));
+    assert("scan adds postgres from package.json", drizzleSignals.has("postgres"));
+    const drizzleTop = topIds(drizzleSignals);
+    assert("drizzle project surfaces postgres", drizzleTop.includes("postgres"), drizzleTop.join(", "));
+    assert("drizzle project excludes playwright", !drizzleTop.includes("playwright"), drizzleTop.join(", "));
+  } finally {
+    rmSync(drizzleDir, { recursive: true, force: true });
+  }
+
+  const supabaseDir = mkdtempSync(join(tmpdir(), "loadout-scan-supabase-"));
+  try {
+    writeFileSync(
+      join(supabaseDir, "package.json"),
+      JSON.stringify({ dependencies: { "@supabase/supabase-js": "2" } }),
+    );
+    const supabaseSignals = scanProject(supabaseDir);
+    assert("scan adds supabase from package.json", supabaseSignals.has("supabase"));
+    const supabaseTop = topIds(supabaseSignals);
+    assert("supabase project surfaces supabase mcp", supabaseTop.includes("supabase"), supabaseTop.join(", "));
+    assert("supabase project excludes playwright", !supabaseTop.includes("playwright"), supabaseTop.join(", "));
+  } finally {
+    rmSync(supabaseDir, { recursive: true, force: true });
+  }
+
   const honoDir = mkdtempSync(join(tmpdir(), "loadout-scan-hono-"));
   try {
     writeFileSync(
