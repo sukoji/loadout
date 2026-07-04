@@ -149,8 +149,8 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `search <query> --json` | Search results as JSON |
 | `stats` | Catalog counts (domains, tiers, types) |
 | `stats --json` | Stats as JSON |
-| `signals` | Print detected project signals (debug recommendations) |
-| `signals --json` | Signals as JSON (`version`, `root`, `signals`, `count`) |
+| `signals` | Print detected project signals and matched domains |
+| `signals --json` | Signals + domains as JSON (`version`, `root`, `signals`, `domains`, `count`) |
 
 **Team loadouts:** run `export` in a reference repo, commit `.loadout.json`, then teammates run
 `apply -f .loadout.json` (add `--target cursor` for non-Claude agents).

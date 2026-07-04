@@ -43,6 +43,9 @@ try {
   assert("signals --json includes react", payload.signals.includes("react"));
   assert("signals --json includes astro", payload.signals.includes("astro"));
   assert("signals --json omits always", !payload.signals.includes("always"));
+  assert("signals --json has domains array", Array.isArray(payload.domains));
+  assert("signals --json matches frontend", payload.domains.some((d) => d.id === "frontend"));
+  assert("signals --json includes general", payload.domains.some((d) => d.id === "general"));
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

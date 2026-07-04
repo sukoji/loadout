@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.60] — 2026-07-05
+### Changed
+- **`signals`** — also prints matched domains (human + `--json`), so one command explains why recommendations fire.
+
 ## [0.3.59] — 2026-07-04
 ### Added
 - **`signals` / `signals --json`** — print detected project signals (debug recommendations).

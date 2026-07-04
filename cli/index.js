@@ -385,8 +385,17 @@ function runApplyManifest(args, flags) {
 
 function runSignals(flags = new Set()) {
   const root = cwd();
-  const signals = [...scanProject(root)].filter((s) => s !== "always").sort();
-  const payload = { version: PKG_VERSION, root, signals, count: signals.length };
+  const signalSet = scanProject(root);
+  const signals = [...signalSet].filter((s) => s !== "always").sort();
+  const { domains } = recommend(loadCatalog(), signalSet, root);
+  const domainRows = domains.map((d) => ({ id: d.id, title: d.title }));
+  const payload = {
+    version: PKG_VERSION,
+    root,
+    signals,
+    count: signals.length,
+    domains: domainRows,
+  };
   if (flags.has("--json")) {
     console.log(JSON.stringify(payload, null, 2));
     return;
@@ -394,10 +403,15 @@ function runSignals(flags = new Set()) {
   console.log(c("bold", "\n📡 Project signals") + c("dim", `  — ${root}\n`));
   if (!signals.length) {
     console.log(c("dim", "  (none beyond always)\n"));
-    return;
+  } else {
+    for (const s of signals) console.log(`  ${c("cyan", s)}`);
+    console.log("");
   }
-  for (const s of signals) console.log(`  ${c("cyan", s)}`);
-  console.log(c("dim", `\n${signals.length} signal(s). Tip: npx claude-loadout --dry-run\n`));
+  console.log(c("bold", "Matched domains:"));
+  for (const d of domainRows) {
+    console.log(`  ${c("cyan", d.id.padEnd(14))} ${d.title}`);
+  }
+  console.log(c("dim", `\n${signals.length} signal(s) · ${domainRows.length} domain(s). Tip: npx claude-loadout --dry-run\n`));
 }
 
 function runStats(flags = new Set()) {
