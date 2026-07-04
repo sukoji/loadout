@@ -108,6 +108,60 @@ try {
     rmSync(kitDir, { recursive: true, force: true });
   }
 
+  const nuxtDir = mkdtempSync(join(tmpdir(), "loadout-scan-nuxt-"));
+  try {
+    writeFileSync(join(nuxtDir, "nuxt.config.ts"), "export default {};\n");
+    writeFileSync(join(nuxtDir, "package.json"), JSON.stringify({ dependencies: { nuxt: "3" } }));
+    const nuxtSignals = scanProject(nuxtDir);
+    assert("scan adds nuxt from nuxt.config", nuxtSignals.has("nuxt"));
+    assert("scan adds nuxt from package.json", nuxtSignals.has("nuxt"));
+    const nuxtTop = topIds(nuxtSignals);
+    assert("nuxt project surfaces playwright", nuxtTop.includes("playwright"), nuxtTop.join(", "));
+  } finally {
+    rmSync(nuxtDir, { recursive: true, force: true });
+  }
+
+  const solidDir = mkdtempSync(join(tmpdir(), "loadout-scan-solid-"));
+  try {
+    writeFileSync(
+      join(solidDir, "package.json"),
+      JSON.stringify({ dependencies: { "solid-js": "1", "@solidjs/router": "0.10" } }),
+    );
+    const solidSignals = scanProject(solidDir);
+    assert("scan adds solid from solid-js package", solidSignals.has("solid"));
+    assert("scan adds solid from @solidjs packages", solidSignals.has("solid"));
+    const solidTop = topIds(solidSignals);
+    assert("solid project surfaces playwright", solidTop.includes("playwright"), solidTop.join(", "));
+  } finally {
+    rmSync(solidDir, { recursive: true, force: true });
+  }
+
+  const qwikDir = mkdtempSync(join(tmpdir(), "loadout-scan-qwik-"));
+  try {
+    writeFileSync(
+      join(qwikDir, "package.json"),
+      JSON.stringify({ dependencies: { "@builder.io/qwik": "1", "@builder.io/qwik-city": "1" } }),
+    );
+    const qwikSignals = scanProject(qwikDir);
+    assert("scan adds qwik from @builder.io/qwik", qwikSignals.has("qwik"));
+    const qwikTop = topIds(qwikSignals);
+    assert("qwik project surfaces playwright", qwikTop.includes("playwright"), qwikTop.join(", "));
+  } finally {
+    rmSync(qwikDir, { recursive: true, force: true });
+  }
+
+  const bunDir = mkdtempSync(join(tmpdir(), "loadout-scan-bun-"));
+  try {
+    writeFileSync(join(bunDir, "bun.lock"), "# bun lockfile\n");
+    writeFileSync(join(bunDir, "package.json"), JSON.stringify({ name: "bun-demo" }));
+    const bunSignals = scanProject(bunDir);
+    assert("scan adds bun from bun.lock", bunSignals.has("bun"));
+    const bunTop = topIds(bunSignals);
+    assert("bun project surfaces playwright", bunTop.includes("playwright"), bunTop.join(", "));
+  } finally {
+    rmSync(bunDir, { recursive: true, force: true });
+  }
+
   const denoDir = mkdtempSync(join(tmpdir(), "loadout-scan-deno-"));
   try {
     writeFileSync(join(denoDir, "deno.json"), "{}\n");

@@ -1,6 +1,6 @@
 # LOOP — Loadout improvement until claims are earned
 
-**Status: ACTIVE** — Phase 1 stop criteria met at `v0.3.6`. Phase 2 shipped browse/CI/profile/automation UX through `v0.3.60` (`signals` includes matched domains). Remaining: optional `NPM_TOKEN` secret and runtime-verified research catalog growth.
+**Status: ACTIVE** — Phase 1 stop criteria met at `v0.3.6`. Phase 2 shipped browse/CI/profile/automation UX through `v0.3.61` (Nuxt/Solid/Qwik/Bun frontend scan). Remaining: optional `NPM_TOKEN` secret and runtime-verified research catalog growth.
 
 **Cadence goal:** 견고함 · 완성도 · 최신성 · 보안성 · UX — users should set up agents without friction,
 and marketing should never outrun what the tool actually does.
@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.61 | 2026-07-05 | Nuxt/Solid/Qwik/Bun frontend scan |
 | 0.3.60 | 2026-07-05 | `signals` includes matched domains |
 | 0.3.59 | 2026-07-04 | `signals` CLI; doctor JSON version field |
 | 0.3.58 | 2026-07-04 | Astro/Remix/SvelteKit/Deno frontend scan |
@@ -112,3 +113,4 @@ run `npm test`, release, update this log.
 30. Astro/Remix/SvelteKit/Deno frontend scan — ✅ v0.3.58
 31. `signals` CLI — ✅ v0.3.59
 32. `signals` includes matched domains — ✅ v0.3.60
+33. Nuxt/Solid/Qwik/Bun frontend scan — ✅ v0.3.61

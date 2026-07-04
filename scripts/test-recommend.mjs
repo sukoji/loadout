@@ -59,6 +59,14 @@ const remix = new Set(["always", "package.json", "remix", ".git"]);
 assert("Remix includes playwright", topNames(remix).includes("playwright"), topNames(remix).join(", "));
 const sveltekit = new Set(["always", "package.json", "sveltekit", "svelte", ".git"]);
 assert("SvelteKit includes playwright", topNames(sveltekit).includes("playwright"), topNames(sveltekit).join(", "));
+const nuxt = new Set(["always", "package.json", "nuxt", ".git"]);
+assert("Nuxt includes playwright", topNames(nuxt).includes("playwright"), topNames(nuxt).join(", "));
+const solid = new Set(["always", "package.json", "solid", ".git"]);
+assert("Solid includes playwright", topNames(solid).includes("playwright"), topNames(solid).join(", "));
+const qwik = new Set(["always", "package.json", "qwik", ".git"]);
+assert("Qwik includes playwright", topNames(qwik).includes("playwright"), topNames(qwik).join(", "));
+const bun = new Set(["always", "package.json", "bun", ".git"]);
+assert("Bun includes playwright", topNames(bun).includes("playwright"), topNames(bun).join(", "));
 
 // Jupyter + numpy research repo (LOOP #5).
 const jupyterResearch = new Set([

@@ -2,7 +2,7 @@
 
 > React, Vue, Svelte, Next, Astro, Remix — anything that ships to a browser.
 
-_Signals that map here: `react`, `next`, `vue`, `svelte`, `sveltekit`, `astro`, `remix`, `vite`, `tailwind`, `angular`, `package.json`, `tsconfig.json`_
+_Signals that map here: `react`, `next`, `vue`, `svelte`, `sveltekit`, `astro`, `remix`, `nuxt`, `solid`, `qwik`, `bun`, `vite`, `tailwind`, `angular`, `package.json`, `tsconfig.json`_
 
 ## MCP servers
 

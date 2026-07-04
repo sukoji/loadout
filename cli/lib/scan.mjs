@@ -33,6 +33,9 @@ export function scanProject(root = process.cwd()) {
         if (name === "astro" || name.startsWith("@astrojs/")) add("astro");
         if (name === "remix" || name.startsWith("@remix-run/")) add("remix");
         if (name === "@sveltejs/kit") add("sveltekit");
+        if (name === "nuxt" || name.startsWith("@nuxt/")) add("nuxt");
+        if (name === "solid-js" || name.startsWith("@solidjs/")) add("solid");
+        if (name.includes("qwik") || name.startsWith("@builder.io/qwik")) add("qwik");
         if (name.includes("tailwind")) add("tailwind");
         if (name.includes("vite")) add("vite");
         if (name.includes("express")) add("express");
@@ -97,8 +100,9 @@ export function scanProject(root = process.cwd()) {
     "tsconfig.json": "tsconfig.json",
     "pnpm-lock.yaml": "pnpm-lock.yaml",
     "yarn.lock": "yarn.lock",
-    "bun.lock": "bun.lock",
-    "bun.lockb": "bun.lock",
+    "bun.lock": "bun",
+    "bun.lockb": "bun",
+    "bunfig.toml": "bun",
     "uv.lock": "uv.lock",
     "deno.json": "deno",
     "deno.jsonc": "deno",
@@ -109,6 +113,9 @@ export function scanProject(root = process.cwd()) {
     "remix.config.ts": "remix",
     "svelte.config.js": "svelte",
     "svelte.config.ts": "svelte",
+    "nuxt.config.ts": "nuxt",
+    "nuxt.config.js": "nuxt",
+    "nuxt.config.mjs": "nuxt",
     "angular.json": "angular",
     "nest-cli.json": "nestjs",
     "build.gradle": "build.gradle",

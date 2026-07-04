@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.61] — 2026-07-05
+### Added
+- **Frontend scan** — Nuxt (`nuxt.config.*`, `nuxt` / `@nuxt/*`), Solid (`solid-js`, `@solidjs/*`), Qwik (`@builder.io/qwik`), Bun (`bun.lock`, `bunfig.toml`).
+- **Frontend domain** — matches `nuxt`, `solid`, `qwik`, `bun` so those stacks get Playwright and related tooling.
+
 ## [0.3.60] — 2026-07-05
 ### Changed
 - **`signals`** — also prints matched domains (human + `--json`), so one command explains why recommendations fire.
