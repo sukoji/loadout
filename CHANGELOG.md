@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.32] — 2026-07-04
+### Added
+- **`doctor --json`** — structured `domains` and `signals` arrays for CI/profile tooling.
+- **`doctor`** — prints detected project signals alongside matched domains.
+
 ## [0.3.31] — 2026-07-04
 ### Added
 - **`search --type mcp|skill|hook`** — filter catalog search by item type.

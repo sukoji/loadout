@@ -62,6 +62,9 @@ try {
   writeFileSync(join(dir, "package.json"), JSON.stringify({ dependencies: { react: "18", next: "14" } }));
   const profiled = doctor(dir);
   assert("doctor reports matched domains", profiled.ok.some((f) => f.msg.includes("Matched domains")));
+  assert("doctor domains array includes frontend", profiled.domains.some((d) => d.id === "frontend"));
+  assert("doctor signals include react", profiled.signals.includes("react"));
+  assert("doctor reports detected signals", profiled.ok.some((f) => f.msg.includes("Detected signals")));
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

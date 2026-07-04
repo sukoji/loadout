@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.32 | 2026-07-04 | doctor JSON domains/signals profile fields |
 | 0.3.31 | 2026-07-04 | search --type filter; doctor matched domains |
 | 0.3.30 | 2026-07-04 | `search <query>` catalog search |
 | 0.3.29 | 2026-07-04 | `domains <id>` detail; show id suggestions |
@@ -60,3 +61,4 @@ run `npm test`, release, update this log.
 7. `show <id>` catalog lookup — ✅ v0.3.28
 8. `domains <id>` loadout detail + show suggestions — ✅ v0.3.29
 9. `search <query>` catalog search — ✅ v0.3.30
+10. `search --type` + doctor domains/signals profile — ✅ v0.3.31–0.3.32

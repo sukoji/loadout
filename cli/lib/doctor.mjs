@@ -19,7 +19,7 @@ const HOOK_DEPS = {
 
 export function doctor(root = process.cwd()) {
   const catalog = loadCatalog();
-  const findings = { ok: [], warn: [], fix: [] };
+  const findings = { ok: [], warn: [], fix: [], domains: [], signals: [] };
 
   const mcpPath = resolve(root, ".mcp.json");
   const settingsPath = resolve(root, ".claude", "settings.json");
@@ -255,11 +255,17 @@ function auditSecurity(hasEnv, settingsDoc, findings) {
 function auditGaps(root, catalog, findings) {
   const signals = scanProject(root);
   const { domains, items } = recommend(catalog, signals, root);
+  findings.domains = domains.map((d) => ({ id: d.id, title: d.title }));
+  findings.signals = [...signals].filter((s) => s !== "always").sort();
   const matched = domains.filter((d) => d.id !== "general").map((d) => d.title);
   if (matched.length) {
     findings.ok.push({ msg: `Matched domains: ${matched.join(", ")}` });
   } else {
     findings.ok.push({ msg: "Matched domains: General only (no stack-specific signals)" });
+  }
+  const interesting = findings.signals.slice(0, 10);
+  if (interesting.length) {
+    findings.ok.push({ msg: `Detected signals: ${interesting.join(", ")}${findings.signals.length > 10 ? "…" : ""}` });
   }
   const top = items.slice(0, 5);
   if (!top.length) {

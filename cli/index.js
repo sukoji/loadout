@@ -474,6 +474,8 @@ function runDoctor(flags = new Set()) {
         fix: findings.fix.length,
         warn: findings.warn.length,
         ok: findings.ok.length,
+        domains: findings.domains?.length || 0,
+        signals: findings.signals?.length || 0,
       },
     }, null, 2));
     if (findings.fix.length) exit(1);
