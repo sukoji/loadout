@@ -67,6 +67,8 @@ const qwik = new Set(["always", "package.json", "qwik", ".git"]);
 assert("Qwik includes playwright", topNames(qwik).includes("playwright"), topNames(qwik).join(", "));
 const bun = new Set(["always", "package.json", "bun", ".git"]);
 assert("Bun includes playwright", topNames(bun).includes("playwright"), topNames(bun).join(", "));
+const angular = new Set(["always", "package.json", "angular", ".git"]);
+assert("Angular includes playwright", topNames(angular).includes("playwright"), topNames(angular).join(", "));
 const deno = new Set(["always", "deno", ".git"]);
 assert("Deno includes playwright", topNames(deno).includes("playwright"), topNames(deno).join(", "));
 const vitepress = new Set(["always", "package.json", "vitepress", "docs", ".git"]);
@@ -123,6 +125,10 @@ const supabase = new Set(["always", "package.json", "supabase", "postgres", ".gi
 assert("Supabase includes context7", topNames(supabase).includes("context7"), topNames(supabase).join(", "));
 assert("Supabase includes supabase mcp", topNames(supabase).includes("supabase"), topNames(supabase).join(", "));
 assert("Supabase excludes playwright", !topNames(supabase).includes("playwright"), topNames(supabase).join(", "));
+const mongodb = new Set(["always", "package.json", "express", "mongoose", "mongodb", ".git"]);
+assert("MongoDB includes context7", topNames(mongodb).includes("context7"), topNames(mongodb).join(", "));
+assert("MongoDB includes mongodb mcp", topNames(mongodb).includes("mongodb"), topNames(mongodb).join(", "));
+assert("MongoDB excludes playwright", !topNames(mongodb).includes("playwright"), topNames(mongodb).join(", "));
 
 const hono = new Set(["always", "package.json", "hono", ".git"]);
 const honoTop = topNames(hono);

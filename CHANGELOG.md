@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.71] — 2026-07-05
+### Added
+- **Backend domain** — matches `mongodb` and `mongoose` for NoSQL-appropriate loadouts.
+- **Regression tests** — MongoDB (Express + Mongoose) and Angular scan + recommend fixtures.
+
 ## [0.3.70] — 2026-07-05
 ### Added
 - **Drizzle scan** — `drizzle.config.ts` / `.js` / `.mjs` plus package deps.

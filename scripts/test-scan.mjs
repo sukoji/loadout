@@ -273,6 +273,23 @@ try {
     rmSync(supabaseDir, { recursive: true, force: true });
   }
 
+  const mongoDir = mkdtempSync(join(tmpdir(), "loadout-scan-mongo-"));
+  try {
+    writeFileSync(
+      join(mongoDir, "package.json"),
+      JSON.stringify({ dependencies: { express: "4", mongoose: "8", mongodb: "6" } }),
+    );
+    const mongoSignals = scanProject(mongoDir);
+    assert("scan adds mongoose from package.json", mongoSignals.has("mongoose"));
+    assert("scan adds mongodb from package.json", mongoSignals.has("mongodb"));
+    assert("scan adds express from package.json", mongoSignals.has("express"));
+    const mongoTop = topIds(mongoSignals);
+    assert("mongodb project surfaces mongodb mcp", mongoTop.includes("mongodb"), mongoTop.join(", "));
+    assert("mongodb project excludes playwright", !mongoTop.includes("playwright"), mongoTop.join(", "));
+  } finally {
+    rmSync(mongoDir, { recursive: true, force: true });
+  }
+
   const honoDir = mkdtempSync(join(tmpdir(), "loadout-scan-hono-"));
   try {
     writeFileSync(
