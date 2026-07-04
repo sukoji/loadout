@@ -665,6 +665,41 @@ try {
     rmSync(monoDir, { recursive: true, force: true });
   }
 
+  const pnpmDir = mkdtempSync(join(tmpdir(), "loadout-scan-pnpm-"));
+  try {
+    writeFileSync(join(pnpmDir, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
+    writeFileSync(join(pnpmDir, "package.json"), JSON.stringify({ name: "pnpm-app" }));
+    const pnpmSignals = scanProject(pnpmDir);
+    assert("scan adds pnpm-lock.yaml signal", pnpmSignals.has("pnpm-lock.yaml"));
+    assert("pnpm-lock alone omits monorepo", !pnpmSignals.has("monorepo"));
+  } finally {
+    rmSync(pnpmDir, { recursive: true, force: true });
+  }
+
+  const tfDir = mkdtempSync(join(tmpdir(), "loadout-scan-tf-"));
+  try {
+    writeFileSync(join(tfDir, "requirements.txt"), "tensorflow>=2.15\nnumpy\n");
+    const tfSignals = scanProject(tfDir);
+    assert("scan adds tensorflow from requirements.txt", tfSignals.has("tensorflow"));
+    const tfTop = topIds(tfSignals);
+    assert("tensorflow project surfaces context7", tfTop.includes("context7"), tfTop.join(", "));
+    assert("tensorflow project excludes playwright", !tfTop.includes("playwright"), tfTop.join(", "));
+  } finally {
+    rmSync(tfDir, { recursive: true, force: true });
+  }
+
+  const skDir = mkdtempSync(join(tmpdir(), "loadout-scan-sklearn-"));
+  try {
+    writeFileSync(join(skDir, "requirements.txt"), "scikit-learn>=1.4\nnumpy\n");
+    const skSignals = scanProject(skDir);
+    assert("scan adds scikit-learn from requirements.txt", skSignals.has("scikit-learn"));
+    const skTop = topIds(skSignals);
+    assert("scikit-learn project surfaces context7", skTop.includes("context7"), skTop.join(", "));
+    assert("scikit-learn project excludes playwright", !skTop.includes("playwright"), skTop.join(", "));
+  } finally {
+    rmSync(skDir, { recursive: true, force: true });
+  }
+
   const nxDir = mkdtempSync(join(tmpdir(), "loadout-scan-nx-"));
   try {
     writeFileSync(join(nxDir, "nx.json"), "{}\n");

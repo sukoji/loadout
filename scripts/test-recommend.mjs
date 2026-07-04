@@ -111,6 +111,16 @@ const torchTop = topNames(torchMl);
 assert("Torch data-ml includes context7", torchTop.includes("context7"), torchTop.join(", "));
 assert("Torch data-ml excludes playwright", !torchTop.includes("playwright"), torchTop.join(", "));
 assert("Torch data-ml excludes mongodb", !torchTop.includes("mongodb"), torchTop.join(", "));
+const tensorflowMl = new Set(["always", "requirements.txt", "tensorflow", "numpy", "python", ".git"]);
+const tfTop = topNames(tensorflowMl);
+assert("TensorFlow data-ml includes context7", tfTop.includes("context7"), tfTop.join(", "));
+assert("TensorFlow data-ml excludes playwright", !tfTop.includes("playwright"), tfTop.join(", "));
+assert("TensorFlow data-ml excludes mongodb", !tfTop.includes("mongodb"), tfTop.join(", "));
+const sklearnMl = new Set(["always", "requirements.txt", "scikit-learn", "numpy", "python", ".git"]);
+const skTop = topNames(sklearnMl);
+assert("scikit-learn data-ml includes context7", skTop.includes("context7"), skTop.join(", "));
+assert("scikit-learn data-ml excludes playwright", !skTop.includes("playwright"), skTop.join(", "));
+assert("scikit-learn data-ml excludes mongodb", !skTop.includes("mongodb"), skTop.join(", "));
 
 // FastAPI backend should get API-appropriate tools, not frontend noise.
 const fastapi = new Set(["always", "requirements.txt", "pyproject.toml", "fastapi", "python", ".git", "postgres"]);
@@ -280,6 +290,11 @@ const nxTop = topNames(nxMonorepo);
 assert("Nx includes filesystem or git", nxTop.includes("filesystem") || nxTop.includes("git"), nxTop.join(", "));
 assert("Nx includes guard-dangerous-bash", nxTop.includes("guard-dangerous-bash"), nxTop.join(", "));
 assert("Nx excludes playwright", !nxTop.includes("playwright"), nxTop.join(", "));
+const pnpmMonorepo = new Set(["always", "monorepo", "turbo", "pnpm-lock.yaml", "pnpm-workspace", "package.json", ".git"]);
+const pnpmTop = topNames(pnpmMonorepo);
+assert("pnpm monorepo includes filesystem or git", pnpmTop.includes("filesystem") || pnpmTop.includes("git"), pnpmTop.join(", "));
+assert("pnpm monorepo includes guard-dangerous-bash", pnpmTop.includes("guard-dangerous-bash"), pnpmTop.join(", "));
+assert("pnpm monorepo excludes playwright", !pnpmTop.includes("playwright"), pnpmTop.join(", "));
 
 // .env alone (via general loadout) surfaces protect-secrets even when security isn't top domain.
 const frontendEnv = new Set(["always", "react", "next", "package.json", ".env"]);

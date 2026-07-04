@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.77] — 2026-07-05
+### Added
+- **Regression tests** — TensorFlow/scikit-learn data-ml and pnpm monorepo scan/recommend fixtures.
+
 ## [0.3.76] — 2026-07-05
 ### Added
 - **Regression tests** — MLflow research and standalone Symfony backend scan/recommend fixtures.
