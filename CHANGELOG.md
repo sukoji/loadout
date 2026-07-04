@@ -6,6 +6,14 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.43] — 2026-07-04
+### Added
+- **Dogfood** — this repo now ships a project `.mcp.json` (context7, git, playwright, github, filesystem).
+
+### Changed
+- **`doctor` tip** — prefers `--mcp-only` only when MCP suggestions remain.
+- Ranking regression tests use an isolated root so a dogfooded `.mcp.json` cannot hide recommendations.
+
 ## [0.3.42] — 2026-07-04
 ### Added
 - **`.github/workflows/loadout-doctor.yml`** — dogfoods `doctor --json` on this repo (artifact upload).

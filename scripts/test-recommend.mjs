@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 // Regression checks for recommend() ranking — run before release.
+import { join } from "node:path";
+import { tmpdir } from "node:os";
 import { loadCatalog } from "../cli/lib/catalog.mjs";
 import { recommend } from "../cli/lib/recommend.mjs";
 
 const catalog = loadCatalog();
+// Isolate from the developer's cwd so dogfooded .mcp.json does not hide recs.
+const CLEAN_ROOT = join(tmpdir(), `loadout-clean-${process.pid}`);
 let failed = 0;
 
 function assert(name, cond, detail = "") {
@@ -16,7 +20,7 @@ function assert(name, cond, detail = "") {
 }
 
 function topNames(signals) {
-  return recommend(catalog, signals).items.slice(0, 8).map((e) => e.item.id);
+  return recommend(catalog, signals, CLEAN_ROOT).items.slice(0, 8).map((e) => e.item.id);
 }
 
 // ML research repo should surface research tools, not random python marketplace plugins.
@@ -110,7 +114,7 @@ const secTop = topNames(security);
 assert("Security includes protect-secrets", secTop.includes("protect-secrets"), secTop.join(", "));
 assert("Security includes guard-dangerous-bash", secTop.includes("guard-dangerous-bash"), secTop.join(", "));
 
-const officialInPool = recommend(catalog, mlResearch).items.filter((e) => e.item.tier === "official").length;
+const officialInPool = recommend(catalog, mlResearch, CLEAN_ROOT).items.filter((e) => e.item.tier === "official").length;
 assert("Official tier capped in pool", officialInPool <= 2, String(officialInPool));
 
 if (failed) {

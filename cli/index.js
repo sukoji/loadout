@@ -623,8 +623,13 @@ function runDoctor(flags = new Set()) {
     return;
   }
   const suggestionIds = (findings.suggestions || []).map((s) => s.id).filter(Boolean);
+  const mcpSuggestionIds = (findings.suggestions || []).filter((s) => s.type === "mcp").map((s) => s.id);
   if (suggestionIds.length) {
-    console.log(c("dim", "Tip: npx claude-loadout apply --suggestions --mcp-only"));
+    if (mcpSuggestionIds.length) {
+      console.log(c("dim", "Tip: npx claude-loadout apply --suggestions --mcp-only"));
+    } else {
+      console.log(c("dim", "Tip: npx claude-loadout apply --suggestions"));
+    }
     console.log(c("dim", `     or: npx claude-loadout apply --ids ${suggestionIds.join(",")}\n`));
   } else if (fix.length) {
     console.log(c("dim", "Tip: npx claude-loadout --dry-run to see recommended additions.\n"));

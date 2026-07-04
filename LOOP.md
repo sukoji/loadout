@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.43 | 2026-07-04 | dogfood .mcp.json; smarter doctor tip |
 | 0.3.42 | 2026-07-04 | enable loadout-doctor workflow on this repo |
 | 0.3.41 | 2026-07-04 | examples/ci-doctor.yml GitHub Actions template |
 | 0.3.40 | 2026-07-04 | doctor JSON applyCommand fields |

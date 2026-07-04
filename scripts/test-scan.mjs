@@ -7,7 +7,13 @@ import { loadCatalog } from "../cli/lib/catalog.mjs";
 import { recommend } from "../cli/lib/recommend.mjs";
 
 const dir = mkdtempSync(join(tmpdir(), "loadout-scan-"));
+const CLEAN_ROOT = join(tmpdir(), `loadout-clean-scan-${process.pid}`);
+const catalog = loadCatalog();
 let failed = 0;
+
+function topIds(signals) {
+  return recommend(catalog, signals, CLEAN_ROOT).items.slice(0, 8).map((e) => e.item.id);
+}
 
 function assert(name, cond) {
   if (!cond) {
@@ -31,8 +37,7 @@ try {
   assert("scan adds .bib from references file", signals.has(".bib"));
   assert("scan adds papers from papers/ directory", signals.has("papers"));
 
-  const catalog = loadCatalog();
-  const top = recommend(catalog, signals).items.slice(0, 8).map((e) => e.item.id);
+  const top = topIds(signals);
   assert("notebook scan surfaces exa-research", top.includes("exa-research"), top.join(", "));
   assert("papers scan surfaces tavily-research", top.includes("tavily-research"), top.join(", "));
 
@@ -44,7 +49,7 @@ try {
     const viteSignals = scanProject(viteDir);
     assert("scan adds vite from vite.config.ts", viteSignals.has("vite"));
     assert("scan adds tsconfig.json signal", viteSignals.has("tsconfig.json"));
-    const viteTop = recommend(catalog, viteSignals).items.slice(0, 8).map((e) => e.item.id);
+    const viteTop = topIds(viteSignals);
     assert("vite project surfaces playwright", viteTop.includes("playwright"), viteTop.join(", "));
   } finally {
     rmSync(viteDir, { recursive: true, force: true });
@@ -57,7 +62,7 @@ try {
     const ngSignals = scanProject(angularDir);
     assert("scan adds angular from angular.json", ngSignals.has("angular"));
     assert("scan adds angular from @angular/core", ngSignals.has("angular"));
-    const ngTop = recommend(catalog, ngSignals).items.slice(0, 8).map((e) => e.item.id);
+    const ngTop = topIds(ngSignals);
     assert("angular project surfaces playwright", ngTop.includes("playwright"), ngTop.join(", "));
   } finally {
     rmSync(angularDir, { recursive: true, force: true });
@@ -70,7 +75,7 @@ try {
     const nestSignals = scanProject(nestDir);
     assert("scan adds nestjs from nest-cli.json", nestSignals.has("nestjs"));
     assert("scan adds fastify from package.json", nestSignals.has("fastify"));
-    const nestTop = recommend(catalog, nestSignals).items.slice(0, 8).map((e) => e.item.id);
+    const nestTop = topIds(nestSignals);
     assert("nestjs project surfaces postgres or context7", nestTop.includes("postgres") || nestTop.includes("context7"), nestTop.join(", "));
   } finally {
     rmSync(nestDir, { recursive: true, force: true });
@@ -84,7 +89,7 @@ try {
     assert("scan adds pubspec.yaml signal", flSignals.has("pubspec.yaml"));
     assert("scan adds flutter from pubspec", flSignals.has("flutter"));
     assert("scan adds build.gradle signal", flSignals.has("build.gradle"));
-    const flTop = recommend(catalog, flSignals).items.slice(0, 8).map((e) => e.item.id);
+    const flTop = topIds(flSignals);
     assert("flutter project surfaces context7", flTop.includes("context7"), flTop.join(", "));
   } finally {
     rmSync(flutterDir, { recursive: true, force: true });
@@ -102,7 +107,7 @@ try {
     assert("scan adds terraform from .tf", dvSignals.has("terraform"));
     assert("scan adds helm from Chart.yaml", dvSignals.has("helm"));
     assert("scan adds k8s from k8s/ directory", dvSignals.has("k8s"));
-    const dvTop = recommend(catalog, dvSignals).items.slice(0, 8).map((e) => e.item.id);
+    const dvTop = topIds(dvSignals);
     assert("devops project surfaces github or git", dvTop.includes("github") || dvTop.includes("git"), dvTop.join(", "));
   } finally {
     rmSync(devopsDir, { recursive: true, force: true });
@@ -120,7 +125,7 @@ try {
     assert("scan adds mkdocs from mkdocs.yml", docSignals.has("mkdocs"));
     assert("scan adds .docx from office file", docSignals.has(".docx"));
     assert("scan adds docusaurus from package", docSignals.has("docusaurus"));
-    const docTop = recommend(catalog, docSignals).items.slice(0, 8).map((e) => e.item.id);
+    const docTop = topIds(docSignals);
     assert("docs project surfaces office-docs or notion", docTop.includes("office-docs") || docTop.includes("notion"), docTop.join(", "));
   } finally {
     rmSync(docsDir, { recursive: true, force: true });
@@ -138,7 +143,7 @@ try {
     assert("scan adds jwt from jsonwebtoken", authSignals.has("jwt"));
     assert("scan adds stripe from package", authSignals.has("stripe"));
     assert("scan adds .env signal", authSignals.has(".env"));
-    const authTop = recommend(catalog, authSignals).items.slice(0, 8).map((e) => e.item.id);
+    const authTop = topIds(authSignals);
     assert("auth project surfaces protect-secrets or guard-dangerous-bash", authTop.includes("protect-secrets") || authTop.includes("guard-dangerous-bash"), authTop.join(", "));
   } finally {
     rmSync(authDir, { recursive: true, force: true });

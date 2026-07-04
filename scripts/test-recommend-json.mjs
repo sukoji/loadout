@@ -1,9 +1,12 @@
 #!/usr/bin/env node
+import { join } from "node:path";
+import { tmpdir } from "node:os";
 import { loadCatalog } from "../cli/lib/catalog.mjs";
 import { recommend } from "../cli/lib/recommend.mjs";
 import { buildRecommendPreview } from "../cli/lib/manifest.mjs";
 
 const catalog = loadCatalog();
+const CLEAN_ROOT = join(tmpdir(), `loadout-clean-json-${process.pid}`);
 let failed = 0;
 
 function assert(name, cond, detail = "") {
@@ -16,7 +19,7 @@ function assert(name, cond, detail = "") {
 }
 
 const signals = new Set(["always", "package.json", "react", "next", ".git"]);
-const { domains, items, community, installed } = recommend(catalog, signals);
+const { domains, items, community, installed } = recommend(catalog, signals, CLEAN_ROOT);
 const json = buildRecommendPreview(signals, domains, items, community, installed);
 
 assert("JSON has items array", Array.isArray(json.items) && json.items.length > 0);
