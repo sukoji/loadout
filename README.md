@@ -132,6 +132,8 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `doctor` | Audit: tokens, hook deps, cross-agent dupes, gaps |
 | `doctor --fix` | Apply auto-writable suggestions (MCP + hooks) and print skill install steps |
 | `doctor --fix --mcp-only` | Fix MCP servers only |
+| `doctor --fix --hooks-only` | Fix hooks/settings only |
+| `apply --suggestions --hooks-only` | Apply hook/setting suggestions only |
 | `doctor --fix --dry-run` | Preview what `--fix` would apply |
 | `doctor --json` | Audit JSON with `domains`, `signals`, `suggestions`, `fixCommand*`, `applyCommand*`, and `summary` (exit 1 when fixes needed) |
 | `domains` | List catalog domains, signal hints, and loadout sizes |

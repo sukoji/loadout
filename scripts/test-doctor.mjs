@@ -82,6 +82,10 @@ try {
   const beforeMcp = JSON.parse(readFileSync(join(dir, ".mcp.json"), "utf8"));
   assert("dry-run leaves mcp unchanged", !beforeMcp.mcpServers?.playwright);
 
+  const hooksOnlyPreview = doctorFix(dir, { hooksOnly: true, dryRun: true });
+  assert("doctor --fix --hooks-only excludes playwright", !hooksOnlyPreview.ids.includes("playwright"));
+  assert("doctor --fix --hooks-only includes protect-secrets", hooksOnlyPreview.ids.includes("protect-secrets"));
+
   const fixed = doctorFix(dir, { mcpOnly: true });
   assert("doctor --fix applies playwright", fixed.applied.includes("playwright"));
   const afterMcp = JSON.parse(readFileSync(join(dir, ".mcp.json"), "utf8"));

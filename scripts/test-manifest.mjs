@@ -115,6 +115,15 @@ try {
     const mcpOnlyIds = sugItems.filter((e) => e.item.type === "mcp").slice(0, 5).map((e) => e.item.id);
     assert("suggestions --mcp-only are all mcp", mcpOnlyIds.every((id) => catalog.byId.get(id)?.type === "mcp"));
     assert("suggestions --mcp-only still includes playwright", mcpOnlyIds.includes("playwright"));
+    const hooksOnlyIds = sugItems
+      .filter((e) => e.item.type === "hook" || e.item.type === "setting")
+      .slice(0, 5)
+      .map((e) => e.item.id);
+    assert("suggestions --hooks-only are all hooks/settings", hooksOnlyIds.every((id) => {
+      const t = catalog.byId.get(id)?.type;
+      return t === "hook" || t === "setting";
+    }));
+    assert("suggestions --hooks-only has at least one item", hooksOnlyIds.length > 0);
     const limited = sugItems.slice(0, 2).map((e) => e.item.id);
     assert("suggestions --limit 2 caps count", limited.length === 2);
     const { receipts: sugReceipts } = applyItems(catalog, sugIds.filter((id) => id === "playwright"), sugDir);

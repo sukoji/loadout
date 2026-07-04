@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.51] — 2026-07-04
+### Added
+- **`--hooks-only`** — filter for `apply --suggestions`, `apply --ids`, and `doctor --fix` (hooks/settings only; mirrors `--mcp-only`).
+- Doctor JSON **`fixCommandHooksOnly`** / **`applyCommandHooksOnly`**.
+
 ## [0.3.50] — 2026-07-04
 ### Fixed
 - **`detectInstalled`** — treats existing `CLAUDE.md` (or `.claude/CLAUDE.md`) as `/init` already done, so `init-claude-md` is not re-suggested.

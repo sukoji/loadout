@@ -9,6 +9,13 @@ import { applyItems } from "./manifest.mjs";
 
 const AUTO_APPLY_TYPES = new Set(["mcp", "hook", "setting"]);
 
+/** Whether a catalog type is auto-writable under --mcp-only / --hooks-only filters. */
+export function isAutoApplyType(type, opts = {}) {
+  if (opts.mcpOnly) return type === "mcp";
+  if (opts.hooksOnly) return type === "hook" || type === "setting";
+  return AUTO_APPLY_TYPES.has(type);
+}
+
 const TOKEN_RE = /<your-[^>]+>/g;
 const HOOK_DEPS = {
   jq: ["format-js-on-edit", "lint-python-on-edit", "guard-dangerous-bash", "protect-secrets", "eslint-fix-on-edit", "gofmt-on-edit", "rustfmt-on-edit", "block-push-to-main", "statusline-git"],
@@ -103,6 +110,8 @@ export function skillInstallGuide(catalog, suggestions = []) {
 export function doctorFix(root = process.cwd(), opts = {}) {
   const catalog = loadCatalog();
   const mcpOnly = Boolean(opts.mcpOnly);
+  const hooksOnly = Boolean(opts.hooksOnly) && !mcpOnly;
+  const typeOpts = { mcpOnly, hooksOnly };
   const dryRun = Boolean(opts.dryRun);
   const limit = opts.limit ?? 5;
   const before = doctor(root);
@@ -115,14 +124,14 @@ export function doctorFix(root = process.cwd(), opts = {}) {
     if (!f.id || seen.has(f.id)) continue;
     const item = catalog.byId.get(f.id);
     if (!item) continue;
-    if (mcpOnly ? item.type !== "mcp" : !AUTO_APPLY_TYPES.has(item.type)) continue;
+    if (!isAutoApplyType(item.type, typeOpts)) continue;
     seen.add(f.id);
     auto.push({ id: item.id, name: item.name, type: item.type, tier: item.tier || "curated", reason: f.msg });
   }
 
   for (const s of before.suggestions || []) {
     if (seen.has(s.id)) continue;
-    if (mcpOnly ? s.type === "mcp" : AUTO_APPLY_TYPES.has(s.type)) {
+    if (isAutoApplyType(s.type, typeOpts)) {
       seen.add(s.id);
       auto.push(s);
     } else {
