@@ -549,6 +549,31 @@ try {
     rmSync(flutterDir, { recursive: true, force: true });
   }
 
+  const unityDir = mkdtempSync(join(tmpdir(), "loadout-scan-unity-"));
+  try {
+    mkdirSync(join(unityDir, "ProjectSettings"), { recursive: true });
+    writeFileSync(join(unityDir, "ProjectSettings", "ProjectVersion.txt"), "m_EditorVersion: 2022.3.0f1\n");
+    const unitySignals = scanProject(unityDir);
+    assert("scan adds unity from ProjectVersion.txt", unitySignals.has("unity"));
+    const unityTop = topIds(unitySignals);
+    assert("unity project surfaces context7", unityTop.includes("context7"), unityTop.join(", "));
+    assert("unity project includes guard-dangerous-bash", unityTop.includes("guard-dangerous-bash"), unityTop.join(", "));
+  } finally {
+    rmSync(unityDir, { recursive: true, force: true });
+  }
+
+  const unrealDir = mkdtempSync(join(tmpdir(), "loadout-scan-unreal-"));
+  try {
+    writeFileSync(join(unrealDir, "Demo.uproject"), "{}\n");
+    const unrealSignals = scanProject(unrealDir);
+    assert("scan adds unreal from .uproject", unrealSignals.has("unreal"));
+    const unrealTop = topIds(unrealSignals);
+    assert("unreal project surfaces context7", unrealTop.includes("context7"), unrealTop.join(", "));
+    assert("unreal project includes guard-dangerous-bash", unrealTop.includes("guard-dangerous-bash"), unrealTop.join(", "));
+  } finally {
+    rmSync(unrealDir, { recursive: true, force: true });
+  }
+
   const devopsDir = mkdtempSync(join(tmpdir(), "loadout-scan-devops-"));
   try {
     writeFileSync(join(devopsDir, "Dockerfile"), "FROM alpine\n");

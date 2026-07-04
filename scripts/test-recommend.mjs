@@ -56,6 +56,8 @@ const tailwind = new Set(["always", "package.json", "react", "tailwind", ".git"]
 assert("Tailwind includes playwright", topNames(tailwind).includes("playwright"), topNames(tailwind).join(", "));
 const vite = new Set(["always", "package.json", "vite", ".git"]);
 assert("Vite includes playwright", topNames(vite).includes("playwright"), topNames(vite).join(", "));
+const vue = new Set(["always", "package.json", "vue", ".git"]);
+assert("Vue includes playwright", topNames(vue).includes("playwright"), topNames(vue).join(", "));
 
 const astro = new Set(["always", "package.json", "astro", ".git"]);
 assert("Astro includes playwright", topNames(astro).includes("playwright"), topNames(astro).join(", "));
@@ -194,6 +196,12 @@ const godot = new Set(["always", "godot", "project.godot", ".git"]);
 const gdTop = topNames(godot);
 assert("Godot includes context7", gdTop.includes("context7"), gdTop.join(", "));
 assert("Godot includes guard-dangerous-bash", gdTop.includes("guard-dangerous-bash"), gdTop.join(", "));
+const unity = new Set(["always", "unity", ".git"]);
+assert("Unity includes context7", topNames(unity).includes("context7"), topNames(unity).join(", "));
+assert("Unity includes guard-dangerous-bash", topNames(unity).includes("guard-dangerous-bash"), topNames(unity).join(", "));
+const unreal = new Set(["always", "unreal", ".git"]);
+assert("Unreal includes context7", topNames(unreal).includes("context7"), topNames(unreal).join(", "));
+assert("Unreal includes guard-dangerous-bash", topNames(unreal).includes("guard-dangerous-bash"), topNames(unreal).join(", "));
 
 // Flutter / mobile.
 const flutter = new Set(["always", "pubspec.yaml", "flutter", "build.gradle", ".git"]);
