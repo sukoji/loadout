@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.54] — 2026-07-04
+### Changed
+- **`doctor`** — when only installable plugins remain, labels them **Optional plugins** (not incomplete setup).
+- **README roadmap** — restructured into Done / Next / Later (EN + KO).
+
 ## [0.3.53] — 2026-07-04
 ### Fixed
 - **`doctor` gaps** — skip hooks/settings whose PATH dependencies are missing (e.g. `statusline-git` without `jq`).

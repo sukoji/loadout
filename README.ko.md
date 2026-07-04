@@ -236,12 +236,21 @@ npm run build:docs   # 카탈로그로부터 docs/domains/ 재생성
 
 ## 로드맵
 
+**완료 (0.3.x)**
 - [x] `claude-loadout`를 npm에 배포해 `npx` 지원
-- [x] `game-dev` 도메인 (Godot, Unity, Unreal)
-- [x] `loadout doctor` — cross-agent 감사, `--json` 지원
-- [x] 팀 로드아웃 — `export` / `apply -f .loadout.json`, `--target` cross-agent
+- [x] `loadout doctor` / `doctor --fix` — 감사 및 MCP·훅 자동 적용
+- [x] 팀 로드아웃 — `export` / `apply -f`, `--ids`, `--suggestions`
+- [x] Cross-agent 타깃 — Cursor, Codex, Gemini, opencode, OpenClaw
+- [x] 카탈로그 탐색 — `domains`, `show`, `search`, `stats`
+- [x] research·game-dev 도메인, 시그널 기반 추천
+
+**다음**
+- [ ] 런타임 검증된 큐레이션 카탈로그 확장 (`npm run test:mcps` 후)
+- [ ] 선택적 CI publish (`NPM_TOKEN` 시크릿 — 워크플로는 이미 있음)
+
+**이후**
 - [ ] 더 많은 도메인 (임베디드, 브라우저 확장, Rust 시스템)
-- [ ] 커뮤니티 투표 기반 관련도 시그널
+- [ ] 데모 GIF / 디렉터리 등록 (awesome-claude-code, marketplaces)
 
 ## 라이선스
 

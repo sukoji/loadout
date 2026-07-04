@@ -7,7 +7,7 @@ Loadout development without the original chat context. If a session dies mid-tas
 - **Local path:** `C:\Users\piai\Desktop\loadout`
 - **What it is:** A hybrid Claude Code **plugin marketplace + recommender**. It profiles a project and
   *applies* a domain-matched loadout of MCP servers / hooks / skills — instead of being one more list to read.
-- **Last updated:** 2026-07-04 (v0.3.53 loop — skip hooks missing PATH deps)
+- **Last updated:** 2026-07-04 (v0.3.54 loop — optional plugins + roadmap)
 - **Owner GitHub account:** `sukoji` (a *user*, not an org — `gh api user` returns `sukoji`, even though
   `gh auth status` shows the label `jskh-201910840`). Token scopes: `repo`, `workflow`, `gist`, `read:org`.
 
@@ -20,7 +20,7 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | Area | State |
 | :-- | :-- |
 | First release shipped & pushed | ✅ on `origin/main`; tagged `v0.1.0` |
-| Published to npm | ✅ `claude-loadout@0.3.53` live. Local `npm publish` uses `~/.npmrc` token. **`prepublishOnly` runs `npm test`.** GitHub Actions `publish` workflow needs repo secret `NPM_TOKEN` — without it the job warns and skips. See CONTRIBUTING § Release. CI: `loadout-doctor.yml`. Dogfood: `.mcp.json` + Prettier/ESLint/security/notify-on-stop hooks. Doctor skips hooks whose PATH deps are missing; built-in skills are not gaps (except `/init` without `CLAUDE.md`). |
+| Published to npm | ✅ `claude-loadout@0.3.54` live. Local `npm publish` uses `~/.npmrc` token. **`prepublishOnly` runs `npm test`.** GitHub Actions `publish` workflow needs repo secret `NPM_TOKEN` — without it the job warns and skips. See CONTRIBUTING § Release. CI: `loadout-doctor.yml`. Dogfood: `.mcp.json` + Prettier/ESLint/security/notify-on-stop hooks. Doctor: PATH-aware gaps, optional-plugins label, builtins not gaps. |
 | Plugin marketplace | ✅ **end-to-end verified from GitHub**: `/plugin marketplace add sukoji/loadout` → `/plugin install loadout@loadout` → `claude plugin details` lists Skills (2): browse, recommend. (Install-blocking bug fixed — see gotcha #8.) |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
 | Catalog | ✅ **3 tiers, 281 items**: 37 curated + 242 official + 2 community. **9 domains** incl. `research`. `npm run test:recommend` guards ranking quality. |
@@ -150,8 +150,7 @@ lists were generated into this repo's planning; the one-line resume pointer is e
 ### P2 — trust, docs, polish
 - [x] **`improve-readme-discoverability` [S]** — ✅ DONE 2026-07-03 (v0.3.3). KO README full parity.
 - [x] **`add-contributing-workflow-doc` [M]** — ✅ DONE 2026-07-03 (v0.3.4). CONTRIBUTING.md + test commands.
-- [ ] **`add-version-roadmap` [S]** — `CHANGELOG.md` (started, see file) + restructure README roadmap into
-      done / 0.2 / 1.0.
+- [x] **`add-version-roadmap` [S]** — ✅ DONE 2026-07-04 (v0.3.54). README roadmap Done / Next / Later (EN + KO).
 - [x] **`setup-ci-publish` [M]** — ✅ DONE 2026-07-03 (v0.3.6). `publish.yml` on `v*` tags; needs `NPM_TOKEN` secret.
 
 ### P3 — distribution (the "get famous" step; do after npm + a demo exist)

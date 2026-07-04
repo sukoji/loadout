@@ -422,10 +422,13 @@ function auditGaps(root, catalog, findings) {
   }
   const names = top.map((e) => e.item.name).join("; ");
   const hasAuto = top.some((e) => AUTO_APPLY_TYPES.has(e.item.type));
+  const onlyPlugins = !hasAuto && top.every((e) => e.item.type === "skill" || e.item.type === "reference");
   findings.warn.push({
     msg: hasAuto
       ? `Loadout would still suggest: ${names} — run npx claude-loadout doctor --fix`
-      : `Loadout would still suggest: ${names} — run npx claude-loadout doctor --fix for skill install steps`,
+      : onlyPlugins
+        ? `Optional plugins: ${names} — run npx claude-loadout doctor --fix for install steps`
+        : `Loadout would still suggest: ${names} — run npx claude-loadout doctor --fix for skill install steps`,
   });
 }
 

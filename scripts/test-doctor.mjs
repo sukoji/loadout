@@ -88,6 +88,41 @@ try {
     rmSync(bareDir, { recursive: true, force: true });
   }
 
+  const matureDir = mkdtempSync(join(tmpdir(), "loadout-doctor-mature-"));
+  try {
+    mkdirSync(join(matureDir, ".claude"), { recursive: true });
+    writeFileSync(join(matureDir, "CLAUDE.md"), "# done\n");
+    writeFileSync(
+      join(matureDir, ".mcp.json"),
+      JSON.stringify({
+        mcpServers: {
+          context7: { command: "npx", args: ["-y", "@upstash/context7-mcp@latest"] },
+          git: { command: "uvx", args: ["mcp-server-git"] },
+        },
+      }),
+    );
+    writeFileSync(
+      join(matureDir, ".claude/settings.json"),
+      JSON.stringify({
+        hooks: {
+          Stop: [{ hooks: [{ type: "command", command: "printf '\\a' ; echo 'loadout: Claude is waiting for you.'" }] }],
+          PreToolUse: [
+            { matcher: "Bash", hooks: [{ type: "command", command: "echo dangerous mkfs" }] },
+            { matcher: "Bash", hooks: [{ type: "command", command: "echo push directly block-push" }] },
+          ],
+        },
+      }),
+    );
+    const mature = doctor(matureDir);
+    assert("mature setup only suggests plugins", mature.suggestions.every((s) => s.type === "skill"));
+    assert(
+      "mature setup labels optional plugins",
+      mature.warn.some((f) => f.msg.startsWith("Optional plugins:")),
+    );
+  } finally {
+    rmSync(matureDir, { recursive: true, force: true });
+  }
+
   const mcpIds = profiled.suggestions.filter((s) => s.type === "mcp").map((s) => s.id);
   assert("doctor can build applyCommandMcpOnly", mcpIds.includes("playwright"));
   const applyCmd = `npx claude-loadout apply --ids ${profiled.suggestions.map((s) => s.id).join(",")}`;

@@ -273,10 +273,21 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the entry schema.
 
 ## Roadmap
 
+**Done (0.3.x)**
 - [x] Publish `claude-loadout` to npm for `npx`
-- [x] `loadout doctor` — audit an existing setup and suggest what's missing
-- [x] Team loadouts — `export` / `apply -f .loadout.json` for shared manifests
-- [ ] More domains (game dev — done; embedded, browser extensions, Rust systems)
+- [x] `loadout doctor` / `doctor --fix` — audit and auto-apply MCP + hooks
+- [x] Team loadouts — `export` / `apply -f .loadout.json`, `--ids`, `--suggestions`
+- [x] Cross-agent targets — Cursor, Codex, Gemini, opencode, OpenClaw
+- [x] Catalog browse — `domains`, `show`, `search`, `stats`
+- [x] Research + game-dev domains; signal-gated recommendations
+
+**Next**
+- [ ] Runtime-verified curated catalog growth (research MCPs only after `npm run test:mcps`)
+- [ ] Optional CI publish via repo `NPM_TOKEN` secret (workflow already ships)
+
+**Later**
+- [ ] More domains (embedded, browser extensions, Rust systems)
+- [ ] Demo GIF / directory submissions (awesome-claude-code, marketplaces)
 
 ## License
 
