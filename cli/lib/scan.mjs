@@ -136,6 +136,21 @@ export function scanProject(root = process.cwd()) {
     if (cargo.includes("actix")) add("actix");
   }
 
+  // Ruby / Rails
+  if (has("Gemfile")) {
+    const gemfile = read("Gemfile").toLowerCase();
+    if (gemfile.includes("rails")) add("rails");
+  }
+  if (has("config/application.rb")) add("rails");
+
+  // Go web frameworks (go.mod also sets generic backend signal via fileSignals below)
+  if (has("go.mod")) {
+    const gomod = read("go.mod").toLowerCase();
+    if (gomod.includes("gin-gonic/gin")) add("gin");
+    if (gomod.includes("gofiber/fiber")) add("fiber");
+    if (gomod.includes("labstack/echo")) add("echo");
+  }
+
   // Other ecosystems
   const fileSignals = {
     "go.mod": "go.mod",

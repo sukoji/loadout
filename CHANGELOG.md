@@ -6,6 +6,12 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.67] — 2026-07-05
+### Added
+- **Ruby backend scan** — Rails from `Gemfile` and `config/application.rb`.
+- **Go backend scan** — Gin, Fiber, and Echo from `go.mod`.
+- **Backend domain** — matches `rails`, `gin`, `fiber`, and `echo`.
+
 ## [0.3.66] — 2026-07-05
 ### Added
 - **Java backend scan** — Spring Boot from `pom.xml`, Gradle (`spring-boot`), and `application.properties` / `.yml`.

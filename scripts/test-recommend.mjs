@@ -122,6 +122,13 @@ assert("Spring excludes playwright", !topNames(spring).includes("playwright"), t
 const axum = new Set(["always", "axum", "Cargo.toml", ".git"]);
 assert("Axum includes context7", topNames(axum).includes("context7"), topNames(axum).join(", "));
 assert("Axum excludes playwright", !topNames(axum).includes("playwright"), topNames(axum).join(", "));
+const rails = new Set(["always", "rails", ".git"]);
+assert("Rails includes context7", topNames(rails).includes("context7"), topNames(rails).join(", "));
+assert("Rails includes guard-dangerous-bash", topNames(rails).includes("guard-dangerous-bash"), topNames(rails).join(", "));
+assert("Rails excludes playwright", !topNames(rails).includes("playwright"), topNames(rails).join(", "));
+const gin = new Set(["always", "gin", "go.mod", ".git"]);
+assert("Gin includes context7", topNames(gin).includes("context7"), topNames(gin).join(", "));
+assert("Gin excludes playwright", !topNames(gin).includes("playwright"), topNames(gin).join(", "));
 
 // Godot game project.
 const godot = new Set(["always", "godot", "project.godot", ".git"]);

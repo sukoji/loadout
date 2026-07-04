@@ -322,6 +322,37 @@ try {
     rmSync(axumDir, { recursive: true, force: true });
   }
 
+  const railsDir = mkdtempSync(join(tmpdir(), "loadout-scan-rails-"));
+  try {
+    mkdirSync(join(railsDir, "config"), { recursive: true });
+    writeFileSync(join(railsDir, "Gemfile"), "source 'https://rubygems.org'\ngem 'rails', '~> 7.0'\n");
+    writeFileSync(join(railsDir, "config/application.rb"), "module Demo\nend\n");
+    const railsSignals = scanProject(railsDir);
+    assert("scan adds rails from Gemfile", railsSignals.has("rails"));
+    assert("scan adds rails from config/application.rb", railsSignals.has("rails"));
+    const railsTop = topIds(railsSignals);
+    assert("rails project surfaces context7", railsTop.includes("context7"), railsTop.join(", "));
+    assert("rails project excludes playwright", !railsTop.includes("playwright"), railsTop.join(", "));
+  } finally {
+    rmSync(railsDir, { recursive: true, force: true });
+  }
+
+  const ginDir = mkdtempSync(join(tmpdir(), "loadout-scan-gin-"));
+  try {
+    writeFileSync(
+      join(ginDir, "go.mod"),
+      "module example.com/demo\n\ngo 1.22\n\nrequire github.com/gin-gonic/gin v1.10.0\n",
+    );
+    const ginSignals = scanProject(ginDir);
+    assert("scan adds gin from go.mod", ginSignals.has("gin"));
+    assert("scan adds go.mod signal", ginSignals.has("go.mod"));
+    const ginTop = topIds(ginSignals);
+    assert("gin project surfaces context7", ginTop.includes("context7"), ginTop.join(", "));
+    assert("gin project excludes playwright", !ginTop.includes("playwright"), ginTop.join(", "));
+  } finally {
+    rmSync(ginDir, { recursive: true, force: true });
+  }
+
   const flutterDir = mkdtempSync(join(tmpdir(), "loadout-scan-flutter-"));
   try {
     writeFileSync(join(flutterDir, "pubspec.yaml"), "name: demo\nflutter:\n  assets: []\n");

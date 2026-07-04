@@ -7,7 +7,7 @@ Loadout development without the original chat context. If a session dies mid-tas
 - **Local path:** `C:\Users\piai\Desktop\loadout`
 - **What it is:** A hybrid Claude Code **plugin marketplace + recommender**. It profiles a project and
   *applies* a domain-matched loadout of MCP servers / hooks / skills — instead of being one more list to read.
-- **Last updated:** 2026-07-05 (v0.3.66 loop — Spring Boot + Rust axum backend scan)
+- **Last updated:** 2026-07-05 (v0.3.67 loop — Rails + Go Gin backend scan)
 - **Owner GitHub account:** `sukoji` (a *user*, not an org — `gh api user` returns `sukoji`, even though
   `gh auth status` shows the label `jskh-201910840`). Token scopes: `repo`, `workflow`, `gist`, `read:org`.
 
@@ -20,7 +20,7 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | Area | State |
 | :-- | :-- |
 | First release shipped & pushed | ✅ on `origin/main`; tagged `v0.1.0` |
-| Published to npm | ✅ `claude-loadout@0.3.66` live. Local `npm publish` uses `~/.npmrc` token. **`prepublishOnly` runs `npm test`.** GitHub Actions `publish` workflow needs repo secret `NPM_TOKEN` — without it the job warns and skips. See CONTRIBUTING § Release. CI: `loadout-doctor.yml` uses `doctor --json --require-healthy`. Scan: Spring Boot/Rust axum + Laravel/GraphQL backend stacks. |
+| Published to npm | ✅ `claude-loadout@0.3.67` live. Local `npm publish` uses `~/.npmrc` token. **`prepublishOnly` runs `npm test`.** GitHub Actions `publish` workflow needs repo secret `NPM_TOKEN` — without it the job warns and skips. See CONTRIBUTING § Release. CI: `loadout-doctor.yml` uses `doctor --json --require-healthy`. Scan: Rails/Go Gin + Spring/Rust/Laravel backend stacks. |
 | Plugin marketplace | ✅ **end-to-end verified from GitHub**: `/plugin marketplace add sukoji/loadout` → `/plugin install loadout@loadout` → `claude plugin details` lists Skills (2): browse, recommend. (Install-blocking bug fixed — see gotcha #8.) |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
 | Catalog | ✅ **3 tiers, 281 items**: 37 curated + 242 official + 2 community. **9 domains** incl. `research`. `npm run test:recommend` guards ranking quality. |
