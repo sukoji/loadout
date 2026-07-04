@@ -132,6 +132,7 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `show <id>` | Show one catalog entry (config, install, homepage) |
 | `show <id> --json` | Entry as JSON |
 | `search <query>` | Search catalog by id, name, description, signals, domains |
+| `search <query> --type mcp\|skill\|hook` | Limit search to one item type |
 | `search <query> --json` | Search results as JSON |
 
 **Team loadouts:** run `export` in a reference repo, commit `.loadout.json`, then teammates run

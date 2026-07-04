@@ -11,6 +11,7 @@ import { apply } from "./lib/apply.mjs";
 import { doctor } from "./lib/doctor.mjs";
 import { buildManifest, writeManifest, applyManifest, readManifestIds, buildRecommendPreview, previewManifestApply } from "./lib/manifest.mjs";
 import { applyToTarget, listTargets, detectTargets, TARGETS } from "./lib/targets.mjs";
+import { searchCatalog } from "./lib/search.mjs";
 
 const PKG_VERSION = JSON.parse(
   readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "package.json"), "utf8"),
@@ -33,7 +34,7 @@ async function main() {
   if (positional[0] === "doctor") return runDoctor(flags);
   if (positional[0] === "domains") return runDomains(positional[1], flags);
   if (positional[0] === "show") return runShow(positional[1], flags);
-  if (positional[0] === "search") return runSearch(positional.slice(1).join(" "), flags);
+  if (positional[0] === "search") return runSearch(args, flags);
   if (positional[0] === "export") return runExport(args, flags);
   if (positional[0] === "apply") return runApplyManifest(args, flags);
 
@@ -202,6 +203,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout show context7")}  Show one catalog entry`);
   console.log(`  ${c("cyan", "npx claude-loadout show context7 --json")}  Entry as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout search playwright")}  Search catalog by name/id/signal`);
+  console.log(`  ${c("cyan", "npx claude-loadout search research --type skill")}  Filter search by type`);
   console.log(`  ${c("cyan", "npx claude-loadout search research --json")}  Search results as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout export")}     Write team loadout → .loadout.json`);
   console.log(`  ${c("cyan", "npx claude-loadout export --json")}  Print manifest JSON to stdout`);
@@ -299,34 +301,39 @@ function runApplyManifest(args, flags) {
   }
 }
 
-function runSearch(query, flags = new Set()) {
-  const q = (query || "").trim().toLowerCase();
-  if (!q) {
-    console.error(c("yellow", "Usage: npx claude-loadout search <query>"));
+function parseFlagValue(args, longName, shortName) {
+  for (let i = 0; i < args.length; i++) {
+    const a = args[i];
+    if ((a === longName || (shortName && a === shortName)) && args[i + 1] && !args[i + 1].startsWith("-")) {
+      return args[i + 1];
+    }
+    if (a.startsWith(`${longName}=`)) return a.slice(longName.length + 1);
+  }
+  return null;
+}
+
+function runSearch(args, flags = new Set()) {
+  const type = parseFlagValue(args, "--type", "-T");
+  const query = args
+    .filter((a, i) => {
+      if (a === "search") return false;
+      if (a.startsWith("-")) return false;
+      if (i > 0 && (args[i - 1] === "--type" || args[i - 1] === "-T")) return false;
+      return true;
+    })
+    .join(" ")
+    .trim();
+  if (!query) {
+    console.error(c("yellow", "Usage: npx claude-loadout search <query> [--type mcp|skill|hook]"));
     exit(1);
   }
+  if (type && !["mcp", "skill", "hook", "setting", "reference"].includes(type.toLowerCase())) {
+    console.error(c("yellow", `Unknown type "${type}" — use mcp, skill, or hook`));
+    exit(1);
+  }
+
   const { all } = loadCatalog();
-  const tokens = q.split(/\s+/).filter(Boolean);
-  const hits = all
-    .map((item) => {
-      const hay = [
-        item.id,
-        item.name,
-        item.description,
-        item.tier,
-        item.type,
-        ...(item.domains || []),
-        ...(item.signals || []),
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-      const score = tokens.reduce((n, t) => n + (hay.includes(t) ? (item.id === t || item.id.includes(t) ? 3 : 1) : 0), 0);
-      return { item, score };
-    })
-    .filter((h) => h.score > 0)
-    .sort((a, b) => b.score - a.score || a.item.id.localeCompare(b.item.id))
-    .slice(0, 20);
+  const hits = searchCatalog(all, query, { type });
 
   if (flags.has("--json")) {
     console.log(JSON.stringify(hits.map(({ item, score }) => ({
@@ -342,11 +349,12 @@ function runSearch(query, flags = new Set()) {
   }
 
   if (!hits.length) {
-    console.log(c("yellow", `\nNo catalog matches for "${query}".\n`));
+    console.log(c("yellow", `\nNo catalog matches for "${query}"${type ? ` (type=${type})` : ""}.\n`));
     return;
   }
 
-  console.log(c("bold", `\n🔎 Search`) + c("dim", `  "${query}" · ${hits.length} hit(s)\n`));
+  const label = type ? ` · type=${type}` : "";
+  console.log(c("bold", `\n🔎 Search`) + c("dim", `  "${query}"${label} · ${hits.length} hit(s)\n`));
   for (const { item } of hits) {
     const tier = item.tier && item.tier !== "curated" ? c("dim", ` · ${item.tier}`) : "";
     console.log(`  ${c("cyan", item.id.padEnd(22))} ${c("bold", item.name)} ${c("dim", `[${item.type}]`)}${tier}`);

@@ -58,6 +58,10 @@ try {
   }));
   assert("doctor JSON shape has fix/warn/ok arrays", Array.isArray(parsed.fix) && Array.isArray(parsed.warn) && Array.isArray(parsed.ok));
   assert("doctor summary counts match arrays", parsed.summary.fix === fix.length && parsed.summary.warn === warn.length);
+
+  writeFileSync(join(dir, "package.json"), JSON.stringify({ dependencies: { react: "18", next: "14" } }));
+  const profiled = doctor(dir);
+  assert("doctor reports matched domains", profiled.ok.some((f) => f.msg.includes("Matched domains")));
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }

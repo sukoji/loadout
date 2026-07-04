@@ -254,7 +254,13 @@ function auditSecurity(hasEnv, settingsDoc, findings) {
 
 function auditGaps(root, catalog, findings) {
   const signals = scanProject(root);
-  const { items } = recommend(catalog, signals, root);
+  const { domains, items } = recommend(catalog, signals, root);
+  const matched = domains.filter((d) => d.id !== "general").map((d) => d.title);
+  if (matched.length) {
+    findings.ok.push({ msg: `Matched domains: ${matched.join(", ")}` });
+  } else {
+    findings.ok.push({ msg: "Matched domains: General only (no stack-specific signals)" });
+  }
   const top = items.slice(0, 5);
   if (!top.length) {
     findings.ok.push({ msg: "Recommendation engine has no gaps — setup looks complete for this repo" });

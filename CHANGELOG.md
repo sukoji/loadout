@@ -6,6 +6,14 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.31] — 2026-07-04
+### Added
+- **`search --type mcp|skill|hook`** — filter catalog search by item type.
+- **`doctor`** — reports matched project domains (e.g. Frontend, Research).
+
+### Changed
+- Search logic lives in `cli/lib/search.mjs` (shared by CLI and tests).
+
 ## [0.3.30] — 2026-07-04
 ### Added
 - **`search <query>` / `search <query> --json`** — search the catalog by id, name, description, signals, or domains.

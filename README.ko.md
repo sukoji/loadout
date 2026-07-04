@@ -107,7 +107,7 @@ npx claude-loadout --help     # 플래그 전체 목록
 | `doctor` / `doctor --json` | 미입력 토큰, 훅 의존성, cross-agent 중복, `.env` 보호 훅 (`summary` 포함) |
 | `domains` / `domains <id>` / `domains --json` | 도메인 목록 또는 한 도메인의 로드아웃 |
 | `show <id>` / `show <id> --json` | 카탈로그 항목 상세 (config, install, homepage) |
-| `search <query>` / `search <query> --json` | id·이름·설명·시그널·도메인으로 카탈로그 검색 |
+| `search <query>` / `--type` / `--json` | id·이름·설명·시그널·도메인 검색 (`mcp`/`skill`/`hook` 필터) |
 | `export` / `export --json` | 팀 manifest 작성 또는 JSON 출력 |
 | `apply -f <file>` | 공유 loadout 적용 (`--target cursor` 등 지원, `--json` receipt) |
 | `--discover` | 미검증 커뮤니티 스킬 추가 노출 |
