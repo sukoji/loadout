@@ -213,6 +213,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout export --json")}  Print manifest JSON to stdout`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
   console.log(`  ${c("cyan", "npx claude-loadout apply --ids playwright,context7")}  Apply specific catalog ids`);
+  console.log(`  ${c("cyan", "npx claude-loadout apply --suggestions")}  Apply top doctor suggestions`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --dry-run --json")}  Preview apply as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --json")}  Apply and print receipts as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout --dry-run")}  Show recommendations only`);
@@ -274,10 +275,17 @@ function parseIds(args) {
   return raw.split(",").map((s) => s.trim()).filter(Boolean);
 }
 
+function suggestionIds(catalog, root) {
+  const signals = scanProject(root);
+  const { items } = recommend(catalog, signals, root);
+  return items.slice(0, 5).map((e) => e.item.id);
+}
+
 function runApplyManifest(args, flags) {
   const root = cwd();
   const catalog = loadCatalog();
   const idsFromFlag = parseIds(args);
+  const useSuggestions = flags.has("--suggestions");
   const targets = parseTargets(args);
   const invalid = targets.filter((t) => !TARGETS[t]);
   if (invalid.length) {
@@ -287,15 +295,29 @@ function runApplyManifest(args, flags) {
 
   let ids;
   let manifestPath = null;
+  let sourceLabel = null;
   if (idsFromFlag?.length) {
     ids = idsFromFlag;
+    sourceLabel = `--ids ${ids.join(",")}`;
+  } else if (useSuggestions) {
+    ids = suggestionIds(catalog, root);
+    sourceLabel = `--suggestions (${ids.join(",") || "none"})`;
+    if (!ids.length) {
+      if (flags.has("--json")) {
+        console.log(JSON.stringify({ ids: [], targets, skipped: [], receipts: [], note: "no suggestions" }, null, 2));
+        return;
+      }
+      console.log(c("green", "\nNo suggestions — setup looks complete.\n"));
+      return;
+    }
   } else {
     manifestPath = resolve(root, parseManifestPath(args));
     ids = readManifestIds(manifestPath);
+    sourceLabel = manifestPath;
   }
 
   const label = targets.map((t) => TARGETS[t].label).join(", ");
-  const source = manifestPath || `--ids ${ids.join(",")}`;
+  const source = sourceLabel;
 
   if (flags.has("--dry-run") || flags.has("-d")) {
     if (flags.has("--json")) {
@@ -579,8 +601,8 @@ function runDoctor(flags = new Set()) {
   }
   const suggestionIds = (findings.suggestions || []).map((s) => s.id).filter(Boolean);
   if (suggestionIds.length) {
-    console.log(c("dim", `Tip: npx claude-loadout apply --ids ${suggestionIds.join(",")}`));
-    console.log(c("dim", "     (or --dry-run / doctor --json for CI)\n"));
+    console.log(c("dim", "Tip: npx claude-loadout apply --suggestions"));
+    console.log(c("dim", `     or: npx claude-loadout apply --ids ${suggestionIds.join(",")}\n`));
   } else if (fix.length) {
     console.log(c("dim", "Tip: npx claude-loadout --dry-run to see recommended additions.\n"));
   } else {

@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.38] — 2026-07-04
+### Added
+- **`apply --suggestions`** — apply the top recommendations for the current repo in one non-interactive step.
+
 ## [0.3.37] — 2026-07-04
 ### Added
 - **`doctor`** — prints a ready-to-run `apply --ids …` tip when suggestions exist.

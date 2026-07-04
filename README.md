@@ -122,6 +122,7 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `export --json` | Print manifest JSON to stdout |
 | `apply -f <file>` | Apply a shared team loadout |
 | `apply --ids id1,id2` | Apply specific catalog ids (e.g. from `doctor --json` suggestions) |
+| `apply --suggestions` | Apply top recommendations for this repo (no manifest file) |
 | `apply -f <file> --target <id>` | Apply manifest MCPs to Cursor, Codex, etc. |
 | `apply -f <file> --dry-run --json` | Preview apply as JSON |
 | `apply -f <file> --json` | Apply and print receipts as JSON |
@@ -146,8 +147,8 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 
 ```bash
 npx claude-loadout doctor --json > profile.json   # domains, signals, suggestions
-npx claude-loadout apply --ids playwright,context7 --json
-# or apply every suggestion id from profile.json in your script
+npx claude-loadout apply --suggestions --json     # apply top gaps in one step
+# or: npx claude-loadout apply --ids playwright,context7 --json
 ```
 
 **Non-interactive shells** (CI, pipes): use `--dry-run`, `--json`, `--all`, or `--all --json` — otherwise Loadout prints recommendations and exits without hanging on input.

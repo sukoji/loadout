@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { loadCatalog } from "../cli/lib/catalog.mjs";
+import { recommend } from "../cli/lib/recommend.mjs";
 import { buildManifest, writeManifest, applyManifest, applyItems, previewManifestApply, previewItemsApply } from "../cli/lib/manifest.mjs";
 
 const catalog = loadCatalog();
@@ -102,6 +103,18 @@ try {
     assert("apply --ids has no skips for known id", idSkipped.length === 0);
   } finally {
     rmSync(idsDir, { recursive: true, force: true });
+  }
+
+  const sugDir = mkdtempSync(join(tmpdir(), "loadout-manifest-sug-"));
+  try {
+    writeFileSync(join(sugDir, "package.json"), JSON.stringify({ dependencies: { react: "18", next: "14" } }));
+    const signals = new Set(["always", "package.json", "react", "next", ".git"]);
+    const sugIds = recommend(catalog, signals, sugDir).items.slice(0, 5).map((e) => e.item.id);
+    assert("suggestions include playwright for react/next", sugIds.includes("playwright"));
+    const { receipts: sugReceipts } = applyItems(catalog, sugIds.filter((id) => id === "playwright"), sugDir);
+    assert("apply --suggestions path writes playwright", sugReceipts.find((r) => r.type === "claude")?.receipt?.mcp?.includes("playwright"));
+  } finally {
+    rmSync(sugDir, { recursive: true, force: true });
   }
 } finally {
   rmSync(dir, { recursive: true, force: true });
