@@ -129,7 +129,7 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `apply -f <file> --dry-run --json` | Preview apply as JSON |
 | `apply -f <file> --json` | Apply and print receipts as JSON |
 | `doctor` | Read-only audit: tokens, hook deps, cross-agent dupes, gaps |
-| `doctor --json` | Machine-readable audit with `domains`, `signals`, `suggestions`, and `summary` (exit 1 when fixes needed) |
+| `doctor --json` | Audit JSON with `domains`, `signals`, `suggestions`, `applyCommand*`, and `summary` (exit 1 when fixes needed) |
 | `domains` | List catalog domains, signal hints, and loadout sizes |
 | `domains <id>` | Show one domain's loadout items |
 | `domains --json` | Domains as JSON |
@@ -148,9 +148,9 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 **CI automation:** profile a repo and apply gaps without prompts:
 
 ```bash
-npx claude-loadout doctor --json > profile.json   # domains, signals, suggestions
-npx claude-loadout apply --suggestions --mcp-only --json   # apply top MCP gaps only
-# or: npx claude-loadout apply --ids playwright,context7 --json
+npx claude-loadout doctor --json > profile.json
+# profile.json includes applyCommand / applyCommandMcpOnly / applyCommandIds
+npx claude-loadout apply --suggestions --mcp-only --json
 ```
 
 **Non-interactive shells** (CI, pipes): use `--dry-run`, `--json`, `--all`, or `--all --json` — otherwise Loadout prints recommendations and exits without hanging on input.

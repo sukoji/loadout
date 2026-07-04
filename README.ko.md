@@ -129,8 +129,9 @@ npx claude-loadout --help     # 플래그 전체 목록
 **CI 자동화:** 프롬프트 없이 프로필을 보고 gap을 적용합니다.
 
 ```bash
-npx claude-loadout doctor --json > profile.json   # domains, signals, suggestions
-npx claude-loadout apply --suggestions --mcp-only --json   # MCP gap만 적용
+npx claude-loadout doctor --json > profile.json
+# profile.json에 applyCommand / applyCommandMcpOnly / applyCommandIds 포함
+npx claude-loadout apply --suggestions --mcp-only --json
 ```
 
 ## 내 에이전트에서 작동 — Claude Code 전용이 아님

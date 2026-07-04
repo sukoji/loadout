@@ -572,8 +572,21 @@ function runDoctor(flags = new Set()) {
   const findings = doctor(root);
 
   if (flags.has("--json")) {
+    const suggestionIds = (findings.suggestions || []).map((s) => s.id).filter(Boolean);
+    const mcpIds = (findings.suggestions || [])
+      .filter((s) => s.type === "mcp")
+      .map((s) => s.id);
     console.log(JSON.stringify({
       ...findings,
+      applyCommand: suggestionIds.length
+        ? `npx claude-loadout apply --suggestions`
+        : null,
+      applyCommandMcpOnly: mcpIds.length
+        ? `npx claude-loadout apply --suggestions --mcp-only`
+        : null,
+      applyCommandIds: suggestionIds.length
+        ? `npx claude-loadout apply --ids ${suggestionIds.join(",")}`
+        : null,
       summary: {
         fix: findings.fix.length,
         warn: findings.warn.length,
@@ -611,7 +624,7 @@ function runDoctor(flags = new Set()) {
   }
   const suggestionIds = (findings.suggestions || []).map((s) => s.id).filter(Boolean);
   if (suggestionIds.length) {
-    console.log(c("dim", "Tip: npx claude-loadout apply --suggestions"));
+    console.log(c("dim", "Tip: npx claude-loadout apply --suggestions --mcp-only"));
     console.log(c("dim", `     or: npx claude-loadout apply --ids ${suggestionIds.join(",")}\n`));
   } else if (fix.length) {
     console.log(c("dim", "Tip: npx claude-loadout --dry-run to see recommended additions.\n"));

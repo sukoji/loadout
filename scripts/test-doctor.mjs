@@ -67,6 +67,11 @@ try {
   assert("doctor reports detected signals", profiled.ok.some((f) => f.msg.includes("Detected signals")));
   assert("doctor suggestions is an array", Array.isArray(profiled.suggestions));
   assert("doctor suggestions include playwright for react/next", profiled.suggestions.some((s) => s.id === "playwright"));
+
+  const mcpIds = profiled.suggestions.filter((s) => s.type === "mcp").map((s) => s.id);
+  assert("doctor can build applyCommandMcpOnly", mcpIds.includes("playwright"));
+  const applyCmd = `npx claude-loadout apply --ids ${profiled.suggestions.map((s) => s.id).join(",")}`;
+  assert("doctor can build applyCommandIds", applyCmd.includes("playwright"));
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }
