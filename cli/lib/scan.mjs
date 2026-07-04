@@ -99,6 +99,21 @@ export function scanProject(root = process.cwd()) {
     }
   }
 
+  // PHP / Composer
+  if (has("composer.json")) {
+    try {
+      const composer = JSON.parse(read("composer.json"));
+      const deps = { ...composer.require, ...composer["require-dev"] };
+      for (const name of Object.keys(deps)) {
+        if (name === "laravel/framework" || name.startsWith("laravel/")) add("laravel");
+        if (name.startsWith("symfony/")) add("symfony");
+      }
+    } catch {
+      /* ignore malformed composer.json */
+    }
+  }
+  if (has("artisan")) add("laravel");
+
   // Other ecosystems
   const fileSignals = {
     "go.mod": "go.mod",

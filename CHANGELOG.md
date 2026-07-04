@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.65] — 2026-07-05
+### Added
+- **PHP backend scan** — Laravel (`laravel/framework`, `laravel/*`, `artisan`) and Symfony (`symfony/*`) from `composer.json`.
+- **Backend domain** — matches `laravel` and `symfony` for API-appropriate loadouts.
+
 ## [0.3.64] — 2026-07-05
 ### Added
 - **Backend scan** — GraphQL (`graphql`, `@apollo/*`, `@graphql-tools/*`, `schema.graphql` / `.gql`) and Redis (`redis`, `ioredis`, `@upstash/redis`).

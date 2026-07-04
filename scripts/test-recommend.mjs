@@ -111,6 +111,10 @@ assert("GraphQL excludes playwright", !topNames(graphql).includes("playwright"),
 const redis = new Set(["always", "package.json", "redis", ".git"]);
 assert("Redis includes context7", topNames(redis).includes("context7"), topNames(redis).join(", "));
 assert("Redis excludes playwright", !topNames(redis).includes("playwright"), topNames(redis).join(", "));
+const laravel = new Set(["always", "laravel", "symfony", ".git"]);
+assert("Laravel includes context7", topNames(laravel).includes("context7"), topNames(laravel).join(", "));
+assert("Laravel includes guard-dangerous-bash", topNames(laravel).includes("guard-dangerous-bash"), topNames(laravel).join(", "));
+assert("Laravel excludes playwright", !topNames(laravel).includes("playwright"), topNames(laravel).join(", "));
 
 // Godot game project.
 const godot = new Set(["always", "godot", "project.godot", ".git"]);

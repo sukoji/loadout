@@ -274,6 +274,24 @@ try {
     rmSync(redisDir, { recursive: true, force: true });
   }
 
+  const laravelDir = mkdtempSync(join(tmpdir(), "loadout-scan-laravel-"));
+  try {
+    writeFileSync(
+      join(laravelDir, "composer.json"),
+      JSON.stringify({ require: { "laravel/framework": "^11.0", "symfony/http-kernel": "^7.0" } }),
+    );
+    writeFileSync(join(laravelDir, "artisan"), "#!/usr/bin/env php\n");
+    const laravelSignals = scanProject(laravelDir);
+    assert("scan adds laravel from composer.json", laravelSignals.has("laravel"));
+    assert("scan adds laravel from artisan", laravelSignals.has("laravel"));
+    assert("scan adds symfony from composer.json", laravelSignals.has("symfony"));
+    const laravelTop = topIds(laravelSignals);
+    assert("laravel project surfaces context7", laravelTop.includes("context7"), laravelTop.join(", "));
+    assert("laravel project excludes playwright", !laravelTop.includes("playwright"), laravelTop.join(", "));
+  } finally {
+    rmSync(laravelDir, { recursive: true, force: true });
+  }
+
   const flutterDir = mkdtempSync(join(tmpdir(), "loadout-scan-flutter-"));
   try {
     writeFileSync(join(flutterDir, "pubspec.yaml"), "name: demo\nflutter:\n  assets: []\n");
