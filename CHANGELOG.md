@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.59] — 2026-07-04
+### Added
+- **`signals` / `signals --json`** — print detected project signals (debug recommendations).
+- Doctor JSON includes package **`version`**.
+
 ## [0.3.58] — 2026-07-04
 ### Added
 - **Frontend scan** — Astro (`astro.config.*`, `astro` / `@astrojs/*`), Remix (`@remix-run/*`), SvelteKit (`@sveltejs/kit`, `svelte.config.*`), Deno (`deno.json` / `deno.jsonc`).

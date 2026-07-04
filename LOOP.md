@@ -1,6 +1,6 @@
 # LOOP — Loadout improvement until claims are earned
 
-**Status: ACTIVE** — Phase 1 stop criteria met at `v0.3.6`. Phase 2 shipped browse/CI/profile/automation UX through `v0.3.58` (Astro/Remix/SvelteKit/Deno scan). Remaining: optional `NPM_TOKEN` secret and runtime-verified research catalog growth.
+**Status: ACTIVE** — Phase 1 stop criteria met at `v0.3.6`. Phase 2 shipped browse/CI/profile/automation UX through `v0.3.59` (`signals` CLI). Remaining: optional `NPM_TOKEN` secret and runtime-verified research catalog growth.
 
 **Cadence goal:** 견고함 · 완성도 · 최신성 · 보안성 · UX — users should set up agents without friction,
 and marketing should never outrun what the tool actually does.
@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.59 | 2026-07-04 | `signals` CLI; doctor JSON version field |
 | 0.3.58 | 2026-07-04 | Astro/Remix/SvelteKit/Deno frontend scan |
 | 0.3.57 | 2026-07-04 | monorepo scan signals; devops match for turbo/nx |
 | 0.3.56 | 2026-07-04 | doctor --require-healthy; dogfood in CI |
@@ -108,3 +109,4 @@ run `npm test`, release, update this log.
 28. doctor --require-healthy; dogfood in CI — ✅ v0.3.56
 29. monorepo scan signals — ✅ v0.3.57
 30. Astro/Remix/SvelteKit/Deno frontend scan — ✅ v0.3.58
+31. `signals` CLI — ✅ v0.3.59

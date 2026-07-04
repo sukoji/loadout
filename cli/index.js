@@ -36,6 +36,7 @@ async function main() {
   if (positional[0] === "show") return runShow(positional[1], flags);
   if (positional[0] === "search") return runSearch(args, flags);
   if (positional[0] === "stats") return runStats(flags);
+  if (positional[0] === "signals") return runSignals(flags);
   if (positional[0] === "export") return runExport(args, flags);
   if (positional[0] === "apply") return runApplyManifest(args, flags);
 
@@ -215,6 +216,8 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout search research --json")}  Search results as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout stats")}      Catalog counts (domains, tiers, types)`);
   console.log(`  ${c("cyan", "npx claude-loadout stats --json")}  Stats as JSON`);
+  console.log(`  ${c("cyan", "npx claude-loadout signals")}    Detected project signals (debug recommend)`);
+  console.log(`  ${c("cyan", "npx claude-loadout signals --json")}  Signals as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout export")}     Write team loadout → .loadout.json`);
   console.log(`  ${c("cyan", "npx claude-loadout export --json")}  Print manifest JSON to stdout`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
@@ -378,6 +381,23 @@ function runApplyManifest(args, flags) {
     if (r.type === "claude" || r.type === "commands") printReceipt(r.receipt);
     else printTargetReceipt(r.receipt);
   }
+}
+
+function runSignals(flags = new Set()) {
+  const root = cwd();
+  const signals = [...scanProject(root)].filter((s) => s !== "always").sort();
+  const payload = { version: PKG_VERSION, root, signals, count: signals.length };
+  if (flags.has("--json")) {
+    console.log(JSON.stringify(payload, null, 2));
+    return;
+  }
+  console.log(c("bold", "\n📡 Project signals") + c("dim", `  — ${root}\n`));
+  if (!signals.length) {
+    console.log(c("dim", "  (none beyond always)\n"));
+    return;
+  }
+  for (const s of signals) console.log(`  ${c("cyan", s)}`);
+  console.log(c("dim", `\n${signals.length} signal(s). Tip: npx claude-loadout --dry-run\n`));
 }
 
 function runStats(flags = new Set()) {
@@ -670,6 +690,7 @@ function doctorJsonPayload(findings) {
     .map((s) => s.id);
   const skills = skillInstallGuide(loadCatalog(), findings.suggestions || []);
   return {
+    version: PKG_VERSION,
     ...findings,
     skills,
     applyCommand: suggestionIds.length ? `npx claude-loadout apply --suggestions` : null,
