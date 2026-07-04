@@ -53,6 +53,13 @@ const frontend = new Set(["always", "package.json", "react", "next", ".git"]);
 const feTop = topNames(frontend);
 assert("Frontend includes playwright", feTop.includes("playwright"), feTop.join(", "));
 
+const astro = new Set(["always", "package.json", "astro", ".git"]);
+assert("Astro includes playwright", topNames(astro).includes("playwright"), topNames(astro).join(", "));
+const remix = new Set(["always", "package.json", "remix", ".git"]);
+assert("Remix includes playwright", topNames(remix).includes("playwright"), topNames(remix).join(", "));
+const sveltekit = new Set(["always", "package.json", "sveltekit", "svelte", ".git"]);
+assert("SvelteKit includes playwright", topNames(sveltekit).includes("playwright"), topNames(sveltekit).join(", "));
+
 // Jupyter + numpy research repo (LOOP #5).
 const jupyterResearch = new Set([
   "always",

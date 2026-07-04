@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.58] — 2026-07-04
+### Added
+- **Frontend scan** — Astro (`astro.config.*`, `astro` / `@astrojs/*`), Remix (`@remix-run/*`), SvelteKit (`@sveltejs/kit`, `svelte.config.*`), Deno (`deno.json` / `deno.jsonc`).
+- **Frontend domain** — matches `astro`, `remix`, `sveltekit` so those stacks get Playwright and related tooling.
+
 ## [0.3.57] — 2026-07-04
 ### Added
 - **Monorepo scan** — detects `pnpm-workspace.yaml`, `turbo.json`, `nx.json`, `lerna.json`, `rush.json`, `package.json` workspaces, and `packages/*/package.json`.

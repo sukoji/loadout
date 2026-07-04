@@ -3,8 +3,8 @@
     "id": "frontend",
     "title": "Frontend / Web UI",
     "title_ko": "프론트엔드 / 웹 UI",
-    "blurb": "React, Vue, Svelte, Next — anything that ships to a browser.",
-    "signals": ["react", "next", "vue", "svelte", "vite", "tailwind", "angular", "package.json", "tsconfig.json"],
+    "blurb": "React, Vue, Svelte, Next, Astro, Remix — anything that ships to a browser.",
+    "signals": ["react", "next", "vue", "svelte", "sveltekit", "astro", "remix", "vite", "tailwind", "angular", "package.json", "tsconfig.json"],
     "loadout": ["context7", "playwright", "chrome-devtools", "figma", "format-js-on-edit", "eslint-fix-on-edit", "superpowers", "code-review", "init-claude-md"]
   },
   {

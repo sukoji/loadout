@@ -68,6 +68,55 @@ try {
     rmSync(angularDir, { recursive: true, force: true });
   }
 
+  const astroDir = mkdtempSync(join(tmpdir(), "loadout-scan-astro-"));
+  try {
+    writeFileSync(join(astroDir, "astro.config.mjs"), "export default {};\n");
+    writeFileSync(join(astroDir, "package.json"), JSON.stringify({ dependencies: { astro: "4" } }));
+    const astroSignals = scanProject(astroDir);
+    assert("scan adds astro from astro.config", astroSignals.has("astro"));
+    assert("scan adds astro from package.json", astroSignals.has("astro"));
+    const astroTop = topIds(astroSignals);
+    assert("astro project surfaces playwright", astroTop.includes("playwright"), astroTop.join(", "));
+  } finally {
+    rmSync(astroDir, { recursive: true, force: true });
+  }
+
+  const remixDir = mkdtempSync(join(tmpdir(), "loadout-scan-remix-"));
+  try {
+    writeFileSync(
+      join(remixDir, "package.json"),
+      JSON.stringify({ dependencies: { "@remix-run/react": "2", "@remix-run/node": "2" } }),
+    );
+    const remixSignals = scanProject(remixDir);
+    assert("scan adds remix from @remix-run packages", remixSignals.has("remix"));
+    const remixTop = topIds(remixSignals);
+    assert("remix project surfaces playwright", remixTop.includes("playwright"), remixTop.join(", "));
+  } finally {
+    rmSync(remixDir, { recursive: true, force: true });
+  }
+
+  const kitDir = mkdtempSync(join(tmpdir(), "loadout-scan-kit-"));
+  try {
+    writeFileSync(join(kitDir, "svelte.config.js"), "import adapter from '@sveltejs/kit';\n");
+    writeFileSync(join(kitDir, "package.json"), JSON.stringify({ dependencies: { "@sveltejs/kit": "2" } }));
+    const kitSignals = scanProject(kitDir);
+    assert("scan adds sveltekit from package", kitSignals.has("sveltekit"));
+    assert("scan adds sveltekit from svelte.config", kitSignals.has("sveltekit"));
+    const kitTop = topIds(kitSignals);
+    assert("sveltekit project surfaces playwright", kitTop.includes("playwright"), kitTop.join(", "));
+  } finally {
+    rmSync(kitDir, { recursive: true, force: true });
+  }
+
+  const denoDir = mkdtempSync(join(tmpdir(), "loadout-scan-deno-"));
+  try {
+    writeFileSync(join(denoDir, "deno.json"), "{}\n");
+    const denoSignals = scanProject(denoDir);
+    assert("scan adds deno from deno.json", denoSignals.has("deno"));
+  } finally {
+    rmSync(denoDir, { recursive: true, force: true });
+  }
+
   const nestDir = mkdtempSync(join(tmpdir(), "loadout-scan-nest-"));
   try {
     writeFileSync(join(nestDir, "nest-cli.json"), "{}\n");

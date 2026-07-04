@@ -30,6 +30,9 @@ export function scanProject(root = process.cwd()) {
         if (name.startsWith("next")) add("next");
         if (name.includes("vue")) add("vue");
         if (name.includes("svelte")) add("svelte");
+        if (name === "astro" || name.startsWith("@astrojs/")) add("astro");
+        if (name === "remix" || name.startsWith("@remix-run/")) add("remix");
+        if (name === "@sveltejs/kit") add("sveltekit");
         if (name.includes("tailwind")) add("tailwind");
         if (name.includes("vite")) add("vite");
         if (name.includes("express")) add("express");
@@ -97,6 +100,15 @@ export function scanProject(root = process.cwd()) {
     "bun.lock": "bun.lock",
     "bun.lockb": "bun.lock",
     "uv.lock": "uv.lock",
+    "deno.json": "deno",
+    "deno.jsonc": "deno",
+    "astro.config.mjs": "astro",
+    "astro.config.ts": "astro",
+    "astro.config.js": "astro",
+    "remix.config.js": "remix",
+    "remix.config.ts": "remix",
+    "svelte.config.js": "svelte",
+    "svelte.config.ts": "svelte",
     "angular.json": "angular",
     "nest-cli.json": "nestjs",
     "build.gradle": "build.gradle",
@@ -136,6 +148,11 @@ export function scanProject(root = process.cwd()) {
   }
   for (const f of ["vite.config.ts", "vite.config.js", "vite.config.mjs"]) {
     if (has(f)) add("vite");
+  }
+  // SvelteKit projects use svelte.config.* plus @sveltejs/kit (handled above).
+  if (has("svelte.config.js") || has("svelte.config.ts")) {
+    const svelteCfg = read("svelte.config.js") + read("svelte.config.ts");
+    if (svelteCfg.includes("@sveltejs/kit") || svelteCfg.includes("sveltekit")) add("sveltekit");
   }
 
   if (has(".git")) add(".git");
