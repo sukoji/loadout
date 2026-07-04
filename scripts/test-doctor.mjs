@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { readFileSync } from "node:fs";
-import { doctor, doctorFix } from "../cli/lib/doctor.mjs";
+import { doctor, doctorFix, hookDepsMissing } from "../cli/lib/doctor.mjs";
 
 const dir = mkdtempSync(join(tmpdir(), "loadout-doctor-"));
 let failed = 0;
@@ -78,6 +78,12 @@ try {
     const bare = doctor(bareDir);
     assert("doctor still suggests /init when CLAUDE.md is missing", bare.suggestions.some((s) => s.id === "init-claude-md"));
     assert("doctor omits /code-review on bare repo too", !bare.suggestions.some((s) => s.id === "code-review"));
+    if (hookDepsMissing("statusline-git").includes("jq")) {
+      assert(
+        "doctor skips statusline-git when jq is missing",
+        !bare.suggestions.some((s) => s.id === "statusline-git"),
+      );
+    }
   } finally {
     rmSync(bareDir, { recursive: true, force: true });
   }
@@ -104,7 +110,13 @@ try {
   assert("after fix, playwright not still suggested", !fixed.findings.suggestions.some((s) => s.id === "playwright"));
 
   const again = doctorFix(dir, { mcpOnly: true });
-  assert("second --fix --mcp-only is no-op", again.applied.length === 0);
+  assert("second --fix --mcp-only does not re-apply playwright", !again.applied.includes("playwright"));
+  // Drain remaining MCP suggestions (chrome-devtools, figma, …) until none left.
+  let mcpDrain = again;
+  for (let i = 0; i < 5 && mcpDrain.applied.length; i++) {
+    mcpDrain = doctorFix(dir, { mcpOnly: true });
+  }
+  assert("mcp-only fix eventually no-ops", mcpDrain.applied.length === 0);
 
   const hooksFix = doctorFix(dir);
   assert("doctor --fix prioritizes protect-secrets", hooksFix.applied.includes("protect-secrets"));

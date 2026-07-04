@@ -373,6 +373,25 @@ function isDoctorGap(item) {
   return true;
 }
 
+/** PATH tools required by a hook/setting that are not currently available. */
+export function hookDepsMissing(itemId) {
+  const missing = [];
+  for (const [bin, ids] of Object.entries(HOOK_DEPS)) {
+    if (ids.includes(itemId) && !commandExists(bin)) missing.push(bin);
+  }
+  return missing;
+}
+
+function isActionableDoctorGap(entry) {
+  const item = entry.item;
+  if (!isDoctorGap(item)) return false;
+  // Don't suggest hooks that need tools the user doesn't have (e.g. statusline-git without jq).
+  if ((item.type === "hook" || item.type === "setting") && hookDepsMissing(item.id).length) {
+    return false;
+  }
+  return true;
+}
+
 function auditGaps(root, catalog, findings) {
   const signals = scanProject(root);
   const { domains, items } = recommend(catalog, signals, root);
@@ -388,7 +407,7 @@ function auditGaps(root, catalog, findings) {
   if (interesting.length) {
     findings.ok.push({ msg: `Detected signals: ${interesting.join(", ")}${findings.signals.length > 10 ? "…" : ""}` });
   }
-  const gaps = items.filter((e) => isDoctorGap(e.item));
+  const gaps = items.filter(isActionableDoctorGap);
   const top = gaps.slice(0, 5);
   findings.suggestions = top.map(({ item, reason }) => ({
     id: item.id,

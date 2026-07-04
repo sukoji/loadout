@@ -6,6 +6,13 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.53] — 2026-07-04
+### Fixed
+- **`doctor` gaps** — skip hooks/settings whose PATH dependencies are missing (e.g. `statusline-git` without `jq`).
+
+### Added
+- **Dogfood** — `notify-on-stop` Stop hook in project settings.
+
 ## [0.3.52] — 2026-07-04
 ### Fixed
 - **`doctor` gaps** — built-in Claude Code skills (`/code-review`, `/security-review`, office-docs, …) are no longer treated as incomplete setup. One-shot `/init` still surfaces when `CLAUDE.md` is missing.

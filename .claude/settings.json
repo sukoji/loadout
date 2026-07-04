@@ -39,6 +39,16 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '\\a' ; echo 'loadout: Claude is waiting for you.'"
+          }
+        ]
+      }
     ]
   }
 }
