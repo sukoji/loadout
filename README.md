@@ -133,6 +133,7 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `show <id> --json` | Entry as JSON |
 | `search <query>` | Search catalog by id, name, description, signals, domains |
 | `search <query> --type mcp\|skill\|hook` | Limit search to one item type |
+| `search <query> --limit N` | Cap results (default 20) |
 | `search <query> --json` | Search results as JSON |
 | `stats` | Catalog counts (domains, tiers, types) |
 | `stats --json` | Stats as JSON |

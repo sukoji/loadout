@@ -31,6 +31,9 @@ assert("search --type mcp finds playwright", mcpOnly.some((h) => h.item.id === "
 const empty = searchCatalog(all, "zzzz-not-a-real-catalog-term-zzzz");
 assert("search miss returns empty", empty.length === 0);
 
+const limited = searchCatalog(all, "a", { limit: 3 });
+assert("search --limit caps results", limited.length <= 3);
+
 const json = JSON.parse(JSON.stringify(pw.slice(0, 5).map(({ item, score }) => ({ id: item.id, score }))));
 assert("search results serialize", json[0].id && typeof json[0].score === "number");
 

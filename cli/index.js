@@ -205,6 +205,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout show context7 --json")}  Entry as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout search playwright")}  Search catalog by name/id/signal`);
   console.log(`  ${c("cyan", "npx claude-loadout search research --type skill")}  Filter search by type`);
+  console.log(`  ${c("cyan", "npx claude-loadout search research --limit 5")}  Cap search results`);
   console.log(`  ${c("cyan", "npx claude-loadout search research --json")}  Search results as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout stats")}      Catalog counts (domains, tiers, types)`);
   console.log(`  ${c("cyan", "npx claude-loadout stats --json")}  Stats as JSON`);
@@ -354,17 +355,20 @@ function parseFlagValue(args, longName, shortName) {
 
 function runSearch(args, flags = new Set()) {
   const type = parseFlagValue(args, "--type", "-T");
+  const limitRaw = parseFlagValue(args, "--limit", "-n");
+  const limit = limitRaw ? Math.max(1, parseInt(limitRaw, 10) || 20) : 20;
   const query = args
     .filter((a, i) => {
       if (a === "search") return false;
       if (a.startsWith("-")) return false;
       if (i > 0 && (args[i - 1] === "--type" || args[i - 1] === "-T")) return false;
+      if (i > 0 && (args[i - 1] === "--limit" || args[i - 1] === "-n")) return false;
       return true;
     })
     .join(" ")
     .trim();
   if (!query) {
-    console.error(c("yellow", "Usage: npx claude-loadout search <query> [--type mcp|skill|hook]"));
+    console.error(c("yellow", "Usage: npx claude-loadout search <query> [--type mcp|skill|hook] [--limit N]"));
     exit(1);
   }
   if (type && !["mcp", "skill", "hook", "setting", "reference"].includes(type.toLowerCase())) {
@@ -373,7 +377,7 @@ function runSearch(args, flags = new Set()) {
   }
 
   const { all } = loadCatalog();
-  const hits = searchCatalog(all, query, { type });
+  const hits = searchCatalog(all, query, { type, limit });
 
   if (flags.has("--json")) {
     console.log(JSON.stringify(hits.map(({ item, score }) => ({

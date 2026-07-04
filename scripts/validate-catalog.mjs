@@ -25,6 +25,11 @@ for (const item of all) {
   if (item.type === "hook" || item.type === "setting") need(item, "settings");
   if (item.type === "skill" || item.type === "reference") need(item, "install");
   if (Array.isArray(item.domains) && item.domains.length === 0) warn.push(`${item.id}: no domains`);
+  // Curated MCP/skills must link a verifiable source (hooks are local snippets).
+  const tier = item.tier || "curated";
+  if (tier === "curated" && item.type !== "hook" && item.type !== "setting" && !item.homepage) {
+    warn.push(`${item.id}: curated item missing homepage`);
+  }
 }
 
 // domain integrity
