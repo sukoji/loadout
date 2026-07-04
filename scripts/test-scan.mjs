@@ -108,6 +108,19 @@ try {
     rmSync(kitDir, { recursive: true, force: true });
   }
 
+  const svelteDir = mkdtempSync(join(tmpdir(), "loadout-scan-svelte-"));
+  try {
+    writeFileSync(join(svelteDir, "svelte.config.js"), "export default { compilerOptions: {} };\n");
+    writeFileSync(join(svelteDir, "package.json"), JSON.stringify({ dependencies: { svelte: "4" } }));
+    const svelteSignals = scanProject(svelteDir);
+    assert("scan adds svelte from package.json", svelteSignals.has("svelte"));
+    assert("plain svelte project omits sveltekit", !svelteSignals.has("sveltekit"));
+    const svelteTop = topIds(svelteSignals);
+    assert("svelte project surfaces playwright", svelteTop.includes("playwright"), svelteTop.join(", "));
+  } finally {
+    rmSync(svelteDir, { recursive: true, force: true });
+  }
+
   const nuxtDir = mkdtempSync(join(tmpdir(), "loadout-scan-nuxt-"));
   try {
     writeFileSync(join(nuxtDir, "nuxt.config.ts"), "export default {};\n");
@@ -620,6 +633,20 @@ try {
     assert("monorepo project surfaces filesystem or git", monoTop.includes("filesystem") || monoTop.includes("git"), monoTop.join(", "));
   } finally {
     rmSync(monoDir, { recursive: true, force: true });
+  }
+
+  const nxDir = mkdtempSync(join(tmpdir(), "loadout-scan-nx-"));
+  try {
+    writeFileSync(join(nxDir, "nx.json"), "{}\n");
+    writeFileSync(join(nxDir, "package.json"), JSON.stringify({ name: "nx-root" }));
+    const nxSignals = scanProject(nxDir);
+    assert("scan adds nx from nx.json", nxSignals.has("nx"));
+    assert("scan adds monorepo from nx.json", nxSignals.has("monorepo"));
+    const nxTop = topIds(nxSignals);
+    assert("nx project surfaces filesystem or git", nxTop.includes("filesystem") || nxTop.includes("git"), nxTop.join(", "));
+    assert("nx project excludes playwright", !nxTop.includes("playwright"), nxTop.join(", "));
+  } finally {
+    rmSync(nxDir, { recursive: true, force: true });
   }
 
   const workspacesDir = mkdtempSync(join(tmpdir(), "loadout-scan-ws-"));

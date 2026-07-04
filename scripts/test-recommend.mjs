@@ -47,6 +47,10 @@ const paperRepo = new Set(["always", "latex", ".bib", "requirements.txt", "pytho
 const paperTop = topNames(paperRepo);
 assert("Paper repo includes exa-research", paperTop.includes("exa-research"), paperTop.join(", "));
 assert("Paper repo includes tavily-research", paperTop.includes("tavily-research"), paperTop.join(", "));
+const wandbResearch = new Set(["always", "wandb", "requirements.txt", "python", ".ipynb", "jupyter", ".git"]);
+const wandbTop = topNames(wandbResearch);
+assert("W&B research includes exa-research", wandbTop.includes("exa-research"), wandbTop.join(", "));
+assert("W&B research excludes playwright", !wandbTop.includes("playwright"), wandbTop.join(", "));
 
 // Frontend repo should still prioritize browser tooling.
 const frontend = new Set(["always", "package.json", "react", "next", ".git"]);
@@ -65,6 +69,8 @@ const remix = new Set(["always", "package.json", "remix", ".git"]);
 assert("Remix includes playwright", topNames(remix).includes("playwright"), topNames(remix).join(", "));
 const sveltekit = new Set(["always", "package.json", "sveltekit", "svelte", ".git"]);
 assert("SvelteKit includes playwright", topNames(sveltekit).includes("playwright"), topNames(sveltekit).join(", "));
+const svelte = new Set(["always", "package.json", "svelte", ".git"]);
+assert("Svelte includes playwright", topNames(svelte).includes("playwright"), topNames(svelte).join(", "));
 const nuxt = new Set(["always", "package.json", "nuxt", ".git"]);
 assert("Nuxt includes playwright", topNames(nuxt).includes("playwright"), topNames(nuxt).join(", "));
 const solid = new Set(["always", "package.json", "solid", ".git"]);
@@ -261,6 +267,11 @@ const monorepo = new Set(["always", "monorepo", "turbo", "package.json", ".git"]
 const monoTop = topNames(monorepo);
 assert("Monorepo includes filesystem or git", monoTop.includes("filesystem") || monoTop.includes("git"), monoTop.join(", "));
 assert("Monorepo includes github or git", monoTop.includes("github") || monoTop.includes("git"), monoTop.join(", "));
+const nxMonorepo = new Set(["always", "monorepo", "nx", "dockerfile", ".git"]);
+const nxTop = topNames(nxMonorepo);
+assert("Nx includes filesystem or git", nxTop.includes("filesystem") || nxTop.includes("git"), nxTop.join(", "));
+assert("Nx includes guard-dangerous-bash", nxTop.includes("guard-dangerous-bash"), nxTop.join(", "));
+assert("Nx excludes playwright", !nxTop.includes("playwright"), nxTop.join(", "));
 
 // .env alone (via general loadout) surfaces protect-secrets even when security isn't top domain.
 const frontendEnv = new Set(["always", "react", "next", "package.json", ".env"]);
