@@ -2,7 +2,7 @@
 
 > Servers, APIs, databases — Node, Python, Go, Rust, Java services.
 
-_Signals that map here: `express`, `fastify`, `hono`, `elysia`, `trpc`, `nestjs`, `django`, `flask`, `fastapi`, `go.mod`, `Cargo.toml`, `pom.xml`, `prisma`, `drizzle`, `postgres`_
+_Signals that map here: `express`, `fastify`, `hono`, `elysia`, `trpc`, `nestjs`, `django`, `flask`, `fastapi`, `go.mod`, `Cargo.toml`, `pom.xml`, `prisma`, `drizzle`, `postgres`, `graphql`, `redis`_
 
 ## MCP servers
 

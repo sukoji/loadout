@@ -56,6 +56,16 @@ export function scanProject(root = process.cwd()) {
         if (name.includes("sentry")) add("sentry");
         if (name.includes("supabase")) add("supabase");
         if (name.includes("mongoose") || name.includes("mongodb")) add("mongodb");
+        if (name === "redis" || name === "ioredis" || name.startsWith("@upstash/redis")) add("redis");
+        if (
+          name === "graphql" ||
+          name.startsWith("@apollo/") ||
+          name.startsWith("@graphql-tools/") ||
+          name === "graphql-yoga" ||
+          name.startsWith("@urql/")
+        ) {
+          add("graphql");
+        }
         if (name.includes("docusaurus")) add("docusaurus");
         if (name === "vitepress") add("vitepress");
         if (
@@ -208,6 +218,8 @@ function sweepExtensions(root, signals, depth = 2) {
     ".gd": "godot",
     ".docx": ".docx",
     ".xlsx": ".xlsx",
+    ".graphql": "graphql",
+    ".gql": "graphql",
   };
   const walk = (dir, d) => {
     if (d < 0) return;

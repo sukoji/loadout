@@ -240,6 +240,40 @@ try {
     rmSync(trpcDir, { recursive: true, force: true });
   }
 
+  const graphqlDir = mkdtempSync(join(tmpdir(), "loadout-scan-graphql-"));
+  try {
+    writeFileSync(
+      join(graphqlDir, "package.json"),
+      JSON.stringify({ dependencies: { graphql: "16", "@apollo/server": "4" } }),
+    );
+    writeFileSync(join(graphqlDir, "schema.graphql"), "type Query { hello: String }\n");
+    const gqlSignals = scanProject(graphqlDir);
+    assert("scan adds graphql from graphql package", gqlSignals.has("graphql"));
+    assert("scan adds graphql from @apollo packages", gqlSignals.has("graphql"));
+    assert("scan adds graphql from schema.graphql", gqlSignals.has("graphql"));
+    const gqlTop = topIds(gqlSignals);
+    assert("graphql project surfaces context7", gqlTop.includes("context7"), gqlTop.join(", "));
+    assert("graphql project excludes playwright", !gqlTop.includes("playwright"), gqlTop.join(", "));
+  } finally {
+    rmSync(graphqlDir, { recursive: true, force: true });
+  }
+
+  const redisDir = mkdtempSync(join(tmpdir(), "loadout-scan-redis-"));
+  try {
+    writeFileSync(
+      join(redisDir, "package.json"),
+      JSON.stringify({ dependencies: { ioredis: "5", "@upstash/redis": "1" } }),
+    );
+    const redisSignals = scanProject(redisDir);
+    assert("scan adds redis from ioredis", redisSignals.has("redis"));
+    assert("scan adds redis from @upstash/redis", redisSignals.has("redis"));
+    const redisTop = topIds(redisSignals);
+    assert("redis project surfaces context7", redisTop.includes("context7"), redisTop.join(", "));
+    assert("redis project excludes playwright", !redisTop.includes("playwright"), redisTop.join(", "));
+  } finally {
+    rmSync(redisDir, { recursive: true, force: true });
+  }
+
   const flutterDir = mkdtempSync(join(tmpdir(), "loadout-scan-flutter-"));
   try {
     writeFileSync(join(flutterDir, "pubspec.yaml"), "name: demo\nflutter:\n  assets: []\n");

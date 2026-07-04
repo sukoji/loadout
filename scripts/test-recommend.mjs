@@ -105,6 +105,12 @@ const elysia = new Set(["always", "package.json", "elysia", ".git"]);
 assert("Elysia includes context7", topNames(elysia).includes("context7"), topNames(elysia).join(", "));
 const trpc = new Set(["always", "package.json", "trpc", ".git"]);
 assert("tRPC includes context7", topNames(trpc).includes("context7"), topNames(trpc).join(", "));
+const graphql = new Set(["always", "package.json", "graphql", ".git"]);
+assert("GraphQL includes context7", topNames(graphql).includes("context7"), topNames(graphql).join(", "));
+assert("GraphQL excludes playwright", !topNames(graphql).includes("playwright"), topNames(graphql).join(", "));
+const redis = new Set(["always", "package.json", "redis", ".git"]);
+assert("Redis includes context7", topNames(redis).includes("context7"), topNames(redis).join(", "));
+assert("Redis excludes playwright", !topNames(redis).includes("playwright"), topNames(redis).join(", "));
 
 // Godot game project.
 const godot = new Set(["always", "godot", "project.godot", ".git"]);
