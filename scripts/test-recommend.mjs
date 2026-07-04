@@ -114,6 +114,11 @@ const secTop = topNames(security);
 assert("Security includes protect-secrets", secTop.includes("protect-secrets"), secTop.join(", "));
 assert("Security includes guard-dangerous-bash", secTop.includes("guard-dangerous-bash"), secTop.join(", "));
 
+// protect-secrets requires .env — do not push it on plain devops repos.
+const devopsNoEnv = new Set(["always", "dockerfile", "terraform", ".github/workflows", ".git"]);
+const devopsNoEnvTop = topNames(devopsNoEnv);
+assert("DevOps without .env excludes protect-secrets", !devopsNoEnvTop.includes("protect-secrets"), devopsNoEnvTop.join(", "));
+
 const officialInPool = recommend(catalog, mlResearch, CLEAN_ROOT).items.filter((e) => e.item.tier === "official").length;
 assert("Official tier capped in pool", officialInPool <= 2, String(officialInPool));
 

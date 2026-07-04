@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.46] — 2026-07-04
+### Changed
+- **Recommend** — domain-loadout items with specific signals (e.g. `protect-secrets` → `.env`) are skipped unless a signal matches.
+- **`protect-secrets`** — no longer tagged `always`; only surfaces when `.env` is present.
+
 ## [0.3.45] — 2026-07-04
 ### Added
 - **Dogfood** — `guard-dangerous-bash` and `block-push-to-main` hooks in project settings.

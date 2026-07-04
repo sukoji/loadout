@@ -59,8 +59,13 @@ export function recommend({ domains, byId, all = [] }, signals, root = process.c
       const item = byId.get(resolvedId);
       if (!item) continue;
       if (installed.has(resolvedId) || installed.has(id)) continue;
-      const strength = item.signals.filter((s) => s !== "always" && signals.has(s.toLowerCase())).length;
-      const alwaysUseful = item.signals.includes("always");
+      // Items without "always" only appear when at least one specific signal matches.
+      const alwaysUseful = (item.signals || []).includes("always");
+      const specific = (item.signals || [])
+        .filter((s) => s !== "always")
+        .map((s) => s.toLowerCase());
+      if (!alwaysUseful && specific.length && !specific.some((s) => signals.has(s))) continue;
+      const strength = specific.filter((s) => signals.has(s)).length;
       items.push({
         item,
         domain: domain.id,

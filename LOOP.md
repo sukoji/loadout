@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.46 | 2026-07-04 | require signal match for specific-signal loadout items |
 | 0.3.45 | 2026-07-04 | dogfood guard-dangerous-bash + block-push-to-main |
 | 0.3.44 | 2026-07-04 | dogfood JS hooks; hook PATH deps are warnings |
 | 0.3.43 | 2026-07-04 | dogfood .mcp.json; smarter doctor tip |

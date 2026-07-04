@@ -101,7 +101,7 @@
     "name": "Refuse to read secret files",
     "description": "Blocks Read on .env / credential files so secrets never get pulled into context (and can't leak into logs or commits). Good default for any repo with real credentials.",
     "domains": ["security", "backend-api"],
-    "signals": [".env", "always"],
+    "signals": [".env"],
     "note": "Requires `jq`. Blocks via exit code 2.",
     "settings": {
       "hooks": {
