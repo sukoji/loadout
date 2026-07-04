@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.30 | 2026-07-04 | `search <query>` catalog search |
 | 0.3.29 | 2026-07-04 | `domains <id>` detail; show id suggestions |
 | 0.3.28 | 2026-07-04 | `show <id>` catalog lookup (tick 20) |
 | 0.3.27 | 2026-07-04 | domains CLI command; all-10 domain catalog test |
@@ -57,3 +58,4 @@ run `npm test`, release, update this log.
 6. `domains` CLI browse — ✅ v0.3.27
 7. `show <id>` catalog lookup — ✅ v0.3.28
 8. `domains <id>` loadout detail + show suggestions — ✅ v0.3.29
+9. `search <query>` catalog search — ✅ v0.3.30

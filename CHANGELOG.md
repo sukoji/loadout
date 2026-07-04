@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.30] — 2026-07-04
+### Added
+- **`search <query>` / `search <query> --json`** — search the catalog by id, name, description, signals, or domains.
+
 ## [0.3.29] — 2026-07-04
 ### Added
 - **`domains <id>`** — show one domain's loadout items (with `--json`).

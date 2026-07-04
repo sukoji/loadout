@@ -33,6 +33,7 @@ async function main() {
   if (positional[0] === "doctor") return runDoctor(flags);
   if (positional[0] === "domains") return runDomains(positional[1], flags);
   if (positional[0] === "show") return runShow(positional[1], flags);
+  if (positional[0] === "search") return runSearch(positional.slice(1).join(" "), flags);
   if (positional[0] === "export") return runExport(args, flags);
   if (positional[0] === "apply") return runApplyManifest(args, flags);
 
@@ -200,6 +201,8 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout domains --json")}  Domains as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout show context7")}  Show one catalog entry`);
   console.log(`  ${c("cyan", "npx claude-loadout show context7 --json")}  Entry as JSON`);
+  console.log(`  ${c("cyan", "npx claude-loadout search playwright")}  Search catalog by name/id/signal`);
+  console.log(`  ${c("cyan", "npx claude-loadout search research --json")}  Search results as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout export")}     Write team loadout → .loadout.json`);
   console.log(`  ${c("cyan", "npx claude-loadout export --json")}  Print manifest JSON to stdout`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
@@ -294,6 +297,62 @@ function runApplyManifest(args, flags) {
     if (r.type === "claude" || r.type === "commands") printReceipt(r.receipt);
     else printTargetReceipt(r.receipt);
   }
+}
+
+function runSearch(query, flags = new Set()) {
+  const q = (query || "").trim().toLowerCase();
+  if (!q) {
+    console.error(c("yellow", "Usage: npx claude-loadout search <query>"));
+    exit(1);
+  }
+  const { all } = loadCatalog();
+  const tokens = q.split(/\s+/).filter(Boolean);
+  const hits = all
+    .map((item) => {
+      const hay = [
+        item.id,
+        item.name,
+        item.description,
+        item.tier,
+        item.type,
+        ...(item.domains || []),
+        ...(item.signals || []),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      const score = tokens.reduce((n, t) => n + (hay.includes(t) ? (item.id === t || item.id.includes(t) ? 3 : 1) : 0), 0);
+      return { item, score };
+    })
+    .filter((h) => h.score > 0)
+    .sort((a, b) => b.score - a.score || a.item.id.localeCompare(b.item.id))
+    .slice(0, 20);
+
+  if (flags.has("--json")) {
+    console.log(JSON.stringify(hits.map(({ item, score }) => ({
+      id: item.id,
+      name: item.name,
+      type: item.type,
+      tier: item.tier || "curated",
+      domains: item.domains || [],
+      score,
+      homepage: item.homepage,
+    })), null, 2));
+    return;
+  }
+
+  if (!hits.length) {
+    console.log(c("yellow", `\nNo catalog matches for "${query}".\n`));
+    return;
+  }
+
+  console.log(c("bold", `\n🔎 Search`) + c("dim", `  "${query}" · ${hits.length} hit(s)\n`));
+  for (const { item } of hits) {
+    const tier = item.tier && item.tier !== "curated" ? c("dim", ` · ${item.tier}`) : "";
+    console.log(`  ${c("cyan", item.id.padEnd(22))} ${c("bold", item.name)} ${c("dim", `[${item.type}]`)}${tier}`);
+    if (item.description) console.log(c("dim", `                         ${item.description.slice(0, 90)}${item.description.length > 90 ? "…" : ""}`));
+  }
+  console.log(c("dim", `\nShow one: npx claude-loadout show ${hits[0].item.id}\n`));
 }
 
 function runShow(id, flags = new Set()) {

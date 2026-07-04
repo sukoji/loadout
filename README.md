@@ -131,6 +131,8 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `domains --json` | Domains as JSON |
 | `show <id>` | Show one catalog entry (config, install, homepage) |
 | `show <id> --json` | Entry as JSON |
+| `search <query>` | Search catalog by id, name, description, signals, domains |
+| `search <query> --json` | Search results as JSON |
 
 **Team loadouts:** run `export` in a reference repo, commit `.loadout.json`, then teammates run
 `apply -f .loadout.json` (add `--target cursor` for non-Claude agents).
