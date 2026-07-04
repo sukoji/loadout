@@ -1,6 +1,6 @@
 {
   "name": "claude-loadout",
-  "version": "0.3.32",
+  "version": "0.3.33",
   "description": "Profile your project and gear up your coding agent with the right MCP servers, skills, and hooks. Claude Code, Codex, Cursor, opencode, Gemini CLI & OpenClaw. A recommender + installer, not a list you read.",
   "type": "module",
   "bin": {
@@ -18,7 +18,7 @@
     "test:recommend": "node scripts/test-recommend.mjs",
     "test:mcps": "node scripts/test-mcps.mjs",
     "verify:mcp": "node scripts/verify-mcp-packages.mjs",
-    "test": "node scripts/validate-catalog.mjs && node scripts/test-recommend.mjs && node scripts/test-recommend-json.mjs && node scripts/test-scan.mjs && node scripts/test-detect-installed.mjs && node scripts/test-doctor.mjs && node scripts/test-manifest.mjs && node scripts/test-domains.mjs && node scripts/test-show.mjs && node scripts/test-search.mjs && node scripts/verify-mcp-packages.mjs",
+    "test": "node scripts/validate-catalog.mjs && node scripts/test-recommend.mjs && node scripts/test-recommend-json.mjs && node scripts/test-scan.mjs && node scripts/test-detect-installed.mjs && node scripts/test-doctor.mjs && node scripts/test-manifest.mjs && node scripts/test-domains.mjs && node scripts/test-show.mjs && node scripts/test-search.mjs && node scripts/test-stats.mjs && node scripts/verify-mcp-packages.mjs",
     "prepublishOnly": "npm test",
     "build:docs": "node scripts/build-docs.mjs",
     "ingest": "node scripts/ingest-official.mjs"

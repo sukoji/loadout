@@ -134,6 +134,8 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `search <query>` | Search catalog by id, name, description, signals, domains |
 | `search <query> --type mcp\|skill\|hook` | Limit search to one item type |
 | `search <query> --json` | Search results as JSON |
+| `stats` | Catalog counts (domains, tiers, types) |
+| `stats --json` | Stats as JSON |
 
 **Team loadouts:** run `export` in a reference repo, commit `.loadout.json`, then teammates run
 `apply -f .loadout.json` (add `--target cursor` for non-Claude agents).

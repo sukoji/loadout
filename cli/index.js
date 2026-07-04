@@ -35,6 +35,7 @@ async function main() {
   if (positional[0] === "domains") return runDomains(positional[1], flags);
   if (positional[0] === "show") return runShow(positional[1], flags);
   if (positional[0] === "search") return runSearch(args, flags);
+  if (positional[0] === "stats") return runStats(flags);
   if (positional[0] === "export") return runExport(args, flags);
   if (positional[0] === "apply") return runApplyManifest(args, flags);
 
@@ -205,6 +206,8 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout search playwright")}  Search catalog by name/id/signal`);
   console.log(`  ${c("cyan", "npx claude-loadout search research --type skill")}  Filter search by type`);
   console.log(`  ${c("cyan", "npx claude-loadout search research --json")}  Search results as JSON`);
+  console.log(`  ${c("cyan", "npx claude-loadout stats")}      Catalog counts (domains, tiers, types)`);
+  console.log(`  ${c("cyan", "npx claude-loadout stats --json")}  Stats as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout export")}     Write team loadout → .loadout.json`);
   console.log(`  ${c("cyan", "npx claude-loadout export --json")}  Print manifest JSON to stdout`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json")}  Apply a shared loadout file`);
@@ -299,6 +302,43 @@ function runApplyManifest(args, flags) {
     if (r.type === "claude" || r.type === "commands") printReceipt(r.receipt);
     else printTargetReceipt(r.receipt);
   }
+}
+
+function runStats(flags = new Set()) {
+  const { domains, all, mcp, skills, hooks, ecosystem, community } = loadCatalog();
+  const byType = {};
+  const byTier = { curated: 0, official: 0, community: 0 };
+  for (const item of all) {
+    byType[item.type] = (byType[item.type] || 0) + 1;
+    const tier = item.tier || "curated";
+    byTier[tier] = (byTier[tier] || 0) + 1;
+  }
+  const payload = {
+    version: PKG_VERSION,
+    domains: domains.length,
+    items: all.length,
+    tiers: byTier,
+    types: byType,
+    curated: {
+      mcp: mcp.length,
+      skills: skills.length,
+      hooks: hooks.length,
+    },
+    official: ecosystem.length,
+    community: community.length,
+  };
+  if (flags.has("--json")) {
+    console.log(JSON.stringify(payload, null, 2));
+    return;
+  }
+  console.log(c("bold", "\n📊 Loadout catalog") + c("dim", `  v${PKG_VERSION}\n`));
+  console.log(`  ${c("cyan", "domains")}   ${payload.domains}`);
+  console.log(`  ${c("cyan", "items")}     ${payload.items}`);
+  console.log(`  ${c("cyan", "curated")}   ${byTier.curated}  (mcp ${mcp.length} · skills ${skills.length} · hooks ${hooks.length})`);
+  console.log(`  ${c("cyan", "official")}  ${byTier.official}`);
+  console.log(`  ${c("cyan", "community")} ${byTier.community}`);
+  console.log(c("dim", "\n  types: " + Object.entries(byType).map(([k, v]) => `${k}=${v}`).join(" · ")));
+  console.log(c("dim", "\nBrowse: npx claude-loadout domains | search <q> | show <id>\n"));
 }
 
 function parseFlagValue(args, longName, shortName) {

@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.33] — 2026-07-04
+### Added
+- **`stats` / `stats --json`** — catalog overview (domains, tiers, types, version).
+
 ## [0.3.32] — 2026-07-04
 ### Added
 - **`doctor --json`** — structured `domains` and `signals` arrays for CI/profile tooling.

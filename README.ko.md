@@ -108,6 +108,7 @@ npx claude-loadout --help     # 플래그 전체 목록
 | `domains` / `domains <id>` / `domains --json` | 도메인 목록 또는 한 도메인의 로드아웃 |
 | `show <id>` / `show <id> --json` | 카탈로그 항목 상세 (config, install, homepage) |
 | `search <query>` / `--type` / `--json` | id·이름·설명·시그널·도메인 검색 (`mcp`/`skill`/`hook` 필터) |
+| `stats` / `stats --json` | 카탈로그 규모 (도메인·티어·타입 카운트) |
 | `export` / `export --json` | 팀 manifest 작성 또는 JSON 출력 |
 | `apply -f <file>` | 공유 loadout 적용 (`--target cursor` 등 지원, `--json` receipt) |
 | `--discover` | 미검증 커뮤니티 스킬 추가 노출 |

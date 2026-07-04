@@ -1,6 +1,6 @@
 # LOOP — Loadout improvement until claims are earned
 
-**Status: ACTIVE** — heartbeat restarted 2026-07-03. Phase 1 stop criteria met at `v0.3.6`; continuing on optional follow-ups below.
+**Status: ACTIVE** — Phase 1 stop criteria met at `v0.3.6`. Phase 2 (ticks 1–25) shipped browse/CI/profile UX through `v0.3.33`. Remaining: optional `NPM_TOKEN` secret and runtime-verified research catalog growth.
 
 **Cadence goal:** 견고함 · 완성도 · 최신성 · 보안성 · UX — users should set up agents without friction,
 and marketing should never outrun what the tool actually does.
@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.33 | 2026-07-04 | `stats` catalog overview (tick 25) |
 | 0.3.32 | 2026-07-04 | doctor JSON domains/signals profile fields |
 | 0.3.31 | 2026-07-04 | search --type filter; doctor matched domains |
 | 0.3.30 | 2026-07-04 | `search <query>` catalog search |
@@ -62,3 +63,4 @@ run `npm test`, release, update this log.
 8. `domains <id>` loadout detail + show suggestions — ✅ v0.3.29
 9. `search <query>` catalog search — ✅ v0.3.30
 10. `search --type` + doctor domains/signals profile — ✅ v0.3.31–0.3.32
+11. `stats` catalog overview — ✅ v0.3.33
