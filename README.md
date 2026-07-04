@@ -135,7 +135,8 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `doctor --fix --hooks-only` | Fix hooks/settings only |
 | `apply --suggestions --hooks-only` | Apply hook/setting suggestions only |
 | `doctor --fix --dry-run` | Preview what `--fix` would apply |
-| `doctor --json` | Audit JSON with `domains`, `signals`, `suggestions`, `fixCommand*`, `applyCommand*`, and `summary` (exit 1 when fixes needed) |
+| `doctor --json` | Audit JSON with `domains`, `signals`, `suggestions`, `fixCommand*`, `applyCommand*`, and `summary` (`healthy` / `optionalOnly`; exit 1 when fixes needed) |
+| `doctor --quiet` | Warnings and fixes only (skip OK lines) |
 | `domains` | List catalog domains, signal hints, and loadout sizes |
 | `domains <id>` | Show one domain's loadout items |
 | `domains --json` | Domains as JSON |

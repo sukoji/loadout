@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { readFileSync } from "node:fs";
-import { doctor, doctorFix, hookDepsMissing } from "../cli/lib/doctor.mjs";
+import { doctor, doctorFix, hookDepsMissing, summarizeDoctor } from "../cli/lib/doctor.mjs";
 
 const dir = mkdtempSync(join(tmpdir(), "loadout-doctor-"));
 let failed = 0;
@@ -60,6 +60,10 @@ try {
   }));
   assert("doctor JSON shape has fix/warn/ok arrays", Array.isArray(parsed.fix) && Array.isArray(parsed.warn) && Array.isArray(parsed.ok));
   assert("doctor summary counts match arrays", parsed.summary.fix === fix.length && parsed.summary.warn === warn.length);
+  const earlySum = summarizeDoctor({ fix, warn, ok, suggestions: [], domains: [], signals: [] });
+  assert("summary has healthy flag", typeof earlySum.healthy === "boolean");
+  assert("summary has optionalOnly flag", typeof earlySum.optionalOnly === "boolean");
+  assert("placeholder key is not healthy", earlySum.healthy === false);
 
   writeFileSync(join(dir, "package.json"), JSON.stringify({ dependencies: { react: "18", next: "14" } }));
   const profiled = doctor(dir);
@@ -119,6 +123,9 @@ try {
       "mature setup labels optional plugins",
       mature.warn.some((f) => f.msg.startsWith("Optional plugins:")),
     );
+    const matureSum = summarizeDoctor(mature);
+    assert("mature summary is healthy", matureSum.healthy === true);
+    assert("mature summary is optionalOnly", matureSum.optionalOnly === true);
   } finally {
     rmSync(matureDir, { recursive: true, force: true });
   }

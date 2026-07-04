@@ -8,7 +8,7 @@ import { loadCatalog } from "./lib/catalog.mjs";
 import { scanProject } from "./lib/scan.mjs";
 import { recommend } from "./lib/recommend.mjs";
 import { apply } from "./lib/apply.mjs";
-import { doctor, doctorFix, skillInstallGuide, isAutoApplyType } from "./lib/doctor.mjs";
+import { doctor, doctorFix, skillInstallGuide, isAutoApplyType, summarizeDoctor } from "./lib/doctor.mjs";
 import { buildManifest, writeManifest, applyManifest, applyItems, readManifestIds, buildRecommendPreview, previewManifestApply, previewItemsApply } from "./lib/manifest.mjs";
 import { applyToTarget, listTargets, detectTargets, TARGETS } from "./lib/targets.mjs";
 import { searchCatalog } from "./lib/search.mjs";
@@ -202,6 +202,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout doctor --fix --hooks-only")}  Fix: hooks/settings only`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor --fix --dry-run")}  Preview what --fix would apply`);
   console.log(`  ${c("cyan", "npx claude-loadout doctor --json")}  Machine-readable audit (exit 1 on fixes)`);
+  console.log(`  ${c("cyan", "npx claude-loadout doctor --quiet")}  Warnings/fixes only (skip OK lines)`);
   console.log(`  ${c("cyan", "npx claude-loadout domains")}    List catalog domains and loadout sizes`);
   console.log(`  ${c("cyan", "npx claude-loadout domains research")}  Show one domain's loadout`);
   console.log(`  ${c("cyan", "npx claude-loadout domains --json")}  Domains as JSON`);
@@ -600,7 +601,7 @@ function runDoctor(flags = new Set()) {
         skipped: result.skipped,
         receipts: result.receipts,
         findings: result.findings,
-        summary: doctorSummary(result.findings),
+        summary: summarizeDoctor(result.findings),
       }, null, 2));
       if (result.findings.fix.length) exit(1);
       return;
@@ -611,6 +612,7 @@ function runDoctor(flags = new Set()) {
   }
 
   const findings = doctor(root);
+  const quiet = flags.has("--quiet") || flags.has("-q");
 
   if (flags.has("--json")) {
     console.log(JSON.stringify(doctorJsonPayload(findings), null, 2));
@@ -619,7 +621,7 @@ function runDoctor(flags = new Set()) {
   }
 
   console.log(c("bold", "\n🩺 Loadout doctor") + c("dim", `  — auditing ${root}\n`));
-  printDoctorFindings(findings);
+  printDoctorFindings(findings, { quiet });
   if (!findings.fix.length && !findings.warn.length) {
     console.log(c("green", "Everything looks good.\n"));
     return;
@@ -652,17 +654,6 @@ function runDoctor(flags = new Set()) {
   if (findings.fix.length) exit(1);
 }
 
-function doctorSummary(findings) {
-  return {
-    fix: findings.fix.length,
-    warn: findings.warn.length,
-    ok: findings.ok.length,
-    domains: findings.domains?.length || 0,
-    signals: findings.signals?.length || 0,
-    suggestions: findings.suggestions?.length || 0,
-  };
-}
-
 function doctorJsonPayload(findings) {
   const suggestionIds = (findings.suggestions || []).map((s) => s.id).filter(Boolean);
   const mcpIds = (findings.suggestions || []).filter((s) => s.type === "mcp").map((s) => s.id);
@@ -682,11 +673,11 @@ function doctorJsonPayload(findings) {
     fixCommand: suggestionIds.length ? `npx claude-loadout doctor --fix` : null,
     fixCommandMcpOnly: mcpIds.length ? `npx claude-loadout doctor --fix --mcp-only` : null,
     fixCommandHooksOnly: hookIds.length ? `npx claude-loadout doctor --fix --hooks-only` : null,
-    summary: doctorSummary(findings),
+    summary: summarizeDoctor(findings),
   };
 }
 
-function printDoctorFindings(findings) {
+function printDoctorFindings(findings, opts = {}) {
   const { ok, warn, fix } = findings;
   if (fix.length) {
     console.log(c("red", "Fix:"));
@@ -698,7 +689,7 @@ function printDoctorFindings(findings) {
     warn.forEach((f) => console.log(`  • ${f.msg}${f.file ? c("dim", ` (${f.file})`) : ""}`));
     console.log("");
   }
-  if (ok.length) {
+  if (ok.length && !opts.quiet) {
     console.log(c("green", "OK:"));
     ok.forEach((f) => console.log(`  • ${f.msg}`));
     console.log("");

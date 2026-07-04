@@ -6,6 +6,11 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.55] — 2026-07-04
+### Added
+- **Doctor JSON `summary.healthy` / `summary.optionalOnly`** — CI can treat optional plugins as complete (`jq -e '.summary.healthy'`).
+- **`doctor --quiet`** — print warnings/fixes only (skip OK lines).
+
 ## [0.3.54] — 2026-07-04
 ### Changed
 - **`doctor`** — when only installable plugins remain, labels them **Optional plugins** (not incomplete setup).

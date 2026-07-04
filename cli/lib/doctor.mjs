@@ -16,6 +16,26 @@ export function isAutoApplyType(type, opts = {}) {
   return AUTO_APPLY_TYPES.has(type);
 }
 
+/** Machine-readable doctor summary for CI (`healthy` / `optionalOnly`). */
+export function summarizeDoctor(findings) {
+  const suggestions = findings.suggestions || [];
+  const optionalOnly =
+    suggestions.length > 0 &&
+    suggestions.every((s) => s.type === "skill" || s.type === "reference") &&
+    findings.fix.length === 0;
+  const healthy = findings.fix.length === 0 && (suggestions.length === 0 || optionalOnly);
+  return {
+    fix: findings.fix.length,
+    warn: findings.warn.length,
+    ok: findings.ok.length,
+    domains: findings.domains?.length || 0,
+    signals: findings.signals?.length || 0,
+    suggestions: suggestions.length,
+    optionalOnly,
+    healthy,
+  };
+}
+
 const TOKEN_RE = /<your-[^>]+>/g;
 const HOOK_DEPS = {
   jq: ["format-js-on-edit", "lint-python-on-edit", "guard-dangerous-bash", "protect-secrets", "eslint-fix-on-edit", "gofmt-on-edit", "rustfmt-on-edit", "block-push-to-main", "statusline-git"],
