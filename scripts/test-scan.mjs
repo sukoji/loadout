@@ -36,6 +36,7 @@ try {
   assert("scan adds jupyter from notebook file", signals.has("jupyter"));
   assert("scan adds .bib from references file", signals.has(".bib"));
   assert("scan adds papers from papers/ directory", signals.has("papers"));
+  assert("scan adds latex from .tex file", signals.has("latex"));
 
   const top = topIds(signals);
   assert("notebook scan surfaces exa-research", top.includes("exa-research"), top.join(", "));
@@ -698,6 +699,46 @@ try {
     assert("scikit-learn project excludes playwright", !skTop.includes("playwright"), skTop.join(", "));
   } finally {
     rmSync(skDir, { recursive: true, force: true });
+  }
+
+  const uvDir = mkdtempSync(join(tmpdir(), "loadout-scan-uv-"));
+  try {
+    writeFileSync(join(uvDir, "uv.lock"), "version = 1\n");
+    writeFileSync(join(uvDir, "pyproject.toml"), "[project]\nname = \"demo\"\n");
+    const uvSignals = scanProject(uvDir);
+    assert("scan adds uv.lock signal", uvSignals.has("uv.lock"));
+    assert("scan adds pyproject.toml signal", uvSignals.has("pyproject.toml"));
+    const uvTop = topIds(uvSignals);
+    assert("uv project surfaces context7", uvTop.includes("context7"), uvTop.join(", "));
+    assert("uv project excludes playwright", !uvTop.includes("playwright"), uvTop.join(", "));
+  } finally {
+    rmSync(uvDir, { recursive: true, force: true });
+  }
+
+  const arxivDir = mkdtempSync(join(tmpdir(), "loadout-scan-arxiv-"));
+  try {
+    writeFileSync(join(arxivDir, "requirements.txt"), "arxiv\nnumpy\n");
+    writeFileSync(join(arxivDir, "fetch_papers.ipynb"), '{"nbformat": 4}\n');
+    const arxivSignals = scanProject(arxivDir);
+    assert("scan adds arxiv from requirements.txt", arxivSignals.has("arxiv"));
+    assert("scan adds jupyter from notebook file", arxivSignals.has("jupyter"));
+    const arxivTop = topIds(arxivSignals);
+    assert("arxiv project surfaces exa-research", arxivTop.includes("exa-research"), arxivTop.join(", "));
+    assert("arxiv project excludes playwright", !arxivTop.includes("playwright"), arxivTop.join(", "));
+  } finally {
+    rmSync(arxivDir, { recursive: true, force: true });
+  }
+
+  const pandasDir = mkdtempSync(join(tmpdir(), "loadout-scan-pandas-"));
+  try {
+    writeFileSync(join(pandasDir, "requirements.txt"), "pandas>=2.0\nnumpy\n");
+    const pandasSignals = scanProject(pandasDir);
+    assert("scan adds pandas from requirements.txt", pandasSignals.has("pandas"));
+    const pandasTop = topIds(pandasSignals);
+    assert("pandas project surfaces context7", pandasTop.includes("context7"), pandasTop.join(", "));
+    assert("pandas project excludes playwright", !pandasTop.includes("playwright"), pandasTop.join(", "));
+  } finally {
+    rmSync(pandasDir, { recursive: true, force: true });
   }
 
   const nxDir = mkdtempSync(join(tmpdir(), "loadout-scan-nx-"));

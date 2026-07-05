@@ -55,6 +55,11 @@ const mlflowResearch = new Set(["always", "mlflow", "requirements.txt", "python"
 const mlflowTop = topNames(mlflowResearch);
 assert("MLflow research includes exa-research", mlflowTop.includes("exa-research"), mlflowTop.join(", "));
 assert("MLflow research excludes playwright", !mlflowTop.includes("playwright"), mlflowTop.join(", "));
+const arxivResearch = new Set(["always", "arxiv", "requirements.txt", "python", ".ipynb", "jupyter", ".git"]);
+const arxivTop = topNames(arxivResearch);
+assert("arxiv research includes exa-research", arxivTop.includes("exa-research"), arxivTop.join(", "));
+assert("arxiv research includes tavily-research", arxivTop.includes("tavily-research"), arxivTop.join(", "));
+assert("arxiv research excludes playwright", !arxivTop.includes("playwright"), arxivTop.join(", "));
 
 // Frontend repo should still prioritize browser tooling.
 const frontend = new Set(["always", "package.json", "react", "next", ".git"]);
@@ -121,6 +126,16 @@ const skTop = topNames(sklearnMl);
 assert("scikit-learn data-ml includes context7", skTop.includes("context7"), skTop.join(", "));
 assert("scikit-learn data-ml excludes playwright", !skTop.includes("playwright"), skTop.join(", "));
 assert("scikit-learn data-ml excludes mongodb", !skTop.includes("mongodb"), skTop.join(", "));
+const pandasMl = new Set(["always", "requirements.txt", "pandas", "numpy", "python", ".git"]);
+const pdTop = topNames(pandasMl);
+assert("pandas data-ml includes context7", pdTop.includes("context7"), pdTop.join(", "));
+assert("pandas data-ml excludes playwright", !pdTop.includes("playwright"), pdTop.join(", "));
+assert("pandas data-ml excludes mongodb", !pdTop.includes("mongodb"), pdTop.join(", "));
+const uvMl = new Set(["always", "uv.lock", "pyproject.toml", "numpy", "python", ".git"]);
+const uvTop = topNames(uvMl);
+assert("uv data-ml includes context7", uvTop.includes("context7"), uvTop.join(", "));
+assert("uv data-ml excludes playwright", !uvTop.includes("playwright"), uvTop.join(", "));
+assert("uv data-ml excludes mongodb", !uvTop.includes("mongodb"), uvTop.join(", "));
 
 // FastAPI backend should get API-appropriate tools, not frontend noise.
 const fastapi = new Set(["always", "requirements.txt", "pyproject.toml", "fastapi", "python", ".git", "postgres"]);
