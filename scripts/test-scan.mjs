@@ -726,6 +726,48 @@ try {
     rmSync(k8sDir, { recursive: true, force: true });
   }
 
+  const tfOnlyDir = mkdtempSync(join(tmpdir(), "loadout-scan-tf-only-"));
+  try {
+    writeFileSync(join(tfOnlyDir, "main.tf"), "resource \"null_resource\" \"demo\" {}\n");
+    const tfOnlySignals = scanProject(tfOnlyDir);
+    assert("scan adds terraform from .tf (standalone)", tfOnlySignals.has("terraform"));
+    assert("terraform-only omits dockerfile", !tfOnlySignals.has("dockerfile"));
+    const tfOnlyTop = topIds(tfOnlySignals);
+    assert("terraform-only project surfaces git or github", tfOnlyTop.includes("git") || tfOnlyTop.includes("github"), tfOnlyTop.join(", "));
+    assert("terraform-only project excludes playwright", !tfOnlyTop.includes("playwright"), tfOnlyTop.join(", "));
+  } finally {
+    rmSync(tfOnlyDir, { recursive: true, force: true });
+  }
+
+  const helmOnlyDir = mkdtempSync(join(tmpdir(), "loadout-scan-helm-only-"));
+  try {
+    writeFileSync(join(helmOnlyDir, "Chart.yaml"), "apiVersion: v2\nname: demo\n");
+    const helmOnlySignals = scanProject(helmOnlyDir);
+    assert("scan adds helm from Chart.yaml (standalone)", helmOnlySignals.has("helm"));
+    assert("helm-only omits dockerfile", !helmOnlySignals.has("dockerfile"));
+    const helmOnlyTop = topIds(helmOnlySignals);
+    assert("helm-only project surfaces git or github", helmOnlyTop.includes("git") || helmOnlyTop.includes("github"), helmOnlyTop.join(", "));
+    assert("helm-only project excludes playwright", !helmOnlyTop.includes("playwright"), helmOnlyTop.join(", "));
+  } finally {
+    rmSync(helmOnlyDir, { recursive: true, force: true });
+  }
+
+  const pyprojectDir = mkdtempSync(join(tmpdir(), "loadout-scan-pyproject-"));
+  try {
+    writeFileSync(
+      join(pyprojectDir, "pyproject.toml"),
+      "[project]\nname = \"demo\"\ndependencies = [\"numpy\"]\n",
+    );
+    const pySignals = scanProject(pyprojectDir);
+    assert("scan adds pyproject.toml signal (standalone)", pySignals.has("pyproject.toml"));
+    assert("scan adds numpy from pyproject.toml", pySignals.has("numpy"));
+    const pyTop = topIds(pySignals);
+    assert("pyproject project surfaces context7", pyTop.includes("context7"), pyTop.join(", "));
+    assert("pyproject project excludes playwright", !pyTop.includes("playwright"), pyTop.join(", "));
+  } finally {
+    rmSync(pyprojectDir, { recursive: true, force: true });
+  }
+
   const monoDir = mkdtempSync(join(tmpdir(), "loadout-scan-mono-"));
   try {
     writeFileSync(join(monoDir, "pnpm-workspace.yaml"), "packages:\n  - packages/*\n");
