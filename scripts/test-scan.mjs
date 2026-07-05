@@ -242,6 +242,23 @@ try {
     rmSync(expressDir, { recursive: true, force: true });
   }
 
+  const expressPostgresDir = mkdtempSync(join(tmpdir(), "loadout-scan-express-pg-"));
+  try {
+    writeFileSync(
+      join(expressPostgresDir, "package.json"),
+      JSON.stringify({ dependencies: { express: "4", postgres: "3" } }),
+    );
+    const expressPgSignals = scanProject(expressPostgresDir);
+    assert("scan adds express from package.json (postgres stack)", expressPgSignals.has("express"));
+    assert("scan adds postgres from package.json (express stack)", expressPgSignals.has("postgres"));
+    const expressPgTop = topIds(expressPgSignals);
+    assert("express+postgres project surfaces postgres", expressPgTop.includes("postgres"), expressPgTop.join(", "));
+    assert("express+postgres project surfaces context7", expressPgTop.includes("context7"), expressPgTop.join(", "));
+    assert("express+postgres project excludes playwright", !expressPgTop.includes("playwright"), expressPgTop.join(", "));
+  } finally {
+    rmSync(expressPostgresDir, { recursive: true, force: true });
+  }
+
   const flaskDir = mkdtempSync(join(tmpdir(), "loadout-scan-flask-"));
   try {
     writeFileSync(join(flaskDir, "requirements.txt"), "flask>=3.0\n");
@@ -964,6 +981,44 @@ try {
     assert("docx-only project excludes playwright", !docxOnlyTop.includes("playwright"), docxOnlyTop.join(", "));
   } finally {
     rmSync(docxOnlyDir, { recursive: true, force: true });
+  }
+
+  const xlsxOnlyDir = mkdtempSync(join(tmpdir(), "loadout-scan-xlsx-only-"));
+  try {
+    writeFileSync(join(xlsxOnlyDir, "budget.xlsx"), "PK\n");
+    const xlsxOnlySignals = scanProject(xlsxOnlyDir);
+    assert("scan adds .xlsx from office file (standalone)", xlsxOnlySignals.has(".xlsx"));
+    const xlsxOnlyTop = topIds(xlsxOnlySignals);
+    assert("xlsx-only project surfaces office-docs", xlsxOnlyTop.includes("office-docs"), xlsxOnlyTop.join(", "));
+    assert("xlsx-only project excludes playwright", !xlsxOnlyTop.includes("playwright"), xlsxOnlyTop.join(", "));
+  } finally {
+    rmSync(xlsxOnlyDir, { recursive: true, force: true });
+  }
+
+  const composeOnlyDir = mkdtempSync(join(tmpdir(), "loadout-scan-compose-only-"));
+  try {
+    writeFileSync(join(composeOnlyDir, "docker-compose.yml"), "services:\n  app:\n    image: node:20\n");
+    const composeOnlySignals = scanProject(composeOnlyDir);
+    assert("scan adds docker-compose from compose file (standalone)", composeOnlySignals.has("docker-compose"));
+    assert("docker-compose-only omits dockerfile", !composeOnlySignals.has("dockerfile"));
+    const composeOnlyTop = topIds(composeOnlySignals);
+    assert("docker-compose-only project surfaces git or github", composeOnlyTop.includes("git") || composeOnlyTop.includes("github"), composeOnlyTop.join(", "));
+    assert("docker-compose-only project excludes playwright", !composeOnlyTop.includes("playwright"), composeOnlyTop.join(", "));
+  } finally {
+    rmSync(composeOnlyDir, { recursive: true, force: true });
+  }
+
+  const ansibleOnlyDir = mkdtempSync(join(tmpdir(), "loadout-scan-ansible-only-"));
+  try {
+    writeFileSync(join(ansibleOnlyDir, "ansible.cfg"), "[defaults]\ninventory = hosts\n");
+    const ansibleOnlySignals = scanProject(ansibleOnlyDir);
+    assert("scan adds ansible from ansible.cfg (standalone)", ansibleOnlySignals.has("ansible"));
+    assert("ansible-only omits dockerfile", !ansibleOnlySignals.has("dockerfile"));
+    const ansibleOnlyTop = topIds(ansibleOnlySignals);
+    assert("ansible-only project surfaces git or github", ansibleOnlyTop.includes("git") || ansibleOnlyTop.includes("github"), ansibleOnlyTop.join(", "));
+    assert("ansible-only project excludes playwright", !ansibleOnlyTop.includes("playwright"), ansibleOnlyTop.join(", "));
+  } finally {
+    rmSync(ansibleOnlyDir, { recursive: true, force: true });
   }
 
   const docsDir = mkdtempSync(join(tmpdir(), "loadout-scan-docs-"));

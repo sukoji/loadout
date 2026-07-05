@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.85] — 2026-07-05
+### Added
+- **Regression tests** — xlsx docs, docker-compose/ansible-only devops, latex+bib research, and Express+postgres scan fixtures.
+
 ## [0.3.84] — 2026-07-05
 ### Added
 - **Regression tests** — workspaces monorepo, dockerfile/ansible-only devops, standalone docx, and Express+postgres backend fixtures.

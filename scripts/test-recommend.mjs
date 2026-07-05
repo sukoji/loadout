@@ -420,6 +420,19 @@ const postgresBeTop = topNames(postgresBackend);
 assert("Express postgres backend includes postgres", postgresBeTop.includes("postgres"), postgresBeTop.join(", "));
 assert("Express postgres backend includes context7", postgresBeTop.includes("context7"), postgresBeTop.join(", "));
 assert("Express postgres backend excludes playwright", !postgresBeTop.includes("playwright"), postgresBeTop.join(", "));
+const xlsxOnly = new Set(["always", ".xlsx", ".git"]);
+const xlsxTop = topNames(xlsxOnly);
+assert("xlsx-only includes office-docs", xlsxTop.includes("office-docs"), xlsxTop.join(", "));
+assert("xlsx-only excludes playwright", !xlsxTop.includes("playwright"), xlsxTop.join(", "));
+const dockerComposeOnly = new Set(["always", "docker-compose", ".git"]);
+const composeOnlyTop = topNames(dockerComposeOnly);
+assert("docker-compose-only devops includes git or github", composeOnlyTop.includes("git") || composeOnlyTop.includes("github"), composeOnlyTop.join(", "));
+assert("docker-compose-only devops includes guard-dangerous-bash", composeOnlyTop.includes("guard-dangerous-bash"), composeOnlyTop.join(", "));
+assert("docker-compose-only devops excludes playwright", !composeOnlyTop.includes("playwright"), composeOnlyTop.join(", "));
+const latexBibOnly = new Set(["always", "latex", ".bib", ".git"]);
+const latexBibTop = topNames(latexBibOnly);
+assert("latex+bib includes exa-research or tavily-research", latexBibTop.includes("exa-research") || latexBibTop.includes("tavily-research"), latexBibTop.join(", "));
+assert("latex+bib excludes playwright", !latexBibTop.includes("playwright"), latexBibTop.join(", "));
 
 // .env alone (via general loadout) surfaces protect-secrets even when security isn't top domain.
 const frontendEnv = new Set(["always", "react", "next", "package.json", ".env"]);
