@@ -7,7 +7,7 @@ Loadout development without the original chat context. If a session dies mid-tas
 - **Local path:** `C:\Users\piai\Desktop\loadout`
 - **What it is:** A hybrid Claude Code **plugin marketplace + recommender**. It profiles a project and
   *applies* a domain-matched loadout of MCP servers / hooks / skills — instead of being one more list to read.
-- **Last updated:** 2026-07-05 (v0.3.87 loop — RN/MLflow/game-dev fixtures)
+- **Last updated:** 2026-07-05 (CI fix — doctor tests Linux-stable; npm still `0.3.87`)
 - **Owner GitHub account:** `sukoji` (a *user*, not an org — `gh api user` returns `sukoji`, even though
   `gh auth status` shows the label `jskh-201910840`). Token scopes: `repo`, `workflow`, `gist`, `read:org`.
 
@@ -27,7 +27,7 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | CLI (`node cli/index.js`) | ✅ `doctor` / `doctor --fix`, browse (`domains`/`show`/`search`/`stats`), `apply --suggestions`, `--help`; `npm test` covers validate + recommend + scan + doctor + manifest + verify:mcp. |
 | Cross-agent targets | ✅ `--target codex\|cursor\|gemini\|opencode\|openclaw\|all` writes each agent's MCP config in its verified format (TOML for Codex, JSON for the rest). Tested emitting all formats + HTTP handling. Skills/hooks stay Claude-only. Code: `cli/lib/targets.mjs`. |
 | Docs | ✅ `docs/domains/*.md` auto-generated, in sync with catalog |
-| CI | ✅ full `npm test` + docs-sync + `loadout-doctor` profile artifact on every push |
+| CI | ✅ **`validate` green on Ubuntu** (doctor test fixtures platform-stable). Full `npm test` + docs-sync + `loadout-doctor` on every push. `publish` on tag still needs repo secret `NPM_TOKEN`. |
 
 ### NOT done yet (known limitations — do not claim these work)
 - Not yet submitted to awesome-claude-code (web issue form) or other directories.
