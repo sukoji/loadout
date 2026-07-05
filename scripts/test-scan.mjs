@@ -56,6 +56,22 @@ try {
     rmSync(viteDir, { recursive: true, force: true });
   }
 
+  const nextDir = mkdtempSync(join(tmpdir(), "loadout-scan-next-"));
+  try {
+    writeFileSync(
+      join(nextDir, "package.json"),
+      JSON.stringify({ dependencies: { next: "14", react: "18" } }),
+    );
+    const nextSignals = scanProject(nextDir);
+    assert("scan adds next from package.json", nextSignals.has("next"));
+    assert("scan adds react from package.json", nextSignals.has("react"));
+    const nextTop = topIds(nextSignals);
+    assert("next project surfaces playwright", nextTop.includes("playwright"), nextTop.join(", "));
+    assert("next project surfaces chrome-devtools", nextTop.includes("chrome-devtools"), nextTop.join(", "));
+  } finally {
+    rmSync(nextDir, { recursive: true, force: true });
+  }
+
   const angularDir = mkdtempSync(join(tmpdir(), "loadout-scan-ng-"));
   try {
     writeFileSync(join(angularDir, "angular.json"), "{}\n");
@@ -609,6 +625,20 @@ try {
     rmSync(swiftDir, { recursive: true, force: true });
   }
 
+  const xcodeDir = mkdtempSync(join(tmpdir(), "loadout-scan-xcode-"));
+  try {
+    mkdirSync(join(xcodeDir, "Demo.xcodeproj"), { recursive: true });
+    writeFileSync(join(xcodeDir, "App.swift"), "import SwiftUI\n");
+    const xcodeSignals = scanProject(xcodeDir);
+    assert("scan adds xcodeproj from .xcodeproj directory", xcodeSignals.has("*.xcodeproj"));
+    assert("scan adds swift from .swift file (xcode)", xcodeSignals.has("swift"));
+    const xcodeTop = topIds(xcodeSignals);
+    assert("xcode project surfaces context7", xcodeTop.includes("context7"), xcodeTop.join(", "));
+    assert("xcode project excludes playwright", !xcodeTop.includes("playwright"), xcodeTop.join(", "));
+  } finally {
+    rmSync(xcodeDir, { recursive: true, force: true });
+  }
+
   const kotlinDir = mkdtempSync(join(tmpdir(), "loadout-scan-kotlin-"));
   try {
     writeFileSync(join(kotlinDir, "Main.kt"), "fun main() {}\n");
@@ -680,6 +710,20 @@ try {
     assert("devops project surfaces github or git", dvTop.includes("github") || dvTop.includes("git"), dvTop.join(", "));
   } finally {
     rmSync(devopsDir, { recursive: true, force: true });
+  }
+
+  const k8sDir = mkdtempSync(join(tmpdir(), "loadout-scan-k8s-"));
+  try {
+    mkdirSync(join(k8sDir, "k8s"), { recursive: true });
+    writeFileSync(join(k8sDir, "k8s", "deployment.yaml"), "apiVersion: apps/v1\nkind: Deployment\n");
+    const k8sSignals = scanProject(k8sDir);
+    assert("scan adds k8s from k8s/ directory (standalone)", k8sSignals.has("k8s"));
+    assert("k8s-only omits dockerfile", !k8sSignals.has("dockerfile"));
+    const k8sTop = topIds(k8sSignals);
+    assert("k8s project surfaces git or github", k8sTop.includes("git") || k8sTop.includes("github"), k8sTop.join(", "));
+    assert("k8s project excludes playwright", !k8sTop.includes("playwright"), k8sTop.join(", "));
+  } finally {
+    rmSync(k8sDir, { recursive: true, force: true });
   }
 
   const monoDir = mkdtempSync(join(tmpdir(), "loadout-scan-mono-"));
