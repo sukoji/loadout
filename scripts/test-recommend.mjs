@@ -187,7 +187,10 @@ assert("Hono includes context7", honoTop.includes("context7"), honoTop.join(", "
 assert("Hono includes guard-dangerous-bash", honoTop.includes("guard-dangerous-bash"), honoTop.join(", "));
 assert("Hono excludes playwright", !honoTop.includes("playwright"), honoTop.join(", "));
 const elysia = new Set(["always", "package.json", "elysia", ".git"]);
-assert("Elysia includes context7", topNames(elysia).includes("context7"), topNames(elysia).join(", "));
+const elysiaTop = topNames(elysia);
+assert("Elysia includes context7", elysiaTop.includes("context7"), elysiaTop.join(", "));
+assert("Elysia includes guard-dangerous-bash", elysiaTop.includes("guard-dangerous-bash"), elysiaTop.join(", "));
+assert("Elysia excludes playwright", !elysiaTop.includes("playwright"), elysiaTop.join(", "));
 const trpc = new Set(["always", "package.json", "trpc", ".git"]);
 assert("tRPC includes context7", topNames(trpc).includes("context7"), topNames(trpc).join(", "));
 const graphql = new Set(["always", "package.json", "graphql", ".git"]);
@@ -297,6 +300,19 @@ const docsWriting = new Set(["always", "docs", "mkdocs", "docusaurus", ".docx"])
 const docsTop = topNames(docsWriting);
 assert("Docs includes office-docs or notion", docsTop.includes("office-docs") || docsTop.includes("notion"), docsTop.join(", "));
 assert("Docs excludes postgres by default", !docsTop.includes("postgres"), docsTop.join(", "));
+const mkdocsOnly = new Set(["always", "mkdocs", "docs", ".git"]);
+const mkTop = topNames(mkdocsOnly);
+assert("MkDocs includes office-docs or notion", mkTop.includes("office-docs") || mkTop.includes("notion"), mkTop.join(", "));
+assert("MkDocs excludes playwright", !mkTop.includes("playwright"), mkTop.join(", "));
+const docusaurusOnly = new Set(["always", "package.json", "docusaurus", "docs", ".git"]);
+const docusaurusTop = topNames(docusaurusOnly);
+assert("Docusaurus includes office-docs or notion", docusaurusTop.includes("office-docs") || docusaurusTop.includes("notion"), docusaurusTop.join(", "));
+assert("Docusaurus excludes playwright", !docusaurusTop.includes("playwright"), docusaurusTop.join(", "));
+const stripeBackend = new Set(["always", "package.json", "express", "stripe", ".git"]);
+const stripeBeTop = topNames(stripeBackend);
+assert("Stripe backend includes context7", stripeBeTop.includes("context7"), stripeBeTop.join(", "));
+assert("Stripe backend includes stripe mcp", stripeBeTop.includes("stripe"), stripeBeTop.join(", "));
+assert("Stripe backend excludes playwright", !stripeBeTop.includes("playwright"), stripeBeTop.join(", "));
 
 // Security-sensitive (auth/payments).
 const security = new Set(["always", "auth", "jwt", "stripe", ".env", ".git"]);

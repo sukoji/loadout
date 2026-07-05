@@ -842,6 +842,52 @@ try {
     rmSync(docsDir, { recursive: true, force: true });
   }
 
+  const mkdocsDir = mkdtempSync(join(tmpdir(), "loadout-scan-mkdocs-"));
+  try {
+    writeFileSync(join(mkdocsDir, "mkdocs.yml"), "site_name: Demo\n");
+    mkdirSync(join(mkdocsDir, "docs"), { recursive: true });
+    writeFileSync(join(mkdocsDir, "docs", "index.md"), "# Demo\n");
+    const mkSignals = scanProject(mkdocsDir);
+    assert("scan adds mkdocs from mkdocs.yml (standalone)", mkSignals.has("mkdocs"));
+    assert("scan adds docs from docs/ directory (standalone)", mkSignals.has("docs"));
+    const mkTop = topIds(mkSignals);
+    assert("mkdocs project surfaces office-docs or notion", mkTop.includes("office-docs") || mkTop.includes("notion"), mkTop.join(", "));
+    assert("mkdocs project excludes playwright", !mkTop.includes("playwright"), mkTop.join(", "));
+  } finally {
+    rmSync(mkdocsDir, { recursive: true, force: true });
+  }
+
+  const docusaurusDir = mkdtempSync(join(tmpdir(), "loadout-scan-docusaurus-"));
+  try {
+    writeFileSync(
+      join(docusaurusDir, "package.json"),
+      JSON.stringify({ dependencies: { "@docusaurus/core": "3", "@docusaurus/preset-classic": "3" } }),
+    );
+    const docusaurusSignals = scanProject(docusaurusDir);
+    assert("scan adds docusaurus from package.json (standalone)", docusaurusSignals.has("docusaurus"));
+    const docusaurusTop = topIds(docusaurusSignals);
+    assert("docusaurus project surfaces office-docs or notion", docusaurusTop.includes("office-docs") || docusaurusTop.includes("notion"), docusaurusTop.join(", "));
+    assert("docusaurus project excludes playwright", !docusaurusTop.includes("playwright"), docusaurusTop.join(", "));
+  } finally {
+    rmSync(docusaurusDir, { recursive: true, force: true });
+  }
+
+  const stripeDir = mkdtempSync(join(tmpdir(), "loadout-scan-stripe-"));
+  try {
+    writeFileSync(
+      join(stripeDir, "package.json"),
+      JSON.stringify({ dependencies: { express: "4", stripe: "14" } }),
+    );
+    const stripeSignals = scanProject(stripeDir);
+    assert("scan adds stripe from package.json (backend)", stripeSignals.has("stripe"));
+    assert("scan adds express from package.json (backend)", stripeSignals.has("express"));
+    const stripeTop = topIds(stripeSignals);
+    assert("stripe backend surfaces stripe mcp", stripeTop.includes("stripe"), stripeTop.join(", "));
+    assert("stripe backend excludes playwright", !stripeTop.includes("playwright"), stripeTop.join(", "));
+  } finally {
+    rmSync(stripeDir, { recursive: true, force: true });
+  }
+
   const authDir = mkdtempSync(join(tmpdir(), "loadout-scan-auth-"));
   try {
     writeFileSync(
