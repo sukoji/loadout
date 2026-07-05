@@ -1,6 +1,6 @@
 # LOOP — Loadout improvement until claims are earned
 
-**Status: ACTIVE** — Phase 1 stop criteria met at `v0.3.6`. Phase 2 shipped browse/CI/profile/automation UX through `v0.3.83` (Go/Rust/turbo/CI fixtures). Remaining: optional `NPM_TOKEN` secret and runtime-verified research catalog growth.
+**Status: ACTIVE** — Phase 1 stop criteria met at `v0.3.6`. Phase 2 shipped browse/CI/profile/automation UX through `v0.3.84` (workspaces/docx/postgres fixtures). Remaining: optional `NPM_TOKEN` secret and runtime-verified research catalog growth.
 
 **Cadence goal:** 견고함 · 완성도 · 최신성 · 보안성 · UX — users should set up agents without friction,
 and marketing should never outrun what the tool actually does.
@@ -29,6 +29,7 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
+| 0.3.84 | 2026-07-05 | workspaces monorepo + dockerfile/ansible-only + docx + postgres backend fixtures |
 | 0.3.83 | 2026-07-05 | Go/Rust guard + GitHub Actions + turbo monorepo fixtures |
 | 0.3.82 | 2026-07-05 | terraform/helm devops + pyproject data-ml + backend guard fixtures |
 | 0.3.81 | 2026-07-05 | Next.js/k8s/Xcode/tRPC scan/recommend fixtures |

@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.84] — 2026-07-05
+### Added
+- **Regression tests** — workspaces monorepo, dockerfile/ansible-only devops, standalone docx, and Express+postgres backend fixtures.
+
 ## [0.3.83] — 2026-07-05
 ### Added
 - **Regression tests** — Go/Rust backend guard, GitHub Actions devops, and turbo monorepo fixtures.

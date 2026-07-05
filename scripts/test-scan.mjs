@@ -935,8 +935,35 @@ try {
     );
     const wsSignals = scanProject(workspacesDir);
     assert("scan adds monorepo from package.json workspaces", wsSignals.has("monorepo"));
+    const wsTop = topIds(wsSignals);
+    assert("workspaces monorepo surfaces filesystem or git", wsTop.includes("filesystem") || wsTop.includes("git"), wsTop.join(", "));
+    assert("workspaces monorepo excludes playwright", !wsTop.includes("playwright"), wsTop.join(", "));
   } finally {
     rmSync(workspacesDir, { recursive: true, force: true });
+  }
+
+  const dockerOnlyDir = mkdtempSync(join(tmpdir(), "loadout-scan-docker-only-"));
+  try {
+    writeFileSync(join(dockerOnlyDir, "Dockerfile"), "FROM node:20\n");
+    const dockerOnlySignals = scanProject(dockerOnlyDir);
+    assert("scan adds dockerfile from Dockerfile (standalone)", dockerOnlySignals.has("dockerfile"));
+    const dockerOnlyTop = topIds(dockerOnlySignals);
+    assert("dockerfile-only project surfaces git or github", dockerOnlyTop.includes("git") || dockerOnlyTop.includes("github"), dockerOnlyTop.join(", "));
+    assert("dockerfile-only project excludes playwright", !dockerOnlyTop.includes("playwright"), dockerOnlyTop.join(", "));
+  } finally {
+    rmSync(dockerOnlyDir, { recursive: true, force: true });
+  }
+
+  const docxOnlyDir = mkdtempSync(join(tmpdir(), "loadout-scan-docx-only-"));
+  try {
+    writeFileSync(join(docxOnlyDir, "report.docx"), "PK\n");
+    const docxOnlySignals = scanProject(docxOnlyDir);
+    assert("scan adds .docx from office file (standalone)", docxOnlySignals.has(".docx"));
+    const docxOnlyTop = topIds(docxOnlySignals);
+    assert("docx-only project surfaces office-docs", docxOnlyTop.includes("office-docs"), docxOnlyTop.join(", "));
+    assert("docx-only project excludes playwright", !docxOnlyTop.includes("playwright"), docxOnlyTop.join(", "));
+  } finally {
+    rmSync(docxOnlyDir, { recursive: true, force: true });
   }
 
   const docsDir = mkdtempSync(join(tmpdir(), "loadout-scan-docs-"));
