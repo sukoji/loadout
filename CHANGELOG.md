@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.86] — 2026-07-05
+### Added
+- **Regression tests** — Vue/Fastify/W&B scan paths, Expo/Flutter mobile guards, and game-dev no-playwright fixtures.
+
 ## [0.3.85] — 2026-07-05
 ### Added
 - **Regression tests** — xlsx docs, docker-compose/ansible-only devops, latex+bib research, and Express+postgres scan fixtures.

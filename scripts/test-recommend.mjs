@@ -269,18 +269,24 @@ const godot = new Set(["always", "godot", "project.godot", ".git"]);
 const gdTop = topNames(godot);
 assert("Godot includes context7", gdTop.includes("context7"), gdTop.join(", "));
 assert("Godot includes guard-dangerous-bash", gdTop.includes("guard-dangerous-bash"), gdTop.join(", "));
+assert("Godot excludes playwright", !gdTop.includes("playwright"), gdTop.join(", "));
 const unity = new Set(["always", "unity", ".git"]);
-assert("Unity includes context7", topNames(unity).includes("context7"), topNames(unity).join(", "));
-assert("Unity includes guard-dangerous-bash", topNames(unity).includes("guard-dangerous-bash"), topNames(unity).join(", "));
+const unityTop = topNames(unity);
+assert("Unity includes context7", unityTop.includes("context7"), unityTop.join(", "));
+assert("Unity includes guard-dangerous-bash", unityTop.includes("guard-dangerous-bash"), unityTop.join(", "));
+assert("Unity excludes playwright", !unityTop.includes("playwright"), unityTop.join(", "));
 const unreal = new Set(["always", "unreal", ".git"]);
-assert("Unreal includes context7", topNames(unreal).includes("context7"), topNames(unreal).join(", "));
-assert("Unreal includes guard-dangerous-bash", topNames(unreal).includes("guard-dangerous-bash"), topNames(unreal).join(", "));
+const unrealTop = topNames(unreal);
+assert("Unreal includes context7", unrealTop.includes("context7"), unrealTop.join(", "));
+assert("Unreal includes guard-dangerous-bash", unrealTop.includes("guard-dangerous-bash"), unrealTop.join(", "));
+assert("Unreal excludes playwright", !unrealTop.includes("playwright"), unrealTop.join(", "));
 
 // Flutter / mobile.
 const flutter = new Set(["always", "pubspec.yaml", "flutter", "build.gradle", ".git"]);
 const flTop = topNames(flutter);
 assert("Flutter includes context7", flTop.includes("context7"), flTop.join(", "));
 assert("Flutter includes figma or playwright", flTop.includes("figma") || flTop.includes("playwright"), flTop.join(", "));
+assert("Flutter excludes postgres by default", !flTop.includes("postgres"), flTop.join(", "));
 
 // Expo / React Native.
 const expo = new Set(["always", "package.json", "expo", "react-native", ".git"]);
@@ -433,6 +439,10 @@ const latexBibOnly = new Set(["always", "latex", ".bib", ".git"]);
 const latexBibTop = topNames(latexBibOnly);
 assert("latex+bib includes exa-research or tavily-research", latexBibTop.includes("exa-research") || latexBibTop.includes("tavily-research"), latexBibTop.join(", "));
 assert("latex+bib excludes playwright", !latexBibTop.includes("playwright"), latexBibTop.join(", "));
+const wandbOnly = new Set(["always", "wandb", "requirements.txt", "python", ".git"]);
+const wandbOnlyTop = topNames(wandbOnly);
+assert("W&B-only includes context7", wandbOnlyTop.includes("context7"), wandbOnlyTop.join(", "));
+assert("W&B-only excludes playwright", !wandbOnlyTop.includes("playwright"), wandbOnlyTop.join(", "));
 
 // .env alone (via general loadout) surfaces protect-secrets even when security isn't top domain.
 const frontendEnv = new Set(["always", "react", "next", "package.json", ".env"]);

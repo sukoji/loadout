@@ -56,6 +56,17 @@ try {
     rmSync(viteDir, { recursive: true, force: true });
   }
 
+  const vueDir = mkdtempSync(join(tmpdir(), "loadout-scan-vue-"));
+  try {
+    writeFileSync(join(vueDir, "package.json"), JSON.stringify({ dependencies: { vue: "3" } }));
+    const vueSignals = scanProject(vueDir);
+    assert("scan adds vue from package.json", vueSignals.has("vue"));
+    const vueTop = topIds(vueSignals);
+    assert("vue project surfaces playwright", vueTop.includes("playwright"), vueTop.join(", "));
+  } finally {
+    rmSync(vueDir, { recursive: true, force: true });
+  }
+
   const nextDir = mkdtempSync(join(tmpdir(), "loadout-scan-next-"));
   try {
     writeFileSync(
@@ -228,6 +239,20 @@ try {
     assert("nestjs project excludes playwright", !nestTop.includes("playwright"), nestTop.join(", "));
   } finally {
     rmSync(nestDir, { recursive: true, force: true });
+  }
+
+  const fastifyDir = mkdtempSync(join(tmpdir(), "loadout-scan-fastify-"));
+  try {
+    writeFileSync(join(fastifyDir, "package.json"), JSON.stringify({ dependencies: { fastify: "4" } }));
+    const fastifySignals = scanProject(fastifyDir);
+    assert("scan adds fastify from package.json (standalone)", fastifySignals.has("fastify"));
+    assert("standalone fastify omits nestjs", !fastifySignals.has("nestjs"));
+    const fastifyTop = topIds(fastifySignals);
+    assert("fastify project surfaces context7", fastifyTop.includes("context7"), fastifyTop.join(", "));
+    assert("fastify project includes guard-dangerous-bash", fastifyTop.includes("guard-dangerous-bash"), fastifyTop.join(", "));
+    assert("fastify project excludes playwright", !fastifyTop.includes("playwright"), fastifyTop.join(", "));
+  } finally {
+    rmSync(fastifyDir, { recursive: true, force: true });
   }
 
   const expressDir = mkdtempSync(join(tmpdir(), "loadout-scan-express-"));
@@ -476,6 +501,18 @@ try {
     rmSync(mlflowDir, { recursive: true, force: true });
   }
 
+  const wandbDir = mkdtempSync(join(tmpdir(), "loadout-scan-wandb-"));
+  try {
+    writeFileSync(join(wandbDir, "requirements.txt"), "wandb>=0.16\n");
+    const wandbSignals = scanProject(wandbDir);
+    assert("scan adds wandb from requirements.txt (standalone)", wandbSignals.has("wandb"));
+    const wandbTop = topIds(wandbSignals);
+    assert("wandb project surfaces context7", wandbTop.includes("context7"), wandbTop.join(", "));
+    assert("wandb project excludes playwright", !wandbTop.includes("playwright"), wandbTop.join(", "));
+  } finally {
+    rmSync(wandbDir, { recursive: true, force: true });
+  }
+
   const springDir = mkdtempSync(join(tmpdir(), "loadout-scan-spring-"));
   try {
     writeFileSync(
@@ -622,8 +659,22 @@ try {
     assert("scan adds build.gradle signal", flSignals.has("build.gradle"));
     const flTop = topIds(flSignals);
     assert("flutter project surfaces context7", flTop.includes("context7"), flTop.join(", "));
+    assert("flutter project includes figma or playwright", flTop.includes("figma") || flTop.includes("playwright"), flTop.join(", "));
+    assert("flutter project excludes postgres by default", !flTop.includes("postgres"), flTop.join(", "));
   } finally {
     rmSync(flutterDir, { recursive: true, force: true });
+  }
+
+  const expoDir = mkdtempSync(join(tmpdir(), "loadout-scan-expo-"));
+  try {
+    writeFileSync(join(expoDir, "package.json"), JSON.stringify({ dependencies: { expo: "50" } }));
+    const expoSignals = scanProject(expoDir);
+    assert("scan adds expo from package.json", expoSignals.has("expo"));
+    const expoTop = topIds(expoSignals);
+    assert("expo project surfaces context7", expoTop.includes("context7"), expoTop.join(", "));
+    assert("expo project excludes postgres by default", !expoTop.includes("postgres"), expoTop.join(", "));
+  } finally {
+    rmSync(expoDir, { recursive: true, force: true });
   }
 
   const swiftDir = mkdtempSync(join(tmpdir(), "loadout-scan-swift-"));
@@ -703,6 +754,7 @@ try {
     const godotTop = topIds(godotSignals);
     assert("godot project surfaces context7", godotTop.includes("context7"), godotTop.join(", "));
     assert("godot project includes guard-dangerous-bash", godotTop.includes("guard-dangerous-bash"), godotTop.join(", "));
+    assert("godot project excludes playwright", !godotTop.includes("playwright"), godotTop.join(", "));
   } finally {
     rmSync(godotDir, { recursive: true, force: true });
   }
