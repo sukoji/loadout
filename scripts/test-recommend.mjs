@@ -264,6 +264,16 @@ const rnTop = topNames(reactNative);
 assert("React Native includes context7", rnTop.includes("context7"), rnTop.join(", "));
 assert("React Native includes figma or playwright", rnTop.includes("figma") || rnTop.includes("playwright"), rnTop.join(", "));
 assert("React Native excludes postgres by default", !rnTop.includes("postgres"), rnTop.join(", "));
+const swiftMobile = new Set(["always", "swift", "build.gradle", ".git"]);
+const swiftTop = topNames(swiftMobile);
+assert("Swift includes context7", swiftTop.includes("context7"), swiftTop.join(", "));
+assert("Swift excludes postgres by default", !swiftTop.includes("postgres"), swiftTop.join(", "));
+assert("Swift excludes playwright", !swiftTop.includes("playwright"), swiftTop.join(", "));
+const kotlinMobile = new Set(["always", "kotlin", "build.gradle", ".git"]);
+const kotlinTop = topNames(kotlinMobile);
+assert("Kotlin includes context7", kotlinTop.includes("context7"), kotlinTop.join(", "));
+assert("Kotlin excludes postgres by default", !kotlinTop.includes("postgres"), kotlinTop.join(", "));
+assert("Kotlin excludes playwright", !kotlinTop.includes("playwright"), kotlinTop.join(", "));
 
 // DevOps / infra.
 const devops = new Set(["always", "dockerfile", "terraform", "helm", "k8s", ".github/workflows", ".git"]);
@@ -271,6 +281,11 @@ const dvTop = topNames(devops);
 assert("DevOps includes git or github", dvTop.includes("git") || dvTop.includes("github"), dvTop.join(", "));
 assert("DevOps includes guard-dangerous-bash", dvTop.includes("guard-dangerous-bash"), dvTop.join(", "));
 assert("DevOps excludes playwright", !dvTop.includes("playwright"), dvTop.join(", "));
+const dockerCompose = new Set(["always", "dockerfile", "docker-compose", "terraform", ".git"]);
+const dcTop = topNames(dockerCompose);
+assert("docker-compose devops includes git or github", dcTop.includes("git") || dcTop.includes("github"), dcTop.join(", "));
+assert("docker-compose devops includes guard-dangerous-bash", dcTop.includes("guard-dangerous-bash"), dcTop.join(", "));
+assert("docker-compose devops excludes playwright", !dcTop.includes("playwright"), dcTop.join(", "));
 const ansible = new Set(["always", "ansible", "dockerfile", "terraform", ".github/workflows", ".git"]);
 const ansibleTop = topNames(ansible);
 assert("Ansible includes git or github", ansibleTop.includes("git") || ansibleTop.includes("github"), ansibleTop.join(", "));

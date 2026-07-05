@@ -593,6 +593,36 @@ try {
     rmSync(flutterDir, { recursive: true, force: true });
   }
 
+  const swiftDir = mkdtempSync(join(tmpdir(), "loadout-scan-swift-"));
+  try {
+    writeFileSync(join(swiftDir, "Package.swift"), "// swift-tools-version:5.9\n");
+    writeFileSync(join(swiftDir, "App.swift"), "import SwiftUI\n");
+    writeFileSync(join(swiftDir, "build.gradle"), "android {}\n");
+    const swiftSignals = scanProject(swiftDir);
+    assert("scan adds swift from Package.swift", swiftSignals.has("swift"));
+    assert("scan adds swift from .swift file", swiftSignals.has("swift"));
+    assert("scan adds build.gradle signal", swiftSignals.has("build.gradle"));
+    const swiftTop = topIds(swiftSignals);
+    assert("swift project surfaces context7", swiftTop.includes("context7"), swiftTop.join(", "));
+    assert("swift project excludes playwright", !swiftTop.includes("playwright"), swiftTop.join(", "));
+  } finally {
+    rmSync(swiftDir, { recursive: true, force: true });
+  }
+
+  const kotlinDir = mkdtempSync(join(tmpdir(), "loadout-scan-kotlin-"));
+  try {
+    writeFileSync(join(kotlinDir, "Main.kt"), "fun main() {}\n");
+    writeFileSync(join(kotlinDir, "build.gradle"), "android {}\n");
+    const kotlinSignals = scanProject(kotlinDir);
+    assert("scan adds kotlin from .kt file", kotlinSignals.has("kotlin"));
+    assert("scan adds build.gradle signal", kotlinSignals.has("build.gradle"));
+    const kotlinTop = topIds(kotlinSignals);
+    assert("kotlin project surfaces context7", kotlinTop.includes("context7"), kotlinTop.join(", "));
+    assert("kotlin project excludes playwright", !kotlinTop.includes("playwright"), kotlinTop.join(", "));
+  } finally {
+    rmSync(kotlinDir, { recursive: true, force: true });
+  }
+
   const unityDir = mkdtempSync(join(tmpdir(), "loadout-scan-unity-"));
   try {
     mkdirSync(join(unityDir, "ProjectSettings"), { recursive: true });
@@ -633,6 +663,7 @@ try {
   const devopsDir = mkdtempSync(join(tmpdir(), "loadout-scan-devops-"));
   try {
     writeFileSync(join(devopsDir, "Dockerfile"), "FROM alpine\n");
+    writeFileSync(join(devopsDir, "docker-compose.yml"), "services:\n  app:\n    build: .\n");
     writeFileSync(join(devopsDir, "main.tf"), "resource \"null_resource\" \"x\" {}\n");
     writeFileSync(join(devopsDir, "Chart.yaml"), "name: demo\n");
     writeFileSync(join(devopsDir, "ansible.cfg"), "[defaults]\ninventory = hosts\n");
@@ -640,6 +671,7 @@ try {
     writeFileSync(join(devopsDir, "k8s", "deploy.yaml"), "apiVersion: v1\n");
     const dvSignals = scanProject(devopsDir);
     assert("scan adds dockerfile signal", dvSignals.has("dockerfile"));
+    assert("scan adds docker-compose from compose file", dvSignals.has("docker-compose"));
     assert("scan adds terraform from .tf", dvSignals.has("terraform"));
     assert("scan adds helm from Chart.yaml", dvSignals.has("helm"));
     assert("scan adds k8s from k8s/ directory", dvSignals.has("k8s"));
@@ -675,6 +707,31 @@ try {
     assert("pnpm-lock alone omits monorepo", !pnpmSignals.has("monorepo"));
   } finally {
     rmSync(pnpmDir, { recursive: true, force: true });
+  }
+
+  const yarnDir = mkdtempSync(join(tmpdir(), "loadout-scan-yarn-"));
+  try {
+    writeFileSync(join(yarnDir, "yarn.lock"), "# yarn lockfile v1\n");
+    writeFileSync(join(yarnDir, "package.json"), JSON.stringify({ name: "yarn-app" }));
+    const yarnSignals = scanProject(yarnDir);
+    assert("scan adds yarn.lock signal", yarnSignals.has("yarn.lock"));
+    assert("yarn.lock alone omits monorepo", !yarnSignals.has("monorepo"));
+  } finally {
+    rmSync(yarnDir, { recursive: true, force: true });
+  }
+
+  const tailwindDir = mkdtempSync(join(tmpdir(), "loadout-scan-tailwind-"));
+  try {
+    writeFileSync(
+      join(tailwindDir, "package.json"),
+      JSON.stringify({ devDependencies: { tailwindcss: "3", react: "18" } }),
+    );
+    const twSignals = scanProject(tailwindDir);
+    assert("scan adds tailwind from package.json", twSignals.has("tailwind"));
+    const twTop = topIds(twSignals);
+    assert("tailwind project surfaces playwright", twTop.includes("playwright"), twTop.join(", "));
+  } finally {
+    rmSync(tailwindDir, { recursive: true, force: true });
   }
 
   const tfDir = mkdtempSync(join(tmpdir(), "loadout-scan-tf-"));

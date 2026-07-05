@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.79] — 2026-07-05
+### Added
+- **Regression tests** — Swift/Kotlin mobile, docker-compose devops, yarn.lock, and Tailwind scan/recommend fixtures.
+
 ## [0.3.78] — 2026-07-05
 ### Added
 - **Regression tests** — uv.lock data-ml, arxiv research, and pandas data-ml scan/recommend fixtures; latex scan assertion.
