@@ -190,12 +190,39 @@ try {
   );
   assert("doctor --fix skill guide omits builtins", !skillGuide.some((s) => s.id === "code-review"));
 
-  // Dry-run with no MCP/hooks left still surfaces skill install steps.
-  const guideOnly = doctorFix(dir, { dryRun: true });
-  assert(
-    "dry-run skill guide when skills remain",
-    guideOnly.skills.some((s) => s.commands?.length || s.note),
-  );
+  // Dry-run skill guide: use a mature isolated fixture — after the full --fix cycle on `dir`,
+  // Linux CI (jq/git on PATH) may rank hooks above skills in the top-5 gap list.
+  const skillGuideDir = mkdtempSync(join(tmpdir(), "loadout-doctor-skill-guide-"));
+  try {
+    mkdirSync(join(skillGuideDir, ".claude"), { recursive: true });
+    writeFileSync(join(skillGuideDir, "CLAUDE.md"), "# done\n");
+    writeFileSync(
+      join(skillGuideDir, ".mcp.json"),
+      JSON.stringify({
+        mcpServers: {
+          context7: { command: "npx", args: ["-y", "@upstash/context7-mcp@latest"] },
+          git: { command: "uvx", args: ["mcp-server-git"] },
+          playwright: { command: "npx", args: ["-y", "@playwright/mcp@latest"] },
+        },
+      }),
+    );
+    writeFileSync(
+      join(skillGuideDir, ".claude/settings.json"),
+      JSON.stringify({
+        hooks: {
+          Stop: [{ hooks: [{ type: "command", command: "printf '\\a'" }] }],
+          PreToolUse: [{ matcher: "Bash", hooks: [{ type: "command", command: "echo blocked" }] }],
+        },
+      }),
+    );
+    const guideOnly = doctorFix(skillGuideDir, { dryRun: true });
+    assert(
+      "dry-run skill guide when skills remain",
+      guideOnly.skills.some((s) => s.commands?.length || s.note),
+    );
+  } finally {
+    rmSync(skillGuideDir, { recursive: true, force: true });
+  }
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }
