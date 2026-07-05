@@ -117,11 +117,13 @@ try {
     writeFileSync(
       join(matureDir, ".claude/settings.json"),
       JSON.stringify({
+        statusLine: { type: "command", command: "echo loadout-statusline" },
         hooks: {
           Stop: [{ hooks: [{ type: "command", command: "printf '\\a' ; echo 'loadout: Claude is waiting for you.'" }] }],
           PreToolUse: [
             { matcher: "Bash", hooks: [{ type: "command", command: "echo dangerous mkfs" }] },
             { matcher: "Bash", hooks: [{ type: "command", command: "echo push directly block-push" }] },
+            { matcher: "Read", hooks: [{ type: "command", command: "echo refusing to read secret files" }] },
           ],
         },
       }),
