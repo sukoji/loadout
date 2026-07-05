@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.3.87] — 2026-07-05
+### Added
+- **Regression tests** — React Native scan, MLflow-only research, Unity/Unreal no-playwright, Symfony guard, and VitePress docs fixtures.
+
 ## [0.3.86] — 2026-07-05
 ### Added
 - **Regression tests** — Vue/Fastify/W&B scan paths, Expo/Flutter mobile guards, and game-dev no-playwright fixtures.

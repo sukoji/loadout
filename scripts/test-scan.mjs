@@ -223,6 +223,7 @@ try {
     assert("scan adds vitepress from package.json", vpSignals.has("vitepress"));
     const vpTop = topIds(vpSignals);
     assert("vitepress project surfaces office-docs or notion", vpTop.includes("office-docs") || vpTop.includes("notion"), vpTop.join(", "));
+    assert("vitepress project excludes playwright", !vpTop.includes("playwright"), vpTop.join(", "));
   } finally {
     rmSync(vitepressDir, { recursive: true, force: true });
   }
@@ -483,6 +484,7 @@ try {
     const symfonyTop = topIds(symfonySignals);
     assert("symfony project surfaces context7", symfonyTop.includes("context7"), symfonyTop.join(", "));
     assert("symfony project excludes playwright", !symfonyTop.includes("playwright"), symfonyTop.join(", "));
+    assert("symfony project includes guard-dangerous-bash", symfonyTop.includes("guard-dangerous-bash"), symfonyTop.join(", "));
   } finally {
     rmSync(symfonyDir, { recursive: true, force: true });
   }
@@ -499,6 +501,19 @@ try {
     assert("mlflow project excludes playwright", !mlflowTop.includes("playwright"), mlflowTop.join(", "));
   } finally {
     rmSync(mlflowDir, { recursive: true, force: true });
+  }
+
+  const mlflowOnlyDir = mkdtempSync(join(tmpdir(), "loadout-scan-mlflow-only-"));
+  try {
+    writeFileSync(join(mlflowOnlyDir, "requirements.txt"), "mlflow>=2.0\n");
+    const mlflowOnlySignals = scanProject(mlflowOnlyDir);
+    assert("scan adds mlflow from requirements.txt (standalone)", mlflowOnlySignals.has("mlflow"));
+    assert("mlflow-only omits jupyter", !mlflowOnlySignals.has("jupyter"));
+    const mlflowOnlyTop = topIds(mlflowOnlySignals);
+    assert("mlflow-only project surfaces context7", mlflowOnlyTop.includes("context7"), mlflowOnlyTop.join(", "));
+    assert("mlflow-only project excludes playwright", !mlflowOnlyTop.includes("playwright"), mlflowOnlyTop.join(", "));
+  } finally {
+    rmSync(mlflowOnlyDir, { recursive: true, force: true });
   }
 
   const wandbDir = mkdtempSync(join(tmpdir(), "loadout-scan-wandb-"));
@@ -673,8 +688,25 @@ try {
     const expoTop = topIds(expoSignals);
     assert("expo project surfaces context7", expoTop.includes("context7"), expoTop.join(", "));
     assert("expo project excludes postgres by default", !expoTop.includes("postgres"), expoTop.join(", "));
+    assert("expo project includes figma or playwright", expoTop.includes("figma") || expoTop.includes("playwright"), expoTop.join(", "));
   } finally {
     rmSync(expoDir, { recursive: true, force: true });
+  }
+
+  const reactNativeDir = mkdtempSync(join(tmpdir(), "loadout-scan-rn-"));
+  try {
+    writeFileSync(
+      join(reactNativeDir, "package.json"),
+      JSON.stringify({ dependencies: { "react-native": "0.74" } }),
+    );
+    const rnSignals = scanProject(reactNativeDir);
+    assert("scan adds react-native from package.json", rnSignals.has("react-native"));
+    const rnTop = topIds(rnSignals);
+    assert("react-native project surfaces context7", rnTop.includes("context7"), rnTop.join(", "));
+    assert("react-native project includes figma or playwright", rnTop.includes("figma") || rnTop.includes("playwright"), rnTop.join(", "));
+    assert("react-native project excludes postgres by default", !rnTop.includes("postgres"), rnTop.join(", "));
+  } finally {
+    rmSync(reactNativeDir, { recursive: true, force: true });
   }
 
   const swiftDir = mkdtempSync(join(tmpdir(), "loadout-scan-swift-"));
@@ -730,6 +762,7 @@ try {
     const unityTop = topIds(unitySignals);
     assert("unity project surfaces context7", unityTop.includes("context7"), unityTop.join(", "));
     assert("unity project includes guard-dangerous-bash", unityTop.includes("guard-dangerous-bash"), unityTop.join(", "));
+    assert("unity project excludes playwright", !unityTop.includes("playwright"), unityTop.join(", "));
   } finally {
     rmSync(unityDir, { recursive: true, force: true });
   }
@@ -742,6 +775,7 @@ try {
     const unrealTop = topIds(unrealSignals);
     assert("unreal project surfaces context7", unrealTop.includes("context7"), unrealTop.join(", "));
     assert("unreal project includes guard-dangerous-bash", unrealTop.includes("guard-dangerous-bash"), unrealTop.join(", "));
+    assert("unreal project excludes playwright", !unrealTop.includes("playwright"), unrealTop.join(", "));
   } finally {
     rmSync(unrealDir, { recursive: true, force: true });
   }

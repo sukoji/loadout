@@ -443,6 +443,13 @@ const wandbOnly = new Set(["always", "wandb", "requirements.txt", "python", ".gi
 const wandbOnlyTop = topNames(wandbOnly);
 assert("W&B-only includes context7", wandbOnlyTop.includes("context7"), wandbOnlyTop.join(", "));
 assert("W&B-only excludes playwright", !wandbOnlyTop.includes("playwright"), wandbOnlyTop.join(", "));
+const mlflowOnly = new Set(["always", "mlflow", "requirements.txt", "python", ".git"]);
+const mlflowOnlyTop = topNames(mlflowOnly);
+assert("MLflow-only includes context7", mlflowOnlyTop.includes("context7"), mlflowOnlyTop.join(", "));
+assert("MLflow-only excludes playwright", !mlflowOnlyTop.includes("playwright"), mlflowOnlyTop.join(", "));
+const vitepressOnly = new Set(["always", "vitepress", "docs", ".git"]);
+const vitepressOnlyTop = topNames(vitepressOnly);
+assert("VitePress-only excludes playwright", !vitepressOnlyTop.includes("playwright"), vitepressOnlyTop.join(", "));
 
 // .env alone (via general loadout) surfaces protect-secrets even when security isn't top domain.
 const frontendEnv = new Set(["always", "react", "next", "package.json", ".env"]);
