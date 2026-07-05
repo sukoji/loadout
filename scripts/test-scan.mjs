@@ -768,6 +768,35 @@ try {
     rmSync(pyprojectDir, { recursive: true, force: true });
   }
 
+  const ghaDir = mkdtempSync(join(tmpdir(), "loadout-scan-gha-"));
+  try {
+    mkdirSync(join(ghaDir, ".github", "workflows"), { recursive: true });
+    writeFileSync(join(ghaDir, ".github", "workflows", "ci.yml"), "name: ci\n");
+    const ghaSignals = scanProject(ghaDir);
+    assert("scan adds .github/workflows signal", ghaSignals.has(".github/workflows"));
+    assert("github-actions-only omits dockerfile", !ghaSignals.has("dockerfile"));
+    const ghaTop = topIds(ghaSignals);
+    assert("github-actions project surfaces git or github", ghaTop.includes("git") || ghaTop.includes("github"), ghaTop.join(", "));
+    assert("github-actions project excludes playwright", !ghaTop.includes("playwright"), ghaTop.join(", "));
+  } finally {
+    rmSync(ghaDir, { recursive: true, force: true });
+  }
+
+  const turboOnlyDir = mkdtempSync(join(tmpdir(), "loadout-scan-turbo-"));
+  try {
+    writeFileSync(join(turboOnlyDir, "turbo.json"), "{}\n");
+    writeFileSync(join(turboOnlyDir, "package.json"), JSON.stringify({ name: "turbo-root" }));
+    const turboOnlySignals = scanProject(turboOnlyDir);
+    assert("scan adds turbo from turbo.json (standalone)", turboOnlySignals.has("turbo"));
+    assert("scan adds monorepo from turbo.json (standalone)", turboOnlySignals.has("monorepo"));
+    assert("turbo-only omits pnpm-workspace", !turboOnlySignals.has("pnpm-workspace"));
+    const turboOnlyTop = topIds(turboOnlySignals);
+    assert("turbo-only project surfaces filesystem or git", turboOnlyTop.includes("filesystem") || turboOnlyTop.includes("git"), turboOnlyTop.join(", "));
+    assert("turbo-only project excludes playwright", !turboOnlyTop.includes("playwright"), turboOnlyTop.join(", "));
+  } finally {
+    rmSync(turboOnlyDir, { recursive: true, force: true });
+  }
+
   const monoDir = mkdtempSync(join(tmpdir(), "loadout-scan-mono-"));
   try {
     writeFileSync(join(monoDir, "pnpm-workspace.yaml"), "packages:\n  - packages/*\n");
