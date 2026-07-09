@@ -7,7 +7,7 @@ Loadout development without the original chat context. If a session dies mid-tas
 - **Local path:** `C:\Users\piai\Desktop\loadout`
 - **What it is:** A hybrid Claude Code **plugin marketplace + recommender**. It profiles a project and
   *applies* a domain-matched loadout of MCP servers / hooks / skills — instead of being one more list to read.
-- **Last updated:** 2026-07-05 (CI fix — doctor tests Linux-stable; npm still `0.3.87`)
+- **Last updated:** 2026-07-09 (distribution prep — homepage URL set, promo kit drafted; awesome-list + social posts pending user submission)
 - **Owner GitHub account:** `sukoji` (a *user*, not an org — `gh api user` returns `sukoji`, even though
   `gh auth status` shows the label `jskh-201910840`). Token scopes: `repo`, `workflow`, `gist`, `read:org`.
 
@@ -30,10 +30,12 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | CI | ✅ **`validate` green on Ubuntu** (doctor test fixtures platform-stable). Full `npm test` + docs-sync + `loadout-doctor` on every push. `publish` on tag still needs repo secret `NPM_TOKEN`. |
 
 ### NOT done yet (known limitations — do not claim these work)
-- Not yet submitted to awesome-claude-code (web issue form) or other directories.
+- **Not yet actually submitted** to awesome-claude-code or posted to Reddit/HN/GeekNews/Discord.
+  Submission requires the web issue form (PRs/CLI forbidden) and social posts need the owner's own
+  accounts — Claude cannot do these. Ready-to-paste drafts prepared (see P3 below / promo kit).
 - `npm run test:mcps` is optional/slow (network); CI skips runtime smoke — uses `verify:mcp` instead.
 - Windows POSIX hooks still need Git Bash/WSL; PowerShell-native variants not yet in catalog.
-- No demo GIF; not yet submitted to awesome-claude-code / marketplaces.
+- `assets/demo.svg` exists and is embedded in README; an animated asciinema/GIF is still not recorded.
 
 ---
 
@@ -154,11 +156,25 @@ lists were generated into this repo's planning; the one-line resume pointer is e
 - [x] **`setup-ci-publish` [M]** — ✅ DONE 2026-07-03 (v0.3.6). `publish.yml` on `v*` tags; needs `NPM_TOKEN` secret.
 
 ### P3 — distribution (the "get famous" step; do after npm + a demo exist)
-- [ ] **`create-demo-gif` [M]** — asciinema/GIF of scan→recommend→apply, embed near top of README. Depends: publish-npm.
-- [ ] **`submit-awesome-claude-code` [S]** — PR to hesreallyhim/awesome-claude-code. Angle: "recommender +
-      installer, not another list." Depends: publish-npm.
+- [x] **`set-repo-metadata` [S]** — ✅ DONE 2026-07-09. `gh repo edit --homepage` → npm page; topics already
+      complete (claude-code, mcp, ai-agents, +7). Verified via `gh repo view --json repositoryTopics,homepageUrl`.
+- [~] **`create-demo-gif` [M]** — PARTIAL. Static `assets/demo.svg` done + embedded in README. Animated
+      asciinema/GIF still not recorded (needs a real terminal run + `agg`/svg-term). Depends: publish-npm.
+- [~] **`submit-awesome-claude-code` [S]** — WIP: **draft ready, NOT submitted.** Angle: "recommender +
+      installer, not another list." ⚠ Must use the WEB ISSUE FORM (PRs/CLI explicitly forbidden):
+      https://github.com/hesreallyhim/awesome-claude-code/issues/new?template=recommend-resource.yml
+      Fields: Display Name=Loadout · Category=Skills · Link=repo · Author=sukoji · one-line description in
+      promo kit. Only the owner can submit (needs their GitHub via web UI). Categories confirmed 2026-07-09.
+- [~] **`submit-social` [S]** — WIP: **drafts ready, NOT posted.** Ready-to-paste posts for Reddit (r/ClaudeAI),
+      HN Show HN (title + first comment), GeekNews (KO), X thread, and the Anthropic/Claude Developers Discord.
+      Owner must post from their own accounts — Claude has no login there. Recommended order: awesome-form +
+      Discord now → HN (weekday AM ET, once a few stars) → Reddit + GeekNews; space 1–2 days, reply fast.
 - [ ] **`submit-to-claude-marketplaces` [S]** — list on claudemarketplaces.com and any official directory.
       Depends: publish-npm, improve-readme-discoverability.
+
+> **Promo kit (draft location):** all six channel drafts + exact submission fields live in a session
+> scratchpad file `promo-kit.md` (not committed — it's marketing copy, not repo content). Regenerate from
+> README if lost. Nothing here is published yet; these tasks stay open until the owner actually submits.
 
 ---
 
