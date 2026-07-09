@@ -160,11 +160,10 @@ lists were generated into this repo's planning; the one-line resume pointer is e
       complete (claude-code, mcp, ai-agents, +7). Verified via `gh repo view --json repositoryTopics,homepageUrl`.
 - [~] **`create-demo-gif` [M]** — PARTIAL. Static `assets/demo.svg` done + embedded in README. Animated
       asciinema/GIF still not recorded (needs a real terminal run + `agg`/svg-term). Depends: publish-npm.
-- [~] **`submit-awesome-claude-code` [S]** — WIP: **draft ready, NOT submitted.** Angle: "recommender +
-      installer, not another list." ⚠ Must use the WEB ISSUE FORM (PRs/CLI explicitly forbidden):
-      https://github.com/hesreallyhim/awesome-claude-code/issues/new?template=recommend-resource.yml
-      Fields: Display Name=Loadout · Category=Skills · Link=repo · Author=sukoji · one-line description in
-      promo kit. Only the owner can submit (needs their GitHub via web UI). Categories confirmed 2026-07-09.
+- [~] **`submit-awesome-claude-code` [S]** — SUBMITTED 2026-07-09 via web issue form as
+      **hesreallyhim/awesome-claude-code#2166** (Display Name=Loadout · Category=Skills). Bot validation
+      PASSED = received. ⏳ Awaiting human maintainer review/approval before it appears on the list.
+      Next: watch #2166 for maintainer questions; answer, then mark [x] once merged/listed.
 - [~] **`submit-social` [S]** — WIP: **drafts ready, NOT posted.** Ready-to-paste posts for Reddit (r/ClaudeAI),
       HN Show HN (title + first comment), GeekNews (KO), X thread, and the Anthropic/Claude Developers Discord.
       Owner must post from their own accounts — Claude has no login there. Recommended order: awesome-form +
