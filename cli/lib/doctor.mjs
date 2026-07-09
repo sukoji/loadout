@@ -290,8 +290,7 @@ function auditMcpEntry(id, cfg, catalog, findings, file, mcpLocations) {
   }
   if (cfg?.env) {
     for (const [k, v] of Object.entries(cfg.env)) {
-      if (typeof v === "string" && TOKEN_RE.test(v)) {
-        TOKEN_RE.lastIndex = 0;
+      if (typeof v === "string" && /<your-[^>]+>/.test(v)) {
         findings.fix.push({ msg: `Fill in ${k} for MCP "${id}"`, file });
       }
     }

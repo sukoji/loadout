@@ -11,6 +11,7 @@ const { domains, byId, all, ecosystem, community } = loadCatalog();
 const ids = new Map();
 for (const item of all) {
   if (!item.id) errors.push(`item with no id: ${JSON.stringify(item).slice(0, 60)}`);
+  else if (!/^[A-Za-z0-9._-]+$/.test(item.id)) errors.push(`unsafe id (breaks TOML headers / keys): ${JSON.stringify(item.id)}`);
   if (ids.has(item.id)) errors.push(`duplicate id: ${item.id}`);
   ids.set(item.id, item);
 }

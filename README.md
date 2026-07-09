@@ -219,7 +219,7 @@ live in one place.
 
 Loadout pulls from three tiers, so it reaches the whole ecosystem without ever blindly applying something unvetted:
 
-- **Curated (37)** — hand-verified MCP servers, hooks & skills. Safe to auto-apply; every npx package is checked to resolve on npm (`npm run verify:mcp`) and smoke-started in release checks (`npm run test:mcps`).
+- **Curated (38)** — hand-verified MCP servers, hooks & skills. Safe to auto-apply; every npx package is checked to resolve on npm (`npm run verify:mcp`) and smoke-started in release checks (`npm run test:mcps`).
 - **Official marketplace (~240)** — Anthropic's official plugin directory, ingested automatically. Surfaced when they match your stack, installed via `/plugin`.
 - **Community (`--discover`)** — well-known community skills like [caveman](https://github.com/JuliusBrussee/caveman) (token saver). Shown only when you ask, labeled **⚠ unverified**, and **never auto-applied**.
 

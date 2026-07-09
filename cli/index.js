@@ -23,6 +23,7 @@ const C = {
 };
 const c = (color, s) => `${C[color]}${s}${C.reset}`;
 const KIND_LABEL = { mcp: "MCP server", hook: "Hook/setting", setting: "Hook/setting", skill: "Skill", reference: "Reference" };
+const KNOWN_COMMANDS = new Set(["doctor", "domains", "show", "search", "stats", "signals", "export", "apply"]);
 
 async function main() {
   const args = argv.slice(2);
@@ -39,6 +40,11 @@ async function main() {
   if (positional[0] === "signals") return runSignals(flags);
   if (positional[0] === "export") return runExport(args, flags);
   if (positional[0] === "apply") return runApplyManifest(args, flags);
+
+  if (positional[0] && !KNOWN_COMMANDS.has(positional[0])) {
+    console.error(c("yellow", `Unknown command: ${positional[0]}`) + c("dim", "  (run --help for usage)"));
+    exit(1);
+  }
 
   const dryRun = flags.has("--dry-run") || flags.has("-d");
   const takeAll = flags.has("--all") || flags.has("-a") || flags.has("--yes") || flags.has("-y");
@@ -231,7 +237,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout --json")}       Print recommendations as JSON (no write)`);
   console.log(`  ${c("cyan", "npx claude-loadout --all")}      Apply top recommendations without prompting`);
   console.log(`  ${c("cyan", "npx claude-loadout --all --json")} Apply top recommendations; print receipts as JSON`);
-  console.log(`  ${c("cyan", "npx claude-loadout --discover")}  Also show unverified community skills`);
+  console.log(`  ${c("cyan", "npx claude-loadout --discover")}  Also show unverified community skills (recommend only; never auto-applied)`);
   console.log(`  ${c("cyan", "npx claude-loadout --target cursor")}  Write MCP config for Cursor`);
   console.log(`  ${c("cyan", "npx claude-loadout --list-targets")}   List supported agents\n`);
   console.log(c("bold", "What auto-applies vs what you run:\n"));

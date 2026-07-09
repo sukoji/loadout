@@ -2646,11 +2646,13 @@
     "tier": "official",
     "type": "skill",
     "name": "langfuse-observability",
-    "description": "The Langfuse x Claude Code Observability Plugin",
+    "description": "Langfuse observability plugin for Claude Code — captures and exports traces, spans, and session telemetry from Claude Code to Langfuse for LLM monitoring, debugging, and evaluation",
     "domains": [
       "devops"
     ],
-    "signals": [],
+    "signals": [
+      "expo"
+    ],
     "official": true,
     "category": "monitoring",
     "homepage": "https://langfuse.com/integrations/other/claude-code",
@@ -5256,11 +5258,11 @@
     }
   },
   {
-    "id": "wordpress.com",
+    "id": "build-with-wordpress",
     "tier": "official",
     "type": "skill",
-    "name": "wordpress.com",
-    "description": "Uses Claude Code to create and edit WordPress sites with WordPress Studio before deploying changes to your WordPress.com site.",
+    "name": "build-with-wordpress",
+    "description": "Craft production-grade WordPress sites and applications. Everything from themes and plugins to commerce and deployment.",
     "domains": [
       "general"
     ],
@@ -5273,9 +5275,9 @@
     "install": {
       "type": "plugin",
       "marketplace": "claude-plugins-official",
-      "plugin": "wordpress.com",
+      "plugin": "build-with-wordpress",
       "commands": [
-        "/plugin install wordpress.com@claude-plugins-official"
+        "/plugin install build-with-wordpress@claude-plugins-official"
       ]
     }
   },

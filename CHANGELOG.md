@@ -6,6 +6,25 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.4.0] — 2026-07-09
+Audit-hardening pass (5-dimension review: robustness, completeness, currency, security, UX).
+### Fixed
+- **Ingest self-cannibalization** — `ingest-official.mjs` deduped against the full catalog (which already
+  included the previous `ecosystem.json`), so re-running collapsed the official tier to ~1 entry. Now it
+  dedupes against Tier 1 (curated) only. This bug would have zeroed out `ecosystem.json` on any CI refresh.
+- **Ingest Windows crash** — switched the fetch from Node/undici `fetch` (libuv teardown crash on Windows)
+  to `node:https` with a real timeout and HTML-error-page rejection.
+- **Version drift** — synced `plugin.json` / `marketplace.json` (were 0.3.46) with `package.json` at 0.4.0.
+- **Unknown-command fail-fast** — `loadout <typo>` now errors instead of silently running the recommend flow.
+- **Idempotent apply** — `deepMerge` no longer duplicates hook entries when the same loadout is re-applied.
+- Docs: corrected curated count (37/35 → 38) in the READMEs.
+### Added
+- `SECURITY.md` documenting the three-tier trust model and what auto-applies.
+- `.github/workflows/refresh-ecosystem.yml` — weekly auto-refresh of the official-marketplace snapshot.
+- Catalog `id` charset validation + a TOML section-header guard (defense-in-depth against header injection).
+### Security
+- Clarified that curated hooks are trusted shell commands by design; hardened id handling and ingest fetch.
+
 ## [0.3.87] — 2026-07-05
 ### Added
 - **Regression tests** — React Native scan, MLflow-only research, Unity/Unreal no-playwright, Symfony guard, and VitePress docs fixtures.

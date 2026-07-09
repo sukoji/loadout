@@ -67,12 +67,15 @@ function writeJson(path, doc) {
   writeFileSync(path, JSON.stringify(doc, null, 2) + "\n");
 }
 
-// Deep-merge source into target. Arrays are concatenated (so hook event arrays append,
-// not replace). Objects merge recursively. Scalars from source win.
+// Deep-merge source into target. Arrays append (so hook event arrays accumulate, not replace)
+// but skip entries already present, so re-applying the same loadout stays idempotent.
+// Objects merge recursively. Scalars from source win.
 function deepMerge(target, source) {
   for (const [key, val] of Object.entries(source)) {
     if (Array.isArray(val)) {
-      target[key] = Array.isArray(target[key]) ? [...target[key], ...val] : [...val];
+      const existing = Array.isArray(target[key]) ? target[key] : [];
+      const seen = new Set(existing.map((x) => JSON.stringify(x)));
+      target[key] = [...existing, ...val.filter((x) => !seen.has(JSON.stringify(x)))];
     } else if (val && typeof val === "object") {
       target[key] = target[key] && typeof target[key] === "object" ? target[key] : {};
       deepMerge(target[key], val);

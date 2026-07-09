@@ -96,6 +96,10 @@ function applyToml(path, mcpItems, isHttp, receipt) {
   let text = existsSync(path) ? readFileSync(path, "utf8") : "";
   const blocks = [];
   for (const e of mcpItems) {
+    if (!/^[A-Za-z0-9._-]+$/.test(e.id)) {
+      receipt.skipped.push(`${e.id} (unsafe id for a TOML section header — skipped)`);
+      continue;
+    }
     if (isHttp(e)) {
       receipt.skipped.push(`${e.id} (HTTP MCP — Codex needs experimental streamable_http; add manually)`);
       continue;

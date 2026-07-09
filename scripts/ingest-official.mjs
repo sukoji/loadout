@@ -8,7 +8,25 @@
 import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
+import { get } from "node:https";
 import { loadCatalog } from "../cli/lib/catalog.mjs";
+
+// Fetch JSON over node:https (avoids the Node/undici fetch libuv teardown crash on Windows) with a timeout.
+function fetchJson(url) {
+  return new Promise((resolve, reject) => {
+    const req = get(url, { timeout: 15000 }, (res) => {
+      if (res.statusCode !== 200) { res.resume(); return reject(new Error(`fetch failed: ${res.statusCode}`)); }
+      // raw.githubusercontent serves JSON as text/plain; only reject an obvious HTML error page. JSON.parse is the real gate.
+      if (/html/i.test(res.headers["content-type"] || "")) { res.resume(); return reject(new Error(`unexpected content-type: ${res.headers["content-type"]}`)); }
+      let data = "";
+      res.setEncoding("utf8");
+      res.on("data", (chunk) => (data += chunk));
+      res.on("end", () => { try { resolve(JSON.parse(data)); } catch (e) { reject(e); } });
+    });
+    req.on("timeout", () => req.destroy(new Error("fetch timed out after 15s")));
+    req.on("error", reject);
+  });
+}
 
 const SRC = "https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/.claude-plugin/marketplace.json";
 const here = dirname(fileURLToPath(import.meta.url));
@@ -56,12 +74,12 @@ function deriveSignals(text) {
   return [...out];
 }
 
-const res = await fetch(SRC);
-if (!res.ok) throw new Error(`fetch failed: ${res.status}`);
-const mp = await res.json();
+const mp = await fetchJson(SRC);
 
-const { byId } = loadCatalog();
-const curated = new Set(byId.keys());
+// Dedupe against Tier 1 (curated) only — NOT loadCatalog().byId, which already includes the previous
+// ecosystem.json and would make re-ingestion cannibalize its own output down to zero.
+const { mcp, skills, hooks } = loadCatalog();
+const curated = new Set([...mcp, ...skills, ...hooks].map((i) => i.id));
 
 const seen = new Set();
 const entries = [];
