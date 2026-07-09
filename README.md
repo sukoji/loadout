@@ -4,13 +4,14 @@
 
 <br/>
 
-### Loadout looks at your project and sets up Claude Code for it — automatically.
+### Loadout looks at your project and sets up Claude Code for it.
 
-It figures out which **MCP servers, hooks, and skills** actually fit your stack, shows you a short
-ranked list with a reason for each, and **installs the ones you pick** — writing the config for you.
-One command instead of reading a 500-item "awesome" list and copy-pasting install commands by hand.
+It works out which MCP servers, hooks, and skills fit your stack, shows you a short ranked list with a
+reason for each, and installs the ones you pick, writing the config for you. So you don't have to read a
+500-item "awesome" list and copy-paste install commands by hand.
 
-**Works across agents:** full setup for Claude Code, and MCP servers for **Codex, Cursor, opencode, Gemini CLI & OpenClaw** too.
+It also works with other agents: full setup for Claude Code, plus MCP servers for Codex, Cursor, opencode,
+Gemini CLI and OpenClaw.
 
 [English](README.md) · [한국어](README.ko.md)
 
@@ -23,18 +24,16 @@ One command instead of reading a 500-item "awesome" list and copy-pasting instal
 
 ---
 
-> **In one line:** point it at a repo → it recommends the right Claude Code extensions for that repo → it applies them.
+> **TL;DR:** point it at a repo, it recommends the Claude Code extensions that fit that repo, and applies the ones you pick.
 
 ## The problem
 
-The Claude Code ecosystem has thousands of skills, MCP servers, hooks, and plugins — spread across dozens of
-"awesome" lists. But every one of them is a **discovery list**: you read hundreds of entries and guess which
-apply to you. As the community put it, *"the trap with awesome-lists is treating them as install lists — they're
-discovery lists."*
+The Claude Code ecosystem has thousands of skills, MCP servers, hooks, and plugins, spread across dozens of
+"awesome" lists. Those lists are good for discovery, but that's all they are: you read hundreds of entries,
+guess which ones apply to you, and copy-paste install commands one by one.
 
-Nobody asked the obvious question: **given *my* project, what should I actually install — and can you just do it for me?**
-
-That's Loadout.
+Loadout does the other half. Point it at a project and it tells you what to install for *that* project, then
+sets it up for you.
 
 ## What it does
 
@@ -69,10 +68,10 @@ Install which? numbers e.g. 1,3,4  ·  'a' = all  ·  Enter = skip: 1,2,3
   .claude/settings.json + format-js-on-edit
 ```
 
-It **scans** your project (languages, frameworks, CI, existing config), **matches** it to one or more domains,
-**ranks** a short loadout with a one-line *why* for each item, lets you **pick**, and **writes** the config
-for you — merging into `.mcp.json` and `.claude/settings.json`, never clobbering, and flagging any tokens you
-still need to fill in.
+It scans your project (languages, frameworks, CI, existing config), matches it to one or more domains, and
+ranks a short loadout with a one-line reason for each item. You pick what you want and it writes the config,
+merging into `.mcp.json` and `.claude/settings.json`, never overwriting what's already there, and flagging any
+tokens you still need to fill in.
 
 ## Two ways to use it
 
