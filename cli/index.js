@@ -73,14 +73,17 @@ async function main() {
   const limitRaw = parseFlagValue(args, "--limit");
   const limit = limitRaw ? Math.max(1, parseInt(limitRaw, 10) || 8) : 8;
   const signals = scanProject(root);
-  let { domains, items, community, installed } = recommend(catalog, signals, root, { discover });
+  let { domains, items, community, tokenSavers, installed } = recommend(catalog, signals, root, { discover });
   if (mcpOnly) {
     items = items.filter((e) => e.item.type === "mcp");
     community = [];
+    tokenSavers = [];
   }
+  const askTokenSaver = flags.has("--token-saver");
+  const previewOpts = { tokenSavers };
 
   if (asJson && !takeAll) {
-    console.log(JSON.stringify(buildRecommendPreview(signals, domains, items, community, installed), null, 2));
+    console.log(JSON.stringify(buildRecommendPreview(signals, domains, items, community, installed, previewOpts), null, 2));
     return;
   }
 
@@ -95,28 +98,30 @@ async function main() {
     if (mcpOnly) console.log(c("dim", "Non-Claude target → showing MCP servers only (skills/hooks are Claude Code-native)."));
     console.log("");
 
-    if (!items.length) {
+    if (!items.length && !tokenSavers.length) {
       console.log(c("green", "You're already well-equipped — nothing new to recommend. 🎉\n"));
       return;
     }
 
-    const top = items.slice(0, limit);
-    console.log(c("bold", "Recommended loadout:\n"));
-    top.forEach((entry, i) => {
-      const { item, reason } = entry;
-      const n = c("cyan", String(i + 1).padStart(2));
-      const tierTag = item.tier === "official" ? " · official marketplace" : "";
-      const kind = c("dim", `[${KIND_LABEL[item.type]}${tierTag}]`);
-      const needs = authLabel(item);
-      console.log(`${n}  ${c("bold", item.name)} ${kind}${needs}`);
-      console.log(`     ${item.description}`);
-      console.log(c("dim", `     why: ${reason}`));
-      if (item.homepage) console.log(c("dim", `     ↳ ${item.homepage}`));
-      console.log("");
-    });
+    if (items.length) {
+      const top = items.slice(0, limit);
+      console.log(c("bold", "Recommended loadout:\n"));
+      top.forEach((entry, i) => {
+        const { item, reason } = entry;
+        const n = c("cyan", String(i + 1).padStart(2));
+        const tierTag = item.tier === "official" ? " · official marketplace" : "";
+        const kind = c("dim", `[${KIND_LABEL[item.type]}${tierTag}]`);
+        const needs = authLabel(item);
+        console.log(`${n}  ${c("bold", item.name)} ${kind}${needs}`);
+        console.log(`     ${item.description}`);
+        console.log(c("dim", `     why: ${reason}`));
+        if (item.homepage) console.log(c("dim", `     ↳ ${item.homepage}`));
+        console.log("");
+      });
 
-    if (items.length > top.length) {
-      console.log(c("dim", `Showing top ${top.length} of ${items.length} matches. See all: npx claude-loadout --limit ${items.length}\n`));
+      if (items.length > top.length) {
+        console.log(c("dim", `Showing top ${top.length} of ${items.length} matches. See all: npx claude-loadout --limit ${items.length}\n`));
+      }
     }
 
     if (community.length) {
@@ -127,17 +132,28 @@ async function main() {
         console.log(c("dim", `      ↳ ${item.homepage}`) + "\n");
       });
     } else if (!discover && !mcpOnly) {
-      console.log(c("dim", "Tip: add --discover to also surface community skills (e.g. caveman token-saver).\n"));
+      console.log(c("dim", "Tip: add --discover to surface more unverified community skills.\n"));
+    }
+
+    if (tokenSavers.length) {
+      printTokenSaverSection(tokenSavers);
     }
   }
 
-  if (!items.length) {
+  if (!items.length && !tokenSavers.length) {
     if (asJson && takeAll) console.log(JSON.stringify({ applied: [], targets, receipts: [] }, null, 2));
     return;
   }
 
   if (dryRun) {
-    if (!asJson) console.log(c("dim", "Dry run — nothing written. Re-run without --dry-run to apply.\n"));
+    if (!asJson) {
+      console.log(c("dim", "Dry run — nothing written. Re-run without --dry-run to apply."));
+      if (tokenSavers.length && !mcpOnly) {
+        console.log(c("dim", "Token-saver skills are asked in a separate step (not part of --all).\n"));
+      } else {
+        console.log("");
+      }
+    }
     return;
   }
 
@@ -149,24 +165,38 @@ async function main() {
     return;
   }
 
-  let picks;
+  const top = items.slice(0, limit);
+  let picks = [];
+  let tokenPicks = [];
+  let rl;
+
   if (takeAll) {
-    picks = items.slice(0, limit);
-  } else {
-    const rl = createInterface({ input: stdin, output: stdout });
-    const answer = await rl.question(
-      c("bold", "Install which? ") + c("dim", "numbers e.g. 1,3,4  ·  'a' = all  ·  Enter = skip: ")
-    );
+    picks = top;
+    if (askTokenSaver && tokenSavers.length) tokenPicks = tokenSavers;
+  } else if (stdin.isTTY) {
+    rl = createInterface({ input: stdin, output: stdout });
+    if (top.length) {
+      const answer = await rl.question(
+        c("bold", "Install which? ") + c("dim", "numbers e.g. 1,3,4  ·  'a' = all  ·  Enter = skip: ")
+      );
+      picks = parseSelection(answer, top);
+    }
+    if (tokenSavers.length && !mcpOnly) {
+      const tsAnswer = await rl.question(
+        c("bold", "Token-saver skills? ") +
+          c("dim", "separate from stack loadout · 1 = yes  ·  Enter = skip: ")
+      );
+      tokenPicks = parseTokenSaverSelection(tsAnswer, tokenSavers);
+    }
     rl.close();
-    picks = parseSelection(answer, items.slice(0, limit));
   }
 
-  if (!picks.length) {
+  if (!picks.length && !tokenPicks.length) {
     if (!asJson) console.log(c("dim", "\nNothing selected. Bye!\n"));
     return;
   }
 
-  const picked = picks.map((p) => p.item);
+  const picked = [...picks, ...tokenPicks].map((p) => p.item);
   const receipts = [];
   for (const t of targets) {
     if (t === "claude") {
@@ -255,7 +285,8 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout --all")}      Apply top recommendations without prompting`);
   console.log(`  ${c("cyan", "npx claude-loadout --all --install")}  …and actually install plugins (runs claude plugin install)`);
   console.log(`  ${c("cyan", "npx claude-loadout --all --json")} Apply top recommendations; print receipts as JSON`);
-  console.log(`  ${c("cyan", "npx claude-loadout --discover")}  Also show unverified community skills (recommend only; never auto-applied)`);
+  console.log(`  ${c("cyan", "npx claude-loadout --discover")}  Also show unverified community skills (not token-savers)`);
+  console.log(`  ${c("cyan", "npx claude-loadout --all --token-saver")}  Apply loadout + opt into token-saver skills`);
   console.log(`  ${c("cyan", "npx claude-loadout --target cursor")}  Write MCP config for Cursor`);
   console.log(`  ${c("cyan", "npx claude-loadout --list-targets")}   List supported agents\n`);
   console.log(c("bold", "What auto-applies vs what you run:\n"));
@@ -819,6 +850,27 @@ function parseSelection(answer, top) {
     a.split(/[\s,]+/).map((t) => parseInt(t, 10) - 1).filter((n) => n >= 0 && n < top.length)
   );
   return [...idx].map((i) => top[i]);
+}
+
+function parseTokenSaverSelection(answer, options) {
+  const a = answer.trim().toLowerCase();
+  if (!a || a === "n" || a === "no") return [];
+  if (a === "a" || a === "all" || a === "y" || a === "yes" || a === "1") return options;
+  return parseSelection(answer, options);
+}
+
+function printTokenSaverSection(tokenSavers) {
+  console.log(
+    c("yellow", "Token saver") +
+      c("dim", "  (optional · not stack-specific — asked separately, never in --all):\n"),
+  );
+  tokenSavers.forEach((entry, i) => {
+    const { item } = entry;
+    console.log(`    ${c("cyan", String(i + 1))}  ${c("bold", item.name)} ${c("dim", "[community · unverified]")}`);
+    console.log(`        ${item.description}`);
+    if (item.homepage) console.log(c("dim", `        ↳ ${item.homepage}`));
+    console.log("");
+  });
 }
 
 function authLabel(item) {

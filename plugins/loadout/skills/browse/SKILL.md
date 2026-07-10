@@ -17,6 +17,7 @@ Read-only. Show what's in the catalog for a chosen domain; do not modify any fil
    kind (MCP servers / Hooks & settings / Skills), each as **name — description**, with the `homepage`
    link and any `auth`/`note` caveat.
 4. End by pointing the user to `/loadout:recommend` if they want these profiled against their actual
-   repo and applied automatically.
+   repo and applied automatically. Mention that **token-saver** skills (e.g. caveman) are not in browse —
+   `/loadout:recommend` asks about those separately after the stack loadout.
 
 Keep it scannable. This is the "read the shelf" mode; `recommend` is the "gear me up" mode.

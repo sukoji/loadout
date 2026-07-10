@@ -28,6 +28,16 @@ function resolveItemId(id, byId) {
 // Score domains against project signals and build a ranked, de-duplicated loadout.
 // Tier 1 (curated) recs come from domain loadouts; Tier 2 (official) enter by signal match;
 // Tier 3 (community) surface only when opts.discover is set, and are never auto-applied.
+// optIn === "token-saver" items are excluded — surfaced separately via tokenSavers (explicit user choice).
+export function listTokenSavers(all, installed = new Set()) {
+  return all
+    .filter((i) => i.optIn === "token-saver" && !installed.has(i.id))
+    .map((item) => ({
+      item,
+      reason: "optional · reduces output tokens · not stack-specific — your preference",
+    }));
+}
+
 export function recommend({ domains, byId, all = [] }, signals, root = process.cwd(), opts = {}) {
   const installed = detectInstalled(root);
 
@@ -102,14 +112,20 @@ export function recommend({ domains, byId, all = [] }, signals, root = process.c
 
   const community = opts.discover
     ? all
-        .filter((i) => i.tier === "community" && !installed.has(i.id))
+        .filter(
+          (i) =>
+            i.tier === "community" && i.optIn !== "token-saver" && !installed.has(i.id),
+        )
         .map((item) => ({ item, reason: "community · unverified — review before installing" }))
     : [];
+
+  const tokenSavers = listTokenSavers(all, installed);
 
   return {
     domains: chosen.map((c) => c.domain),
     items: finalized,
     community,
+    tokenSavers,
     installed: [...installed],
   };
 }

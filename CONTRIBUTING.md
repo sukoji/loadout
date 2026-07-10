@@ -23,6 +23,7 @@ skill and the `npx claude-loadout` CLI both read it):
 | `domains` | ✅ | array of domain ids from `domains.json` |
 | `signals` | ✅ | lowercase tokens (dep names, filenames, extensions) that boost relevance; use `"always"` for broadly-useful items |
 | `homepage` | ▲ | source/docs URL — required for anything third-party so people can verify it |
+| `optIn` | ▲ | community only: e.g. `"token-saver"` — surfaced in a separate user opt-in step, never in domain loadout or `--discover` |
 
 ### Type-specific fields
 

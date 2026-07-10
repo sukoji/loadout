@@ -18,12 +18,14 @@ export function buildManifest(catalog, root = process.cwd(), opts = {}) {
 
 export function buildRecommendPreview(signals, domains, items, community, installed, opts = {}) {
   const limit = opts.limit ?? 12;
+  const tokenSavers = opts.tokenSavers || [];
   return {
     signals: [...signals].filter((s) => s !== "always").sort(),
     domains: domains.map((d) => ({ id: d.id, title: d.title })),
     installed: [...installed],
     items: items.slice(0, limit).map(({ item, reason }) => serializeItem(item, reason)),
     community: community.map(({ item }) => serializeItem(item)),
+    tokenSavers: tokenSavers.map(({ item }) => serializeItem(item)),
   };
 }
 

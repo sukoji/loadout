@@ -1,6 +1,6 @@
 # LOOP — Loadout improvement until claims are earned
 
-**Status: ACTIVE** — Phase 1 stop criteria met at `v0.3.6`. Phase 2 shipped browse/CI/profile/automation UX through `v0.3.87` (RN/MLflow/game-dev fixtures). Remaining: optional `NPM_TOKEN` secret and runtime-verified research catalog growth.
+**Status: STABILIZE** — npm `0.5.1` live. Token-saver skills (caveman) opt-in separately from domain loadout.
 
 **Cadence goal:** 견고함 · 완성도 · 최신성 · 보안성 · UX — users should set up agents without friction,
 and marketing should never outrun what the tool actually does.
@@ -29,7 +29,8 @@ run `npm test`, release, update this log.
 
 | Version | Date | Focus |
 | :-- | :-- | :-- |
-| 0.3.87 | 2026-07-05 | React Native + MLflow-only + Unity/Unreal + Symfony/VitePress fixtures |
+| 0.5.1 | 2026-07-10 | Token-saver opt-in (caveman separate from domain loadout / --discover) |
+| 0.5.0 | 2026-07-09 | `--install` runs plugin install via Claude CLI |
 | 0.3.86 | 2026-07-05 | Vue/Fastify/W&B scan + Expo/Flutter mobile + game-dev no-playwright fixtures |
 | 0.3.85 | 2026-07-05 | xlsx docs + docker-compose/ansible-only + latex+bib + express+postgres scan fixtures |
 | 0.3.84 | 2026-07-05 | workspaces monorepo + dockerfile/ansible-only + docx + postgres backend fixtures |

@@ -30,7 +30,8 @@ plugin installed with the `/plugin install <name>@claude-plugins-official` comma
 
 Tier meaning: **curated** = auto-apply safe; **official** = trusted, install via `/plugin`; **community**
 (Tier 3) = UNVERIFIED — only surface if the user asks to "discover"/see more, label it clearly, and never
-auto-apply it.
+auto-apply it. Items with `"optIn": "token-saver"` are **never** in discover or the domain loadout — offer
+them only in the separate token-saver step (Step 3).
 
 ## Step 1 — Profile the project
 
@@ -80,6 +81,19 @@ Group by kind (MCP / Hooks & settings / Skills). Then call `AskUserQuestion` wit
 Put the strongest 2–3 picks first and mark the top one "(Recommended)". Always spell out auth/token needs
 in the option itself (e.g. "needs a Figma token", "needs a Stripe secret key", "OAuth on first use") so no
 one installs something and then hits a wall.
+
+### Token-saver opt-in (separate from the stack loadout)
+
+After the main loadout question, **always** offer token-saver skills in a **second**, separate
+`AskUserQuestion` — never mix them into the domain loadout table or the first multi-select.
+
+1. Read `community.json` for items with `"optIn": "token-saver"` (currently caveman).
+2. These are **not** stack recommendations — they change how verbose the agent is, not what tools the
+   project needs. Label them clearly: optional, unverified community, reduces output tokens.
+3. Use a single-select or yes/no question, e.g. "Add a token-saver skill (terser replies)?" with caveman
+   as the option. Default is **no** — user must opt in.
+4. Never auto-apply token-savers with the main loadout; never include them when the user says "apply all"
+   unless they explicitly pick the token-saver step.
 
 If a project signal is ambiguous (e.g. no clear framework), ask one short clarifying question about the
 project's domain before recommending — don't guess wildly.

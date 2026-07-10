@@ -6,6 +6,13 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.5.1] — 2026-07-10
+### Changed
+- **Token-saver opt-in** — caveman and future `optIn: "token-saver"` community skills are no longer mixed
+  into domain loadouts or `--discover`. CLI asks in a **separate** interactive step after the stack loadout;
+  `--all` never includes them unless `--token-saver` is passed. `/loadout:recommend` skill documents the
+  same two-step AskUserQuestion flow.
+
 ## [0.5.0] — 2026-07-09
 ### Added
 - **`--install` — actually install the plugins**, not just print the commands. With `--install`, Loadout
