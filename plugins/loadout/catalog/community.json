@@ -6,7 +6,7 @@
     "type": "skill",
     "name": "Caveman (token saver)",
     "description": "Community skill that makes the agent answer in terse 'caveman' style, cutting ~65–75% of output tokens while keeping technical accuracy. Levels: /caveman lite | full | ultra, plus Caveman Compress for CLAUDE.md.",
-    "domains": [],
+    "domains": ["general"],
     "signals": [],
     "optIn": "token-saver",
     "official": false,

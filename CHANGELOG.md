@@ -6,6 +6,10 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.5.2] — 2026-07-10
+### Fixed
+- **Catalog validate** — restore `domains: ["general"]` on caveman (opt-in behavior unchanged; 0 warnings).
+
 ## [0.5.1] — 2026-07-10
 ### Changed
 - **Token-saver opt-in** — caveman and future `optIn: "token-saver"` community skills are no longer mixed
