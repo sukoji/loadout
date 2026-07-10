@@ -6,6 +6,19 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.4.1] — 2026-07-09
+### Fixed
+- **Regression from 0.4.0** — the unknown-command fail-fast treated flag *values* as commands, breaking
+  `--target cursor`, `--limit N`, and similar. Now only the first non-flag argument is a subcommand.
+### Added
+- `--limit N` flag and a "Showing top N of M — see all: `--limit M`" hint (the recommend list was silently
+  capped at 8, hiding lower-ranked matches).
+- Tier 3 community: **Karpathy behavioral rules** (`multica-ai/andrej-karpathy-skills`, ~190k★) — the most-
+  shared behavior skill of 2026, surfaced via `--discover`. (Verified real; the viral-tips gap audit found
+  most other "tips" are either already covered, unverifiable, or non-installable usage patterns out of scope.)
+### Changed
+- Refreshed the caveman star count (~70k).
+
 ## [0.4.0] — 2026-07-09
 Audit-hardening pass (5-dimension review: robustness, completeness, currency, security, UX).
 ### Fixed

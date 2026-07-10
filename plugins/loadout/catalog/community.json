@@ -12,7 +12,24 @@
     "homepage": "https://github.com/JuliusBrussee/caveman",
     "install": {
       "type": "manual",
-      "note": "Community (~14k★), UNVERIFIED by Loadout — review the repo before installing. Works with Claude Code and 40+ other agents.",
+      "note": "Community (~70k★), UNVERIFIED by Loadout — review the repo before installing. Works with Claude Code and 40+ other agents.",
+      "commands": []
+    }
+  },
+  {
+    "id": "karpathy-rules",
+    "tier": "community",
+    "verified": false,
+    "type": "skill",
+    "name": "Karpathy behavioral rules",
+    "description": "A CLAUDE.md skill encoding four rules from Andrej Karpathy's LLM-coding observations — no silent assumptions, no over-engineering, no orthogonal changes, explicit verification. One of the most-shared behavior skills of 2026.",
+    "domains": ["general"],
+    "signals": ["always"],
+    "official": false,
+    "homepage": "https://github.com/multica-ai/andrej-karpathy-skills",
+    "install": {
+      "type": "manual",
+      "note": "Community (~190k★), UNVERIFIED by Loadout — review before installing. Install as a plugin (/plugin marketplace add multica-ai/andrej-karpathy-skills) or drop its CLAUDE.md into your project.",
       "commands": []
     }
   },

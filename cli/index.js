@@ -41,8 +41,11 @@ async function main() {
   if (positional[0] === "export") return runExport(args, flags);
   if (positional[0] === "apply") return runApplyManifest(args, flags);
 
-  if (positional[0] && !KNOWN_COMMANDS.has(positional[0])) {
-    console.error(c("yellow", `Unknown command: ${positional[0]}`) + c("dim", "  (run --help for usage)"));
+  // The subcommand, if any, is the FIRST arg and only when it isn't a flag. Later bare tokens
+  // (e.g. the value after --target/--limit) are flag values, not commands.
+  const command = args[0] && !args[0].startsWith("-") ? args[0] : null;
+  if (command && !KNOWN_COMMANDS.has(command)) {
+    console.error(c("yellow", `Unknown command: ${command}`) + c("dim", "  (run --help for usage)"));
     exit(1);
   }
 
@@ -65,6 +68,8 @@ async function main() {
   const asJson = flags.has("--json");
 
   const discover = flags.has("--discover");
+  const limitRaw = parseFlagValue(args, "--limit");
+  const limit = limitRaw ? Math.max(1, parseInt(limitRaw, 10) || 8) : 8;
   const signals = scanProject(root);
   let { domains, items, community, installed } = recommend(catalog, signals, root, { discover });
   if (mcpOnly) {
@@ -93,7 +98,7 @@ async function main() {
       return;
     }
 
-    const top = items.slice(0, 8);
+    const top = items.slice(0, limit);
     console.log(c("bold", "Recommended loadout:\n"));
     top.forEach((entry, i) => {
       const { item, reason } = entry;
@@ -107,6 +112,10 @@ async function main() {
       if (item.homepage) console.log(c("dim", `     ↳ ${item.homepage}`));
       console.log("");
     });
+
+    if (items.length > top.length) {
+      console.log(c("dim", `Showing top ${top.length} of ${items.length} matches. See all: npx claude-loadout --limit ${items.length}\n`));
+    }
 
     if (community.length) {
       console.log(c("yellow", "Discover — community skills") + c("dim", "  (unverified · review before installing):\n"));
@@ -140,14 +149,14 @@ async function main() {
 
   let picks;
   if (takeAll) {
-    picks = items.slice(0, 8);
+    picks = items.slice(0, limit);
   } else {
     const rl = createInterface({ input: stdin, output: stdout });
     const answer = await rl.question(
       c("bold", "Install which? ") + c("dim", "numbers e.g. 1,3,4  ·  'a' = all  ·  Enter = skip: ")
     );
     rl.close();
-    picks = parseSelection(answer, items.slice(0, 8));
+    picks = parseSelection(answer, items.slice(0, limit));
   }
 
   if (!picks.length) {
@@ -234,6 +243,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --dry-run --json")}  Preview apply as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout apply -f .loadout.json --json")}  Apply and print receipts as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout --dry-run")}  Show recommendations only`);
+  console.log(`  ${c("cyan", "npx claude-loadout --limit 20")}  Show more than the default top 8`);
   console.log(`  ${c("cyan", "npx claude-loadout --json")}       Print recommendations as JSON (no write)`);
   console.log(`  ${c("cyan", "npx claude-loadout --all")}      Apply top recommendations without prompting`);
   console.log(`  ${c("cyan", "npx claude-loadout --all --json")} Apply top recommendations; print receipts as JSON`);
