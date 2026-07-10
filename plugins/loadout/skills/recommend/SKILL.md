@@ -99,8 +99,9 @@ Merge; never overwrite an existing file wholesale. Prefer project scope unless t
   - `install.type: "builtin"` → nothing to install; tell the user the command to run (e.g. `/init`,
     `/code-review`) and what it does.
   - `install.type: "plugin"` → show the `install.commands` (e.g. `/plugin marketplace add …` then
-    `/plugin install …`). These are user-run slash commands — present them for the user to run; do not
-    fake them.
+    `/plugin install …`) for the user to run. **If the user asks you to actually install them**, run the CLI
+    form via Bash instead — `claude plugin marketplace add <repo>` then `claude plugin install <name>@<mp>` —
+    but only for curated/official items, **never for community (unverified) ones**.
   - `install.type: "manual"` / `reference` → give the `homepage` link.
 
 After applying, print a short receipt: what was written to which file, what tokens still need filling,

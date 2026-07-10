@@ -6,6 +6,15 @@ All notable changes to Loadout are documented here. Format loosely follows
 ## [Unreleased]
 - See [LOOP.md](LOOP.md).
 
+## [0.5.0] — 2026-07-09
+### Added
+- **`--install` — actually install the plugins**, not just print the commands. With `--install`, Loadout
+  runs `claude plugin marketplace add` / `claude plugin install` for the selected plugin-type skills via the
+  Claude Code CLI (`cli/lib/install.mjs`). Safeguards: opt-in only; Claude target only; **community/unverified
+  items are never auto-installed**; shell metacharacters in a command are rejected; if the `claude` CLI isn't
+  found it falls back to printing the commands. (MCP servers + hooks were already auto-written; this closes the
+  loop for skills/plugins.)
+
 ## [0.4.1] — 2026-07-09
 ### Fixed
 - **Regression from 0.4.0** — the unknown-command fail-fast treated flag *values* as commands, breaking

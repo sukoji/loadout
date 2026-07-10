@@ -12,6 +12,7 @@ import { doctor, doctorFix, skillInstallGuide, isAutoApplyType, summarizeDoctor 
 import { buildManifest, writeManifest, applyManifest, applyItems, readManifestIds, buildRecommendPreview, previewManifestApply, previewItemsApply } from "./lib/manifest.mjs";
 import { applyToTarget, listTargets, detectTargets, TARGETS } from "./lib/targets.mjs";
 import { searchCatalog } from "./lib/search.mjs";
+import { installSelected } from "./lib/install.mjs";
 
 const PKG_VERSION = JSON.parse(
   readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "package.json"), "utf8"),
@@ -51,6 +52,7 @@ async function main() {
 
   const dryRun = flags.has("--dry-run") || flags.has("-d");
   const takeAll = flags.has("--all") || flags.has("-a") || flags.has("--yes") || flags.has("-y");
+  const doInstall = flags.has("--install");
 
   if (flags.has("--list-targets")) return printTargets();
 
@@ -171,6 +173,11 @@ async function main() {
       const receipt = apply(picked, root);
       receipts.push({ type: "claude", receipt });
       if (!asJson) printReceipt(receipt);
+      if (doInstall) {
+        const res = installSelected(picked);
+        if (!asJson) printInstallResults(res);
+        receipts.push({ type: "install", ...res });
+      }
     } else {
       const mcp = picked.filter((i) => i.type === "mcp");
       const receipt = applyToTarget(t, mcp, root);
@@ -246,6 +253,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout --limit 20")}  Show more than the default top 8`);
   console.log(`  ${c("cyan", "npx claude-loadout --json")}       Print recommendations as JSON (no write)`);
   console.log(`  ${c("cyan", "npx claude-loadout --all")}      Apply top recommendations without prompting`);
+  console.log(`  ${c("cyan", "npx claude-loadout --all --install")}  …and actually install plugins (runs claude plugin install)`);
   console.log(`  ${c("cyan", "npx claude-loadout --all --json")} Apply top recommendations; print receipts as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout --discover")}  Also show unverified community skills (recommend only; never auto-applied)`);
   console.log(`  ${c("cyan", "npx claude-loadout --target cursor")}  Write MCP config for Cursor`);
@@ -253,7 +261,7 @@ function printHelp() {
   console.log(c("bold", "What auto-applies vs what you run:\n"));
   console.log(`  ${c("green", "Auto-written")}   MCP entries → .mcp.json (or agent-specific MCP file)`);
   console.log(`  ${c("green", "Auto-written")}   Hooks/settings → .claude/settings.json`);
-  console.log(`  ${c("yellow", "You run")}       Plugin skills → /plugin install … in Claude Code`);
+  console.log(`  ${c("yellow", "You run")}       Plugin skills → /plugin install … (or add ${c("cyan", "--install")} to run it for you)`);
   console.log(`  ${c("yellow", "You fill")}       API keys / OAuth when a server needs auth\n`);
   console.log(c("dim", "Docs: https://github.com/sukoji/loadout\n"));
 }
@@ -823,6 +831,23 @@ function authLabel(item) {
 function describeSignals(signals) {
   const interesting = [...signals].filter((s) => s !== "always").slice(0, 8);
   return interesting.length ? interesting.map((s) => c("green", s)).join(", ") : c("dim", "a fresh/empty project");
+}
+
+function printInstallResults(res) {
+  if (!res.ran) {
+    if (res.reason === "claude-cli-missing" && res.plugins.length) {
+      console.log(c("yellow", "\n--install: `claude` CLI not found — run these in Claude Code yourself:"));
+      for (const p of res.plugins) (p.install.commands || []).forEach((cmd) => console.log(`     ${c("green", cmd)}`));
+      console.log("");
+    }
+    return;
+  }
+  console.log(c("bold", "\n🔌 Installed plugins:\n"));
+  for (const r of res.results) {
+    console.log(`  ${r.ok ? c("green", "✓") : c("red", "✗")} ${r.name}`);
+    if (!r.ok && r.log) console.log(c("dim", `      ${r.log.split("\n").slice(-1)[0]}`));
+  }
+  console.log(c("dim", "\nRestart Claude Code (or /reload-plugins) to load them.\n"));
 }
 
 function printReceipt(r) {
