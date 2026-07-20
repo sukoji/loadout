@@ -249,6 +249,30 @@
     }
   },
   {
+    "id": "amd-skills",
+    "tier": "official",
+    "type": "skill",
+    "name": "amd-skills",
+    "description": "AMD's verified Agent Skills in one plugin: route image/audio through local AI on Ryzen AI, serve LLMs on AMD Instinct GPUs with vLLM, and analyze GPU kernel and PyTorch trace performance.",
+    "domains": [
+      "general"
+    ],
+    "signals": [
+      "torch"
+    ],
+    "official": true,
+    "category": "development",
+    "homepage": "https://developer.amd.com/",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "amd-skills",
+      "commands": [
+        "/plugin install amd-skills@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "amplitude",
     "tier": "official",
     "type": "skill",
@@ -1784,6 +1808,28 @@
     }
   },
   {
+    "id": "deepeval",
+    "tier": "official",
+    "type": "skill",
+    "name": "deepeval",
+    "description": "Skills for adding DeepEval evaluations, tracing, datasets, Confident AI reports, and iterative improvement loops to AI applications.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "development",
+    "homepage": "https://github.com/confident-ai/deepeval",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "deepeval",
+      "commands": [
+        "/plugin install deepeval@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "deploy-on-aws",
     "tier": "official",
     "type": "skill",
@@ -2396,7 +2442,7 @@
     "id": "hostinger",
     "tier": "official",
     "type": "skill",
-    "name": "hostinger",
+    "name": "Hostinger",
     "description": "Deploy, manage and monitor Hostinger services — Websites, Domains, Ecommerce, Email Marketing, Subscriptions & Payments, and VPS. Authenticate via browser (OAuth) or API token.",
     "domains": [
       "devops"
@@ -4049,6 +4095,28 @@
     }
   },
   {
+    "id": "receipts",
+    "tier": "official",
+    "type": "skill",
+    "name": "receipts",
+    "description": "Generate a personal Claude Code impact report from your local ~/.claude/projects transcripts, cross-referenced against your local git history — what you shipped, which projects it went to, and each project's share of your usage — for justifying usage to a manager or a self-review. Reads your session transcripts and runs read-only git commands in the projects they mention; mining is local and only a small aggregate summary (counts and project names) is sent to write the report, which is saved to your home directory and published nowhere.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/receipts",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "receipts",
+      "commands": [
+        "/plugin install receipts@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "redis-development",
     "tier": "official",
     "type": "skill",
@@ -4563,31 +4631,6 @@
       "plugin": "session-report",
       "commands": [
         "/plugin install session-report@claude-plugins-official"
-      ]
-    }
-  },
-  {
-    "id": "shopify",
-    "tier": "official",
-    "type": "skill",
-    "name": "shopify",
-    "description": "Shopify developer tools for Claude Code — search Shopify docs, generate and validate GraphQL, Liquid, and UI extension code",
-    "domains": [
-      "general"
-    ],
-    "signals": [
-      "graphql",
-      "shopify"
-    ],
-    "official": true,
-    "category": "development",
-    "homepage": "https://shopify.dev/docs/apps/build/devmcp",
-    "install": {
-      "type": "plugin",
-      "marketplace": "claude-plugins-official",
-      "plugin": "shopify",
-      "commands": [
-        "/plugin install shopify@claude-plugins-official"
       ]
     }
   },
