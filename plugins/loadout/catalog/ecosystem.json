@@ -227,6 +227,34 @@
     }
   },
   {
+    "id": "altimate-code",
+    "tier": "official",
+    "type": "skill",
+    "name": "altimate-code",
+    "description": "Delegates dbt and warehouse work to altimate-code, a specialized CLI agent with 100+ purpose-built data tools (SQL analysis, column-level lineage, dbt build/test/run, warehouse profiling, FinOps, connectivity to Snowflake, BigQuery, Redshift, Databricks, Postgres, MySQL, DuckDB).",
+    "domains": [
+      "backend-api",
+      "data-ml"
+    ],
+    "signals": [
+      "postgres",
+      "mysql",
+      "snowflake",
+      "bigquery"
+    ],
+    "official": true,
+    "category": "database",
+    "homepage": "https://www.altimate.ai",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "altimate-code",
+      "commands": [
+        "/plugin install altimate-code@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "amazon-location-service",
     "tier": "official",
     "type": "skill",
@@ -746,6 +774,31 @@
     }
   },
   {
+    "id": "azure-sql-developer",
+    "tier": "official",
+    "type": "skill",
+    "name": "azure-sql-developer",
+    "description": "Agent skills for Azure SQL Developer, the Azure SQL Database engine running locally in a container. Teaches your agent to run the engine, connect, migrate, scaffold, build RAG, wire CI, and go local-to-cloud, using the real Private Preview image instead of the SQL Server image.",
+    "domains": [
+      "backend-api",
+      "data-ml"
+    ],
+    "signals": [
+      "go.mod"
+    ],
+    "official": true,
+    "category": "database",
+    "homepage": "https://github.com/microsoft/azure-sql-database-container",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "azure-sql-developer",
+      "commands": [
+        "/plugin install azure-sql-developer@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "base44",
     "tier": "official",
     "type": "skill",
@@ -884,6 +937,29 @@
     }
   },
   {
+    "id": "browser-use",
+    "tier": "official",
+    "type": "skill",
+    "name": "browser-use",
+    "description": "Give Claude a real browser — your Chrome or a Browser Use Cloud browser. Use it whenever a task involves a website or web app: browsing, scraping and data extraction, filling forms, testing sites, taking screenshots, automating web workflows.",
+    "domains": [
+      "devops",
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "automation",
+    "homepage": "https://browser-use.com",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "browser-use",
+      "commands": [
+        "/plugin install browser-use@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "buildkite",
     "tier": "official",
     "type": "skill",
@@ -924,6 +1000,28 @@
       "plugin": "canva",
       "commands": [
         "/plugin install canva@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "carbone-skill",
+    "tier": "official",
+    "type": "skill",
+    "name": "carbone-skill",
+    "description": "Official Carbone skill — complete templating language reference covering tags, loops, conditions, formatters, aggregators, and all output formats (DOCX, XLSX, PPTX, ODT, HTML, Markdown, PDF)",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://carbone.io",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "carbone-skill",
+      "commands": [
+        "/plugin install carbone-skill@claude-plugins-official"
       ]
     }
   },
@@ -990,6 +1088,28 @@
       "plugin": "carta-investors",
       "commands": [
         "/plugin install carta-investors@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "catalyst-by-zoho",
+    "tier": "official",
+    "type": "skill",
+    "name": "catalyst-by-zoho",
+    "description": "Official Claude Code plugin for Catalyst by Zoho — full-stack serverless cloud platform. With Skills that covers all services, SDKs, CLI, architecture patterns, pricing, migration guides, and Zoho MCP tool-based resource management.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "development",
+    "homepage": "https://catalyst.zoho.com/",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "catalyst-by-zoho",
+      "commands": [
+        "/plugin install catalyst-by-zoho@claude-plugins-official"
       ]
     }
   },
@@ -1082,6 +1202,28 @@
     }
   },
   {
+    "id": "ckeditor",
+    "tier": "official",
+    "type": "skill",
+    "name": "ckeditor",
+    "description": "Install, configure, and integrate CKEditor 5 (free and premium) in any JavaScript project.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "development",
+    "homepage": "https://ckeditor.com",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "ckeditor",
+      "commands": [
+        "/plugin install ckeditor@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "clangd-lsp",
     "tier": "official",
     "type": "skill",
@@ -1144,6 +1286,28 @@
       "plugin": "claude-md-management",
       "commands": [
         "/plugin install claude-md-management@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "claude-security",
+    "tier": "official",
+    "type": "skill",
+    "name": "claude-security",
+    "description": "Deep vulnerability scanning of your own code, run entirely inside your Claude Code session at a chosen effort tier, with every finding challenged before it is reported and the verification tally computed in code. Turns surviving findings into targeted patches, each verified by a panel of agents, that you apply when you choose.",
+    "domains": [
+      "security"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "security",
+    "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-security",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "claude-security",
+      "commands": [
+        "/plugin install claude-security@claude-plugins-official"
       ]
     }
   },
@@ -1485,6 +1649,31 @@
       "plugin": "convex",
       "commands": [
         "/plugin install convex@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "crowdsec",
+    "tier": "official",
+    "type": "skill",
+    "name": "crowdsec",
+    "description": "Operational skill for installing, configuring, operating, and debugging CrowdSec (cscli, LAPI/CAPI, hub, bouncers, WAF/AppSec) across bare-metal, Docker, and Kubernetes.",
+    "domains": [
+      "security"
+    ],
+    "signals": [
+      "dockerfile",
+      "k8s"
+    ],
+    "official": true,
+    "category": "security",
+    "homepage": "https://www.crowdsec.net",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "crowdsec",
+      "commands": [
+        "/plugin install crowdsec@claude-plugins-official"
       ]
     }
   },
@@ -2259,6 +2448,32 @@
     }
   },
   {
+    "id": "gitkraken",
+    "tier": "official",
+    "type": "skill",
+    "name": "gitkraken",
+    "description": "Gives Claude access to your real Git and project context: commits, branches, pull requests, and issues across every repo you work in. Works with GitHub, GitLab, Azure DevOps, Bitbucket, and Jira.",
+    "domains": [
+      "general"
+    ],
+    "signals": [
+      ".github",
+      "gitlab",
+      "jira"
+    ],
+    "official": true,
+    "category": "development",
+    "homepage": "https://www.gitkraken.com",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "gitkraken",
+      "commands": [
+        "/plugin install gitkraken@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "gitlab",
     "tier": "official",
     "type": "skill",
@@ -2391,6 +2606,29 @@
       "plugin": "greptile",
       "commands": [
         "/plugin install greptile@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "growthbook",
+    "tier": "official",
+    "type": "skill",
+    "name": "growthbook",
+    "description": "A suite of agent skills for the full GrowthBook feature flag and experimentation lifecycle.",
+    "domains": [
+      "frontend",
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "testing",
+    "homepage": "https://growthbook.io",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "growthbook",
+      "commands": [
+        "/plugin install growthbook@claude-plugins-official"
       ]
     }
   },
@@ -3279,6 +3517,50 @@
     }
   },
   {
+    "id": "modern-web-guidance",
+    "tier": "official",
+    "type": "skill",
+    "name": "modern-web-guidance",
+    "description": "Keep your coding agent up to date with the latest web best practices",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "development",
+    "homepage": "https://goo.gle/modern-web-guidance",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "modern-web-guidance",
+      "commands": [
+        "/plugin install modern-web-guidance@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "mlflow",
+    "tier": "official",
+    "type": "skill",
+    "name": "mlflow",
+    "description": "Skills for tracing, evaluating, and improving AI agents with MLflow. Supports the full agent improvement loop: instrument → trace → evaluate → iterate → validate.",
+    "domains": [
+      "devops"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "monitoring",
+    "homepage": "https://mlflow.org/",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "mlflow",
+      "commands": [
+        "/plugin install mlflow@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "monday-crm",
     "tier": "official",
     "type": "skill",
@@ -3366,6 +3648,30 @@
       "plugin": "netsuite-suitecloud",
       "commands": [
         "/plugin install netsuite-suitecloud@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "newrelic",
+    "tier": "official",
+    "type": "skill",
+    "name": "newrelic",
+    "description": "New Relic observability intelligence for Claude Code. Investigate APM performance, analyze cloud costs, debug Kubernetes, write NRQL queries, and respond to alerts — all from your terminal using New Relic telemetry data.",
+    "domains": [
+      "devops"
+    ],
+    "signals": [
+      "k8s"
+    ],
+    "official": true,
+    "category": "monitoring",
+    "homepage": "https://newrelic.com",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "newrelic",
+      "commands": [
+        "/plugin install newrelic@claude-plugins-official"
       ]
     }
   },
@@ -3963,10 +4269,10 @@
     }
   },
   {
-    "id": "qodo-skills",
+    "id": "qodo",
     "tier": "official",
     "type": "skill",
-    "name": "qodo-skills",
+    "name": "Qodo",
     "description": "Qodo Skills provides a curated library of reusable AI agent capabilities that extend Claude's functionality for software development workflows. Each skill is designed to integrate seamlessly into your development process, enabling tasks like code quality checks, automated testing, security scanning, and compliance validation. Skills operate across your entire SDLC—from IDE to CI/CD—ensuring consistent standards and catching issues early.",
     "domains": [
       "general"
@@ -3978,9 +4284,9 @@
     "install": {
       "type": "plugin",
       "marketplace": "claude-plugins-official",
-      "plugin": "qodo-skills",
+      "plugin": "qodo",
       "commands": [
-        "/plugin install qodo-skills@claude-plugins-official"
+        "/plugin install qodo@claude-plugins-official"
       ]
     }
   },
@@ -4099,7 +4405,7 @@
     "tier": "official",
     "type": "skill",
     "name": "receipts",
-    "description": "Generate a personal Claude Code impact report from your local ~/.claude/projects transcripts, cross-referenced against your local git history — what you shipped, which projects it went to, and each project's share of your usage — for justifying usage to a manager or a self-review. Reads your session transcripts and runs read-only git commands in the projects they mention; mining is local and only a small aggregate summary (counts and project names) is sent to write the report, which is saved to your home directory and published nowhere.",
+    "description": "A personal Claude Code impact report for justifying your usage to a manager or a self-review: what you shipped, which projects it went to, and each project's share of your usage. Reads your ~/.claude/projects transcripts and runs read-only git locally; only counts and project names are sent to write it up, and the report stays on your machine.",
     "domains": [
       "general"
     ],
@@ -4819,6 +5125,52 @@
     }
   },
   {
+    "id": "stackhawk-hawkscan",
+    "tier": "official",
+    "type": "skill",
+    "name": "stackhawk-hawkscan",
+    "description": "Configure, run, and interpret HawkScan DAST results inside Claude Code. Generates stackhawk.yml configs, runs scans via CLI or Docker, and transforms security findings into prioritized fix tasks for your coding agent.",
+    "domains": [
+      "security"
+    ],
+    "signals": [
+      "dockerfile"
+    ],
+    "official": true,
+    "category": "security",
+    "homepage": "https://docs.stackhawk.com/ai-security/",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "stackhawk-hawkscan",
+      "commands": [
+        "/plugin install stackhawk-hawkscan@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "stackhawk-api",
+    "tier": "official",
+    "type": "skill",
+    "name": "stackhawk-api",
+    "description": "Query the StackHawk platform API for security posture reporting, findings analysis, and app management. Guides agents through authentication, data retrieval, and result presentation.",
+    "domains": [
+      "security"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "security",
+    "homepage": "https://docs.stackhawk.com/ai-security/",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "stackhawk-api",
+      "commands": [
+        "/plugin install stackhawk-api@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "sumup",
     "tier": "official",
     "type": "skill",
@@ -5019,6 +5371,28 @@
       "plugin": "typescript-lsp",
       "commands": [
         "/plugin install typescript-lsp@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "ui-theme-designer",
+    "tier": "official",
+    "type": "skill",
+    "name": "ui-theme-designer",
+    "description": "Plugin for coding agents working with UI theme designer. Bundles two skills: how-to and conceptual answers about UI theme designer on BTP, and questions about the SAP Design System and SAP Fiori design tokens — theme parameters and component-level parameter usage in UI5, UI5 Web Components, and Fundamental Styles.",
+    "domains": [
+      "frontend"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "design",
+    "homepage": "https://github.com/SAP/ui-theme-designer-plugins-for-coding-agents",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "ui-theme-designer",
+      "commands": [
+        "/plugin install ui-theme-designer@claude-plugins-official"
       ]
     }
   },
