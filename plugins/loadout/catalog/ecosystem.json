@@ -3315,6 +3315,28 @@
     }
   },
   {
+    "id": "mattpocock-skills",
+    "tier": "official",
+    "type": "skill",
+    "name": "mattpocock-skills",
+    "description": "Matt Pocock's agent skills for real engineering — grilling, spec/ticket flows, TDD, code review, domain modelling and more. Plug-and-play, not vibe coding.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "development",
+    "homepage": "https://github.com/mattpocock/skills",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "mattpocock-skills",
+      "commands": [
+        "/plugin install mattpocock-skills@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "mcp-apps",
     "tier": "official",
     "type": "skill",
@@ -3878,6 +3900,30 @@
       "plugin": "pagerduty",
       "commands": [
         "/plugin install pagerduty@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "paypal",
+    "tier": "official",
+    "type": "skill",
+    "name": "paypal",
+    "description": "PayPal development plugin for Claude — integrate payments, subscriptions, invoices, disputes, and more using PayPal's APIs and MCP server",
+    "domains": [
+      "general"
+    ],
+    "signals": [
+      "payment"
+    ],
+    "official": true,
+    "category": "development",
+    "homepage": "https://developer.paypal.com/",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "paypal",
+      "commands": [
+        "/plugin install paypal@claude-plugins-official"
       ]
     }
   },
@@ -4937,6 +4983,28 @@
       "plugin": "session-report",
       "commands": [
         "/plugin install session-report@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "shippo",
+    "tier": "official",
+    "type": "skill",
+    "name": "shippo",
+    "description": "Shippo connects you to USPS, UPS, FedEx, DHL, and 40+ carriers, so you can handle a shipment end to end right inside Claude. Compare live rates and pick the cheapest or best option, buy and print labels (domestic and international, with customs declarations), validate and standardize addresses, and track packages across carriers. Just ask in plain language: rate-shop a parcel, buy the right label, check a delivery status, or confirm an address before you ship. Whether you run a store or just need to send a package, Shippo turns a pile of carrier accounts into one simple conversation.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://docs.goshippo.com",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "shippo",
+      "commands": [
+        "/plugin install shippo@claude-plugins-official"
       ]
     }
   },
