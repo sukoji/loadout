@@ -179,6 +179,54 @@
     }
   },
   {
+    "id": "airwallex-dev",
+    "tier": "official",
+    "type": "skill",
+    "name": "airwallex-dev",
+    "description": "Build Airwallex payment integrations in your own codebase. Generates the checkout, card-element, onboarding, and subscription-billing code for an Airwallex integration and wires it into your project: Hosted Payment Page, Drop-in and Split Card elements, connected-account KYC onboarding, and Billing Hosted Checkout for subscriptions and card-saving. Also plans card-on-file merchant-initiated flows for AI providers such as top-ups and auto-recharge.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "development",
+    "homepage": "https://www.airwallex.com/docs",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "airwallex-dev",
+      "commands": [
+        "/plugin install airwallex-dev@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "aiven",
+    "tier": "official",
+    "type": "skill",
+    "name": "aiven",
+    "description": "Easily deploy managed PostgreSQL (pg), Kafka, OpenSearch, Clickhouse and other databases, streaming and apps. Free tier available, up and running in minutes.",
+    "domains": [
+      "backend-api",
+      "data-ml"
+    ],
+    "signals": [
+      "postgres",
+      "kafka"
+    ],
+    "official": true,
+    "category": "database",
+    "homepage": "https://aiven.io",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "aiven",
+      "commands": [
+        "/plugin install aiven@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "alloydb",
     "tier": "official",
     "type": "skill",
@@ -396,7 +444,7 @@
     "tier": "official",
     "type": "skill",
     "name": "asana",
-    "description": "Asana project management integration. Create and manage tasks, search projects, update assignments, track progress, and integrate your development workflow with Asana's work management platform.",
+    "description": "Asana project management integration. Connects Claude Code to Asana's V2 MCP server to create and manage tasks, search projects, update assignments, and track progress. Requires a one-time Asana OAuth app setup — run /asana-setup after installing.",
     "domains": [
       "general"
     ],
@@ -478,6 +526,30 @@
       "plugin": "atlassian",
       "commands": [
         "/plugin install atlassian@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "atlassian-twg-cli",
+    "tier": "official",
+    "type": "skill",
+    "name": "atlassian-twg-cli",
+    "description": "Teamwork Graph CLI is Atlassian's agent-first interface to your entire work context: Jira issues, Confluence pages, Bitbucket PRs, along with your connected third-party data sources. Purpose-built for coding agents like Claude Code (terminal or desktop), and powered by Atlassian's context graph. Try: \"draft a Jira issue from this PR and link it to the epic.\" Using Claude Code in the browser? Install the Atlassian Rovo MCP plugin instead. Run /twg-setup after install to connect Atlassian Teamwork Graph CLI to Claude Code.",
+    "domains": [
+      "general"
+    ],
+    "signals": [
+      "jira"
+    ],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://developer.atlassian.com/cloud/twg-cli/",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "atlassian-twg-cli",
+      "commands": [
+        "/plugin install atlassian-twg-cli@claude-plugins-official"
       ]
     }
   },
@@ -1696,6 +1768,28 @@
       "plugin": "crowdstrike-falcon-foundry",
       "commands": [
         "/plugin install crowdstrike-falcon-foundry@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "crowdstrike-falcon-fusion",
+    "tier": "official",
+    "type": "skill",
+    "name": "crowdstrike-falcon-fusion",
+    "description": "CrowdStrike Falcon Fusion skills for authoring, deploying, and executing Fusion workflows. Includes live action discovery, YAML authoring with schema validation, workflow import and release, execution monitoring, and Falcon Next-Gen SIEM lookup files.",
+    "domains": [
+      "security"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "security",
+    "homepage": "https://github.com/CrowdStrike/fusion-skills",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "crowdstrike-falcon-fusion",
+      "commands": [
+        "/plugin install crowdstrike-falcon-fusion@claude-plugins-official"
       ]
     }
   },
@@ -3742,6 +3836,30 @@
     }
   },
   {
+    "id": "noibu",
+    "tier": "official",
+    "type": "skill",
+    "name": "noibu",
+    "description": "Built for ecommerce, the Noibu plugin bridges the gap between customer experience and revenue by connecting Claude directly to your store's session, error, and conversion data through Noibu — and to the marketing, support, and commerce platforms that put insight into motion. Go beyond analysis: surface what's costing you revenue, take action across your stack, build workflows to automate work end-to-end.",
+    "domains": [
+      "devops"
+    ],
+    "signals": [
+      "go.mod"
+    ],
+    "official": true,
+    "category": "monitoring",
+    "homepage": "https://help.noibu.com/articles/3918362002-overview-of-the-noibu-plugin-for-claude",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "noibu",
+      "commands": [
+        "/plugin install noibu@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "nvidia-skills",
     "tier": "official",
     "type": "skill",
@@ -4718,6 +4836,30 @@
     }
   },
   {
+    "id": "salesforce-development",
+    "tier": "official",
+    "type": "skill",
+    "name": "salesforce-development",
+    "description": "Build Salesforce apps and agents using these core building blocks: metadata, Apex, deploy/retrieve, security, reporting, and generated installed-versus-available capability discovery.",
+    "domains": [
+      "general"
+    ],
+    "signals": [
+      "salesforce"
+    ],
+    "official": true,
+    "category": "development",
+    "homepage": "https://github.com/forcedotcom/sf-skills/tree/main/plugins/builder/salesforce-development",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "salesforce-development",
+      "commands": [
+        "/plugin install salesforce-development@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "sanity",
     "tier": "official",
     "type": "skill",
@@ -5239,6 +5381,30 @@
     }
   },
   {
+    "id": "streaming-skills-plugin",
+    "tier": "official",
+    "type": "skill",
+    "name": "streaming-skills-plugin",
+    "description": "Skills for streaming application developers, covering Kafka and Flink client libraries and Schema Registry",
+    "domains": [
+      "general"
+    ],
+    "signals": [
+      "kafka"
+    ],
+    "official": true,
+    "category": "development",
+    "homepage": "https://www.confluent.io",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "streaming-skills-plugin",
+      "commands": [
+        "/plugin install streaming-skills-plugin@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "sumup",
     "tier": "official",
     "type": "skill",
@@ -5281,6 +5447,29 @@
       "plugin": "swift-lsp",
       "commands": [
         "/plugin install swift-lsp@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "synthflow",
+    "tier": "official",
+    "type": "skill",
+    "name": "synthflow",
+    "description": "Connects Claude Code to the Synthflow AI voice-agent platform through its hosted MCP server, with skills for reviewing calls and auditing agent prompts, plus a docs-search connector.",
+    "domains": [
+      "devops",
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "automation",
+    "homepage": "https://synthflow.ai",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "synthflow",
+      "commands": [
+        "/plugin install synthflow@claude-plugins-official"
       ]
     }
   },
