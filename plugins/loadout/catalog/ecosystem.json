@@ -710,28 +710,6 @@
     }
   },
   {
-    "id": "aws-dev-toolkit",
-    "tier": "official",
-    "type": "skill",
-    "name": "aws-dev-toolkit",
-    "description": "AWS development toolkit — 34 skills, 11 agents, and 3 MCP servers for building, migrating, and performing architecture reviews on AWS.",
-    "domains": [
-      "general"
-    ],
-    "signals": [],
-    "official": true,
-    "category": "development",
-    "homepage": "https://github.com/aws-samples/sample-claude-code-plugins-for-startups",
-    "install": {
-      "type": "plugin",
-      "marketplace": "claude-plugins-official",
-      "plugin": "aws-dev-toolkit",
-      "commands": [
-        "/plugin install aws-dev-toolkit@claude-plugins-official"
-      ]
-    }
-  },
-  {
     "id": "aws-serverless",
     "tier": "official",
     "type": "skill",
@@ -2592,6 +2570,30 @@
     }
   },
   {
+    "id": "google-cloud-storage",
+    "tier": "official",
+    "type": "skill",
+    "name": "google-cloud-storage",
+    "description": "Official Google Cloud Storage (GCS) plugin. Manage buckets and objects, transfer data, and configure MCP, FUSE, IAM, security, lifecycle rules, signed URLs, Terraform, and the CLI.",
+    "domains": [
+      "devops"
+    ],
+    "signals": [
+      "terraform"
+    ],
+    "official": true,
+    "category": "deployment",
+    "homepage": "https://cloud.google.com/storage",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "google-cloud-storage",
+      "commands": [
+        "/plugin install google-cloud-storage@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "gopls-lsp",
     "tier": "official",
     "type": "skill",
@@ -3695,6 +3697,31 @@
       "plugin": "monday-crm",
       "commands": [
         "/plugin install monday-crm@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "mongodb-atlas",
+    "tier": "official",
+    "type": "skill",
+    "name": "mongodb-atlas",
+    "description": "Connect to MongoDB Atlas clusters only through the Atlas Managed MCP Server. Sign in with your Atlas account to explore data, manage collections, optimize queries, generate reliable code with MongoDB best practices, and manage Atlas resources such as clusters, projects, database users, and network access. If you are running a different MongoDB deployment or want to run a local MongoDB MCP Server, install the MongoDB (Self-Managed MCP) plugin instead.",
+    "domains": [
+      "backend-api",
+      "data-ml"
+    ],
+    "signals": [
+      "mongodb"
+    ],
+    "official": true,
+    "category": "database",
+    "homepage": "https://www.mongodb.com/docs/mcp-server/get-started/",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "mongodb-atlas",
+      "commands": [
+        "/plugin install mongodb-atlas@claude-plugins-official"
       ]
     }
   },
@@ -5423,6 +5450,28 @@
       "plugin": "sumup",
       "commands": [
         "/plugin install sumup@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "superdesign",
+    "tier": "official",
+    "type": "skill",
+    "name": "superdesign",
+    "description": "Design or redesign frontend UI and marketing graphics on the Superdesign infinite canvas. Reads your codebase for context, sets up a design system, and generates branchable design drafts you refine.",
+    "domains": [
+      "frontend"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "design",
+    "homepage": "https://superdesign.dev",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "superdesign",
+      "commands": [
+        "/plugin install superdesign@claude-plugins-official"
       ]
     }
   },
