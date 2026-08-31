@@ -4,10 +4,10 @@
 Loadout development without the original chat context. If a session dies mid-task, start here.
 
 - **Repo:** https://github.com/sukoji/loadout (public, MIT)
-- **Local path:** `C:\Users\piai\Desktop\loadout`
-- **What it is:** A hybrid Claude Code **plugin marketplace + recommender**. It profiles a project and
+- **Local path:** `D:\Projects\loadout`
+- **What it is:** A cross-agent **plugin + recommender** with Claude Code and Codex packaging. It profiles a project and
   *applies* a domain-matched loadout of MCP servers / hooks / skills — instead of being one more list to read.
-- **Last updated:** 2026-07-10 (v0.5.1 — token-saver opt-in)
+- **Last updated:** 2026-08-31 (Codex packaging and target-capability refresh; package v0.5.2)
 - **Owner GitHub account:** `sukoji` (a *user*, not an org — `gh api user` returns `sukoji`, even though
   `gh auth status` shows the label `jskh-201910840`). Token scopes: `repo`, `workflow`, `gist`, `read:org`.
 
@@ -15,7 +15,7 @@ Loadout development without the original chat context. If a session dies mid-tas
 
 ## 1. Current status (what's DONE and verified)
 
-Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the commands in §5.
+Core status below was re-verified on 2026-08-31. Re-verify anytime with the commands in §5.
 
 | Area | State |
 | :-- | :-- |
@@ -23,9 +23,9 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 | Published to npm | ✅ `claude-loadout@0.5.1` live. Local `npm publish` uses `~/.npmrc` token. **`prepublishOnly` runs `npm test`.** GitHub Actions `publish` workflow needs repo secret `NPM_TOKEN` — without it the job warns and skips. See CONTRIBUTING § Release. CI: `loadout-doctor.yml` uses `doctor --json --require-healthy`. Scan: full domain coverage across all 10 domains. |
 | Plugin marketplace | ✅ **end-to-end verified from GitHub**: `/plugin marketplace add sukoji/loadout` → `/plugin install loadout@loadout` → `claude plugin details` lists Skills (2): browse, recommend. (Install-blocking bug fixed — see gotcha #8.) |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
-| Catalog | ✅ **3 tiers, 281 items**: 37 curated + 242 official + 2 community. **9 domains** incl. `research`. `npm run test:recommend` guards ranking quality. |
+| Catalog | ✅ **3 tiers, 319 items**: 38 curated + 278 official + 3 community across **10 domains**. `npm run test:recommend` guards ranking quality. |
 | CLI (`node cli/index.js`) | ✅ `doctor` / `doctor --fix`, browse (`domains`/`show`/`search`/`stats`), `apply --suggestions`, `--help`; `npm test` covers validate + recommend + scan + doctor + manifest + verify:mcp. |
-| Cross-agent targets | ✅ `--target codex\|cursor\|gemini\|opencode\|openclaw\|all` writes each agent's MCP config in its verified format (TOML for Codex, JSON for the rest). Tested emitting all formats + HTTP handling. Skills/hooks stay Claude-only. Code: `cli/lib/targets.mjs`. |
+| Cross-agent targets | ✅ Target capabilities are explicit. `--target codex` writes stdio/HTTP MCPs to `.codex/config.toml` and compatible lifecycle hooks to `.codex/hooks.json`; other non-Claude targets remain MCP-only. Both Claude and Codex plugin manifests expose the shared skills. Code: `cli/lib/targets.mjs`. |
 | Docs | ✅ `docs/domains/*.md` auto-generated, in sync with catalog |
 | CI | ✅ **`validate` green on Ubuntu** (doctor test fixtures platform-stable). Full `npm test` + docs-sync + `loadout-doctor` on every push. `publish` on tag still needs repo secret `NPM_TOKEN`. |
 
@@ -36,6 +36,7 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 - `npm run test:mcps` is optional/slow (network); CI skips runtime smoke — uses `verify:mcp` instead.
 - Windows POSIX hooks still need Git Bash/WSL; PowerShell-native variants not yet in catalog.
 - `assets/demo.svg` exists and is embedded in README; an animated asciinema/GIF is still not recorded.
+- Codex marketplace/directory submission and a clean installed-plugin smoke test are not completed yet.
 
 ---
 
@@ -44,7 +45,8 @@ Everything below was run and confirmed on 2026-07-03. Re-verify anytime with the
 ```
 .claude-plugin/marketplace.json   ← makes the repo a CC marketplace (/plugin marketplace add sukoji/loadout)
 plugins/loadout/
-  .claude-plugin/plugin.json       ← plugin manifest (name: loadout, v0.1.0)
+  .claude-plugin/plugin.json       ← Claude plugin manifest (name: loadout, v0.5.2)
+  .codex-plugin/plugin.json        ← Codex manifest; exposes the shared skills directory
   skills/recommend/SKILL.md         ← FLAGSHIP: scan→match→rank→AskUserQuestion→apply
   skills/browse/SKILL.md            ← read-only catalog browse
   catalog/{mcp,skills,hooks,domains}.json  ← ⭐ Tier 1 curated, hand-maintained SOURCE OF TRUTH
@@ -90,17 +92,18 @@ CONTRIBUTING.md                     ← catalog entry schema
    The `metadata.pluginRoot` + bare `"source": "loadout"` form *validates* but **fails at install time**
    on current Claude Code with "source type your Claude Code version does not support." Don't reintroduce it.
 9. **Cross-agent config formats are verified against official docs** (see `cli/lib/targets.mjs` header comment).
-   Codex uses TOML `[mcp_servers.NAME]` and (stable) supports stdio only — HTTP MCPs are skipped with a note.
+   Codex uses TOML `[mcp_servers.NAME]` for stdio and Streamable HTTP (`url`) MCPs, plus project
+   `.codex/hooks.json` for compatible lifecycle hooks.
    opencode combines command+args into ONE array and uses `environment` (not `env`). OpenClaw nests under
    `mcp.servers` and uses `transport: streamable-http` for HTTP. Don't "simplify" these to the Claude shape.
-10. **`detectInstalled()`** now checks Claude + Cursor + Gemini + opencode project configs. Codex TOML /
-    OpenClaw home config detection is still a follow-up.
+10. **`detectInstalled()`** checks Claude, Codex, Cursor, Gemini, opencode, and OpenClaw MCP configs,
+    plus Claude and Codex hook configs. `AGENTS.md` satisfies the project-guidance check.
 
 ---
 
 ## 4. Resume protocol (do this when you pick up the project)
 
-1. `cd C:\Users\piai\Desktop\loadout`
+1. `cd D:\Projects\loadout`
 2. Run §5 verification. If anything is red, fixing it is your first task.
 3. `git status` / `git log --oneline -5` to see where the last session stopped.
 4. Open the **task board** (§6), pick the highest-priority unblocked task, and use its *resume pointer*.
@@ -109,8 +112,8 @@ CONTRIBUTING.md                     ← catalog entry schema
 ## 5. Verify the build (copy-paste)
 
 ```bash
-cd C:/Users/piai/Desktop/loadout
-node scripts/validate-catalog.mjs            # expect: catalog OK, 0 warnings
+cd D:/Projects/loadout
+npm run validate                             # expect: catalog + Claude/Codex packaging OK, 0 warnings
 node scripts/build-docs.mjs && git status --porcelain docs/   # expect: no output (in sync)
 node cli/index.js --dry-run                  # expect: sensible recommendation for cwd
 claude plugin validate ./plugins/loadout     # expect: Validation passed
@@ -121,8 +124,8 @@ Optional — exercise the **apply + idempotency** path in a throwaway dir (prove
 
 ```bash
 SB=$(mktemp -d) && echo '{"dependencies":{"next":"14"}}' > "$SB/package.json"
-( cd "$SB" && node C:/Users/piai/Desktop/loadout/cli/index.js --all )      # writes .mcp.json + .claude/settings.json
-( cd "$SB" && node C:/Users/piai/Desktop/loadout/cli/index.js --dry-run )  # re-run → "Already configured (skipped): ..."
+( cd "$SB" && node D:/Projects/loadout/cli/index.js --all )      # writes .mcp.json + .claude/settings.json
+( cd "$SB" && node D:/Projects/loadout/cli/index.js --dry-run )  # re-run → "Already configured (skipped): ..."
 ```
 
 ---
@@ -140,6 +143,8 @@ lists were generated into this repo's planning; the one-line resume pointer is e
       the public registry. Next release: bump `package.json` version, update CHANGELOG, tag `vX.Y.Z`.
 - [x] **cross-agent targets** — ✅ DONE 2026-07-03 (this session, beyond the original board). `--target`
       for codex/cursor/gemini/opencode/openclaw; see `cli/lib/targets.mjs` and gotchas #9–10.
+- [x] **native Codex packaging + hooks** — ✅ DONE 2026-08-31 in `57402ee`. Added the Codex manifest,
+      host-aware shared skills, HTTP MCP/hook application, installed detection, and regression tests.
 
 ### P1 — content depth & correctness (this is what makes it genuinely useful)
 - [x] **`research-domain-and-ranking` [M]** — ✅ DONE 2026-07-03 (v0.3.1). `research` domain, Exa/Tavily curated
@@ -184,3 +189,18 @@ If you're about to run low on tokens or end a session:
 2. Update **§1 status** and check off / annotate the task in **§6** you touched (leave a one-line "next step").
 3. If mid-task, add a `WIP:` note under that task saying exactly what's half-done and the next command to run.
 4. Never leave `docs/` out of sync (`npm run build:docs`) or the catalog invalid (`npm run validate`) — CI will fail and the next session inherits a red build.
+
+---
+
+## 8. Session log
+
+### 2026-08-31 — Codex integration and ecosystem refresh
+
+- **Work:** Added native Codex plugin packaging, target-capability routing, Streamable HTTP MCP output,
+  lifecycle hook merge/idempotency, Codex installed detection, host-aware skills, packaging checks, and
+  updated the official Anthropic ecosystem snapshot from 242 to 278 entries.
+- **Verification:** `npm test`; `npm run validate` (319 items, 0 warnings); `npm run build:docs`;
+  `claude plugin validate ./plugins/loadout`; Codex plugin and both skill validators; `npm pack --dry-run`.
+- **Feature commit:** `57402ee` (`feat: add native Codex plugin and hook support`).
+- **Blockers / follow-up:** Codex marketplace/directory submission and an installed-plugin smoke test were
+  not performed. Pre-existing local `.codex/` configuration remains intentionally untracked and untouched.
