@@ -1,0 +1,27 @@
+{
+  "name": "loadout",
+  "version": "0.5.2",
+  "description": "Profile a project and recommend a focused loadout of MCP servers, lifecycle hooks, and skills.",
+  "author": {
+    "name": "sukoji",
+    "url": "https://github.com/sukoji"
+  },
+  "homepage": "https://github.com/sukoji/loadout",
+  "repository": "https://github.com/sukoji/loadout",
+  "license": "MIT",
+  "keywords": ["setup", "recommender", "mcp", "skills", "hooks", "codex"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Loadout",
+    "shortDescription": "Project-aware agent setup",
+    "longDescription": "Scan a project, recommend a small domain-matched set of MCP servers, hooks, and skills, then apply only the selected compatible items.",
+    "developerName": "sukoji",
+    "category": "Developer Tools",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/sukoji/loadout",
+    "defaultPrompt": [
+      "Recommend a loadout for this project.",
+      "Browse the Loadout catalog for this stack."
+    ]
+  }
+}

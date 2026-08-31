@@ -10,7 +10,7 @@ import { recommend } from "./lib/recommend.mjs";
 import { apply } from "./lib/apply.mjs";
 import { doctor, doctorFix, skillInstallGuide, isAutoApplyType, summarizeDoctor } from "./lib/doctor.mjs";
 import { buildManifest, writeManifest, applyManifest, applyItems, readManifestIds, buildRecommendPreview, previewManifestApply, previewItemsApply } from "./lib/manifest.mjs";
-import { applyToTarget, listTargets, detectTargets, TARGETS } from "./lib/targets.mjs";
+import { applyToTarget, listTargets, detectTargets, supportedItems, TARGETS } from "./lib/targets.mjs";
 import { searchCatalog } from "./lib/search.mjs";
 import { installSelected } from "./lib/install.mjs";
 
@@ -62,8 +62,8 @@ async function main() {
     console.error(c("yellow", `Unknown target(s): ${invalid.join(", ")}`) + c("dim", "  (run --list-targets)"));
     exit(1);
   }
-  // Skills and hooks are Claude-Code-native; other agents only take MCP servers.
-  const mcpOnly = !targets.includes("claude");
+  const portableTypes = new Set(targets.flatMap((target) => TARGETS[target].types));
+  const agentNativeOnly = !targets.includes("claude");
 
   const catalog = loadCatalog();
   const root = cwd();
@@ -74,8 +74,8 @@ async function main() {
   const limit = limitRaw ? Math.max(1, parseInt(limitRaw, 10) || 8) : 8;
   const signals = scanProject(root);
   let { domains, items, community, tokenSavers, installed } = recommend(catalog, signals, root, { discover });
-  if (mcpOnly) {
-    items = items.filter((e) => e.item.type === "mcp");
+  if (agentNativeOnly) {
+    items = items.filter((e) => portableTypes.has(e.item.type));
     community = [];
     tokenSavers = [];
   }
@@ -95,7 +95,10 @@ async function main() {
     const detected = detectTargets(root).filter((t) => !targets.includes(t));
     if (detected.length) console.log(c("dim", `Also configured here: ${detected.map((t) => TARGETS[t].label).join(", ")} (target them with --target)`));
     if (installed.length) console.log(c("dim", `Already configured (skipped): ${installed.join(", ")}`));
-    if (mcpOnly) console.log(c("dim", "Non-Claude target → showing MCP servers only (skills/hooks are Claude Code-native)."));
+    if (agentNativeOnly) {
+      const scope = portableTypes.has("hook") ? "MCP servers and compatible hooks" : "MCP servers only";
+      console.log(c("dim", `Target-aware recommendations: ${scope}.`));
+    }
     console.log("");
 
     if (!items.length && !tokenSavers.length) {
@@ -131,7 +134,7 @@ async function main() {
         console.log(`      ${item.description}`);
         console.log(c("dim", `      ↳ ${item.homepage}`) + "\n");
       });
-    } else if (!discover && !mcpOnly) {
+    } else if (!discover && !agentNativeOnly) {
       console.log(c("dim", "Tip: add --discover to surface more unverified community skills.\n"));
     }
 
@@ -148,7 +151,7 @@ async function main() {
   if (dryRun) {
     if (!asJson) {
       console.log(c("dim", "Dry run — nothing written. Re-run without --dry-run to apply."));
-      if (tokenSavers.length && !mcpOnly) {
+      if (tokenSavers.length && !agentNativeOnly) {
         console.log(c("dim", "Token-saver skills are asked in a separate step (not part of --all).\n"));
       } else {
         console.log("");
@@ -181,7 +184,7 @@ async function main() {
       );
       picks = parseSelection(answer, top);
     }
-    if (tokenSavers.length && !mcpOnly) {
+    if (tokenSavers.length && !agentNativeOnly) {
       const tsAnswer = await rl.question(
         c("bold", "Token-saver skills? ") +
           c("dim", "separate from stack loadout · 1 = yes  ·  Enter = skip: ")
@@ -209,8 +212,7 @@ async function main() {
         receipts.push({ type: "install", ...res });
       }
     } else {
-      const mcp = picked.filter((i) => i.type === "mcp");
-      const receipt = applyToTarget(t, mcp, root);
+      const receipt = applyToTarget(t, supportedItems(t, picked), root);
       receipts.push({ type: "target", target: t, receipt });
       if (!asJson) printTargetReceipt(receipt);
     }
@@ -242,7 +244,7 @@ function printTargets() {
     const where = t.scope === "home" ? "~/" + t.file : t.file;
     console.log(`  ${c("cyan", t.id.padEnd(9))} ${c("bold", t.label.padEnd(13))} ${c("dim", where)}`);
   }
-  console.log(c("dim", "\nMCP servers apply to every target. Skills & hooks are Claude Code-native.\n"));
+  console.log(c("dim", "\nMCP servers apply to every target. Codex also supports lifecycle hooks; skills remain host-specific.\n"));
 }
 
 function printHelp() {
@@ -287,7 +289,7 @@ function printHelp() {
   console.log(`  ${c("cyan", "npx claude-loadout --all --json")} Apply top recommendations; print receipts as JSON`);
   console.log(`  ${c("cyan", "npx claude-loadout --discover")}  Also show unverified community skills (not token-savers)`);
   console.log(`  ${c("cyan", "npx claude-loadout --all --token-saver")}  Apply loadout + opt into token-saver skills`);
-  console.log(`  ${c("cyan", "npx claude-loadout --target cursor")}  Write MCP config for Cursor`);
+  console.log(`  ${c("cyan", "npx claude-loadout --target codex")}   Write Codex MCP + hook config`);
   console.log(`  ${c("cyan", "npx claude-loadout --list-targets")}   List supported agents\n`);
   console.log(c("bold", "What auto-applies vs what you run:\n"));
   console.log(`  ${c("green", "Auto-written")}   MCP entries → .mcp.json (or agent-specific MCP file)`);
@@ -923,7 +925,10 @@ function printReceipt(r) {
 
 function printTargetReceipt(r) {
   console.log(c("bold", `\n✅ ${r.label}:\n`));
-  if (r.added.length) console.log(`  ${c("cyan", r.file)}\n     + ${r.added.join(", ")}`);
+  if (r.added.length) {
+    const files = r.files?.length ? r.files.join(", ") : r.file;
+    console.log(`  ${c("cyan", files)}\n     + ${r.added.join(", ")}`);
+  }
   if (r.skipped.length) {
     console.log(c("dim", "  skipped:"));
     r.skipped.forEach((s) => console.log(c("dim", `     - ${s}`)));
@@ -932,8 +937,8 @@ function printTargetReceipt(r) {
     console.log(c("yellow", "\n⚠  Needs your attention:"));
     r.tokens.forEach((t) => console.log(`     ${t}`));
   }
-  if (!r.added.length && !r.skipped.length) console.log(c("dim", "  (no MCP servers to add)"));
-  console.log(c("dim", `\nRestart ${r.label} so new MCP servers load.\n`));
+  if (!r.added.length && !r.skipped.length) console.log(c("dim", "  (nothing compatible to add)"));
+  console.log(c("dim", `\nRestart ${r.label} so new configuration loads.\n`));
 }
 
 main().catch((err) => {

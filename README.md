@@ -10,8 +10,9 @@ It works out which MCP servers, hooks, and skills fit your stack, shows you a sh
 reason for each, and installs the ones you pick, writing the config for you. So you don't have to read a
 500-item "awesome" list and copy-paste install commands by hand.
 
-It also works with other agents: full setup for Claude Code, plus MCP servers for Codex, Cursor, opencode,
-Gemini CLI and OpenClaw.
+It also works with other agents: full setup for Claude Code, MCP servers plus lifecycle hooks for Codex,
+and MCP servers for Cursor, opencode, Gemini CLI, and OpenClaw. The bundled Loadout skills now ship with
+both Claude Code and Codex plugin manifests.
 
 [English](README.md) · [한국어](README.ko.md)
 
@@ -116,7 +117,7 @@ Zero dependencies, ~1s for scan/recommend, nothing to install globally.
 | `--all` / `-a` / `-y` | Apply the top recommendations without prompting |
 | `--all --json` | Apply top recommendations; print receipts as JSON only |
 | `--discover` | Also surface **unverified** community skills |
-| `--target <id>` | Write MCP config for `cursor`, `codex`, `gemini`, `opencode`, `openclaw`, or `all` |
+| `--target <id>` | Write compatible config for `cursor`, `codex`, `gemini`, `opencode`, `openclaw`, or `all` (Codex gets MCP + hooks) |
 | `--list-targets` | List agents and config file paths |
 | `export` | Write team loadout manifest → `.loadout.json` (includes `installed` ids) |
 | `export --json` | Print manifest JSON to stdout |
@@ -171,7 +172,7 @@ Copy-paste GitHub Actions job: [examples/ci-doctor.yml](examples/ci-doctor.yml).
 | Kind | Loadout writes it? | You still need to… |
 | :-- | :-- | :-- |
 | MCP servers | ✅ merges into `.mcp.json` (or agent MCP file) | Fill API keys; OAuth on first use for hosted servers |
-| Hooks & settings | ✅ merges into `.claude/settings.json` | Install hook deps (`jq`, `ruff`, …); on Windows use Git Bash/WSL for shell hooks |
+| Hooks & settings | ✅ `.claude/settings.json`; Codex hooks use `.codex/hooks.json` | Install hook deps (`jq`, `ruff`, …); on Windows use Git Bash/WSL for shell hooks |
 | Built-in skills (`/init`, `/code-review`) | ❌ already in Claude Code | Run the slash command when you want it |
 | Marketplace plugins (Exa, Superpowers, …) | ❌ prints `/plugin install …` | Run those commands in Claude Code |
 
@@ -180,11 +181,12 @@ Run `npx claude-loadout doctor` anytime to see unfilled placeholders and missing
 ## Works with your agent — not just Claude Code
 
 MCP servers are portable across today's agents; only the config file and format differ. Loadout writes
-the right one for each. Skills and hooks are Claude Code-native, so for other agents Loadout applies the
-MCP servers and tells you what's Claude-only.
+the right one for each. Codex also receives compatible lifecycle hooks in `.codex/hooks.json`. Catalog
+skill install commands remain Claude-specific unless an entry explicitly says otherwise, while Loadout's
+own `recommend` and `browse` skills are packaged for both Claude Code and Codex.
 
 ```bash
-npx claude-loadout --target codex        # writes ~/.codex-style .codex/config.toml
+npx claude-loadout --target codex        # writes .codex/config.toml + .codex/hooks.json
 npx claude-loadout --target cursor        # writes .cursor/mcp.json
 npx claude-loadout --target claude,cursor # apply to several at once
 npx claude-loadout --target all           # every supported agent
@@ -197,7 +199,7 @@ npx claude-loadout --list-targets         # see them all
 | `cursor` | Cursor | `.cursor/mcp.json` | `mcpServers` |
 | `gemini` | Gemini CLI | `.gemini/settings.json` | `mcpServers` |
 | `opencode` | opencode | `opencode.json` | `mcp` (`type: local`) |
-| `codex` | Codex CLI | `.codex/config.toml` | `[mcp_servers.*]` (TOML) |
+| `codex` | Codex | `.codex/config.toml` + `.codex/hooks.json` | `[mcp_servers.*]` (stdio or HTTP) + lifecycle hooks |
 | `openclaw` | OpenClaw | `~/.openclaw/openclaw.json` | `mcp.servers` |
 
 If you don't pass `--target`, Loadout targets Claude Code and points out any other agents it detects in the project.
@@ -219,7 +221,7 @@ live in one place.
 Loadout pulls from three tiers, so it reaches the whole ecosystem without ever blindly applying something unvetted:
 
 - **Curated (38)** — hand-verified MCP servers, hooks & skills. Safe to auto-apply; every npx package is checked to resolve on npm (`npm run verify:mcp`) and smoke-started in release checks (`npm run test:mcps`).
-- **Official marketplace (~240)** — Anthropic's official plugin directory, ingested automatically. Surfaced when they match your stack, installed via `/plugin`.
+- **Official marketplace (278)** — Anthropic's official plugin directory, ingested automatically. Surfaced when they match your stack, installed via `/plugin`.
 - **Community (`--discover`)** — well-known community skills like [caveman](https://github.com/JuliusBrussee/caveman) (token saver). Shown only when you ask, labeled **⚠ unverified**, and **never auto-applied**.
 
 ```bash

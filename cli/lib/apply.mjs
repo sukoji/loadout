@@ -70,7 +70,7 @@ function writeJson(path, doc) {
 // Deep-merge source into target. Arrays append (so hook event arrays accumulate, not replace)
 // but skip entries already present, so re-applying the same loadout stays idempotent.
 // Objects merge recursively. Scalars from source win.
-function deepMerge(target, source) {
+export function deepMerge(target, source) {
   for (const [key, val] of Object.entries(source)) {
     if (Array.isArray(val)) {
       const existing = Array.isArray(target[key]) ? target[key] : [];

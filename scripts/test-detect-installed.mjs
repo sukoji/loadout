@@ -59,6 +59,7 @@ try {
   const hooksDir = mkdtempSync(join(tmpdir(), "loadout-detect-hooks-"));
   try {
     mkdirSync(join(hooksDir, ".claude"), { recursive: true });
+    mkdirSync(join(hooksDir, ".codex"), { recursive: true });
     writeFileSync(
       join(hooksDir, ".claude/settings.json"),
       JSON.stringify({
@@ -68,6 +69,10 @@ try {
         },
         statusLine: { type: "command", command: "git status" },
       }),
+    );
+    writeFileSync(
+      join(hooksDir, ".codex/hooks.json"),
+      JSON.stringify({ hooks: { PreToolUse: [{ hooks: [{ command: "echo dangerous mkfs" }] }] } }),
     );
     writeFileSync(join(hooksDir, "package.json"), JSON.stringify({ dependencies: { react: "18" } }));
     const { items: hookItems, installed: hookInstalled } = recommend(
@@ -79,7 +84,9 @@ try {
     assert("installed includes eslint-fix-on-edit from settings", hookInstalled.includes("eslint-fix-on-edit"));
     assert("installed includes statusline-git from settings", hookInstalled.includes("statusline-git"));
     assert("installed includes block-push-to-main from settings", hookInstalled.includes("block-push-to-main"));
+    assert("installed includes guard-dangerous-bash from Codex hooks", hookInstalled.includes("guard-dangerous-bash"));
     assert("eslint-fix-on-edit not re-recommended", !hookIds.includes("eslint-fix-on-edit"));
+    assert("guard-dangerous-bash not re-recommended", !hookIds.includes("guard-dangerous-bash"));
   } finally {
     rmSync(hooksDir, { recursive: true, force: true });
   }
@@ -102,6 +109,16 @@ try {
       assert("init-claude-md recommended without CLAUDE.md", bare.items.some((e) => e.item.id === "init-claude-md"));
     } finally {
       rmSync(bareDir, { recursive: true, force: true });
+    }
+
+    const agentsDir = mkdtempSync(join(tmpdir(), "loadout-agents-"));
+    try {
+      writeFileSync(join(agentsDir, "package.json"), JSON.stringify({ name: "z" }));
+      writeFileSync(join(agentsDir, "AGENTS.md"), "# Project\n");
+      const withAgents = recommend(catalog, new Set(["always", "package.json"]), agentsDir);
+      assert("AGENTS.md satisfies project-instructions recommendation", withAgents.installed.includes("init-claude-md"));
+    } finally {
+      rmSync(agentsDir, { recursive: true, force: true });
     }
   } finally {
     rmSync(initDir, { recursive: true, force: true });

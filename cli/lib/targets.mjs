@@ -2,9 +2,10 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { homedir } from "node:os";
 import { openclawHome } from "./paths.mjs";
+import { deepMerge } from "./apply.mjs";
 
 // Cross-agent target adapters. MCP servers are portable across modern agents; each target
-// only differs in WHERE its config lives and WHAT shape an MCP entry takes. Verified formats:
+// differs in supported item types, config location, and MCP entry shape. Verified formats:
 //   Claude Code  .mcp.json                    { mcpServers: { NAME: {command,args,env} | {type:"http",url} } }
 //   Cursor       .cursor/mcp.json             same "mcpServers" shape as Claude
 //   Gemini CLI   .gemini/settings.json        same "mcpServers" shape as Claude
@@ -13,12 +14,12 @@ import { openclawHome } from "./paths.mjs";
 //   OpenClaw     ~/.openclaw/openclaw.json    { mcp: { servers: { NAME: {command,args,env} } } }  (http → transport)
 
 export const TARGETS = {
-  claude: { label: "Claude Code", scope: "project", file: ".mcp.json", kind: "mcpServers" },
-  cursor: { label: "Cursor", scope: "project", file: ".cursor/mcp.json", kind: "mcpServers" },
-  gemini: { label: "Gemini CLI", scope: "project", file: ".gemini/settings.json", kind: "mcpServers" },
-  opencode: { label: "opencode", scope: "project", file: "opencode.json", kind: "opencode" },
-  codex: { label: "Codex CLI", scope: "project", file: ".codex/config.toml", kind: "toml" },
-  openclaw: { label: "OpenClaw", scope: "home", file: ".openclaw/openclaw.json", kind: "openclaw" },
+  claude: { label: "Claude Code", scope: "project", file: ".mcp.json", kind: "mcpServers", types: ["mcp", "hook", "setting", "skill", "reference"] },
+  cursor: { label: "Cursor", scope: "project", file: ".cursor/mcp.json", kind: "mcpServers", types: ["mcp"] },
+  gemini: { label: "Gemini CLI", scope: "project", file: ".gemini/settings.json", kind: "mcpServers", types: ["mcp"] },
+  opencode: { label: "opencode", scope: "project", file: "opencode.json", kind: "opencode", types: ["mcp"] },
+  codex: { label: "Codex", scope: "project", file: ".codex/config.toml", kind: "toml", types: ["mcp", "hook"] },
+  openclaw: { label: "OpenClaw", scope: "home", file: ".openclaw/openclaw.json", kind: "openclaw", types: ["mcp"] },
 };
 
 export function listTargets() {
@@ -41,11 +42,18 @@ function targetPath(t, root) {
 }
 
 // Apply the given MCP catalog entries to one target. Returns a receipt.
-export function applyToTarget(targetId, mcpItems, root = process.cwd()) {
+export function supportedItems(targetId, items) {
+  const supported = new Set(TARGETS[targetId]?.types || []);
+  return items.filter((item) => supported.has(item.type));
+}
+
+export function applyToTarget(targetId, items, root = process.cwd()) {
   const t = TARGETS[targetId];
   if (!t) throw new Error(`unknown target "${targetId}" (see --list-targets)`);
   const path = targetPath(t, root);
-  const receipt = { target: targetId, label: t.label, file: path, scope: t.scope, added: [], skipped: [], tokens: [] };
+  const receipt = { target: targetId, label: t.label, file: path, files: [], scope: t.scope, added: [], skipped: [], tokens: [] };
+  const mcpItems = items.filter((item) => item.type === "mcp");
+  const hookItems = targetId === "codex" ? items.filter((item) => item.type === "hook") : [];
 
   const isHttp = (e) => e.config?.type === "http" || !!e.config?.url;
   for (const e of mcpItems) {
@@ -63,6 +71,19 @@ export function applyToTarget(targetId, mcpItems, root = process.cwd()) {
       receipt.added.push(e.id);
     }
     writeJson(path, doc);
+    if (mcpItems.length) receipt.files.push(path);
+  }
+
+  if (hookItems.length) {
+    const hooksPath = resolve(root, ".codex", "hooks.json");
+    const doc = readJson(hooksPath) || {};
+    for (const item of hookItems) {
+      deepMerge(doc, { hooks: item.settings.hooks });
+      receipt.added.push(item.id);
+      if (item.note) receipt.tokens.push(`${item.name}: ${item.note}`);
+    }
+    writeJson(hooksPath, doc);
+    receipt.files.push(hooksPath);
   }
   return receipt;
 }
@@ -100,17 +121,14 @@ function applyToml(path, mcpItems, isHttp, receipt) {
       receipt.skipped.push(`${e.id} (unsafe id for a TOML section header — skipped)`);
       continue;
     }
-    if (isHttp(e)) {
-      receipt.skipped.push(`${e.id} (HTTP MCP — Codex needs experimental streamable_http; add manually)`);
-      continue;
-    }
     if (text.includes(`[mcp_servers.${e.id}]`)) {
       receipt.skipped.push(`${e.id} (already present)`);
       continue;
     }
-    let b = `\n[mcp_servers.${e.id}]\ncommand = ${tstr(e.config.command)}\n`;
-    if (e.config.args?.length) b += `args = ${tarr(e.config.args)}\n`;
-    if (e.config.env && Object.keys(e.config.env).length) {
+    let b = `\n[mcp_servers.${e.id}]\n`;
+    b += isHttp(e) ? `url = ${tstr(e.config.url)}\n` : `command = ${tstr(e.config.command)}\n`;
+    if (!isHttp(e) && e.config.args?.length) b += `args = ${tarr(e.config.args)}\n`;
+    if (!isHttp(e) && e.config.env && Object.keys(e.config.env).length) {
       b += `env = { ${Object.entries(e.config.env).map(([k, v]) => `${k} = ${tstr(v)}`).join(", ")} }\n`;
     }
     blocks.push(b);
@@ -120,6 +138,7 @@ function applyToml(path, mcpItems, isHttp, receipt) {
     if (text && !text.endsWith("\n")) text += "\n";
     mkdirSync(dirname(path), { recursive: true });
     writeFileSync(path, text + blocks.join(""));
+    receipt.files.push(path);
   }
 }
 

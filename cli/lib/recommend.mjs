@@ -217,8 +217,9 @@ function detectInstalled(root) {
     }
   }
 
-  const settingsPath = resolve(root, ".claude", "settings.json");
-  if (existsSync(settingsPath)) {
+  const settingsPaths = [resolve(root, ".claude", "settings.json"), resolve(root, ".codex", "hooks.json")];
+  for (const settingsPath of settingsPaths) {
+    if (!existsSync(settingsPath)) continue;
     try {
       const settings = JSON.parse(readFileSync(settingsPath, "utf8"));
       const blob = JSON.stringify(settings).toLowerCase();
@@ -240,11 +241,12 @@ function detectInstalled(root) {
     }
   }
 
-  // /init already done when a project CLAUDE.md exists (root or .claude/).
+  // Project instructions already exist when either supported host has a guidance file.
   if (
     existsSync(resolve(root, "CLAUDE.md")) ||
     existsSync(resolve(root, "claude.md")) ||
-    existsSync(resolve(root, ".claude", "CLAUDE.md"))
+    existsSync(resolve(root, ".claude", "CLAUDE.md")) ||
+    existsSync(resolve(root, "AGENTS.md"))
   ) {
     installed.add("init-claude-md");
   }

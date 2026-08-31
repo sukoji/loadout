@@ -3773,18 +3773,62 @@
     }
   },
   {
+    "id": "netsuite-ai-companion",
+    "tier": "official",
+    "type": "skill",
+    "name": "netsuite-ai-companion",
+    "description": "Guides AI assistants that use the NetSuite AI Connector: tool-selection order, output formatting, NetSuite domain knowledge, multi-subsidiary and currency handling, and SuiteQL safety guardrails. Requires the NetSuite AI Connector Service.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://github.com/oracle/netsuite-suitecloud-sdk/tree/ai-plugins-dist/anthropic/netsuite-ai-companion",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "netsuite-ai-companion",
+      "commands": [
+        "/plugin install netsuite-ai-companion@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "netsuite-finance-analyst",
+    "tier": "official",
+    "type": "skill",
+    "name": "netsuite-finance-analyst",
+    "description": "Director-level finance analysis on live NetSuite data: financial reporting, period close, variance, aging and reconciliation reviews, cash reporting, and board-ready narratives with next actions. Requires the NetSuite AI Connector Service.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://github.com/oracle/netsuite-suitecloud-sdk/tree/ai-plugins-dist/anthropic/netsuite-finance-analyst",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "netsuite-finance-analyst",
+      "commands": [
+        "/plugin install netsuite-finance-analyst@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "netsuite-suitecloud",
     "tier": "official",
     "type": "skill",
     "name": "netsuite-suitecloud",
-    "description": "NetSuite agent skills from Oracle — authoring guidance for SuiteCloud Development Framework (SDF) objects and UIF single-page-app components, plus runtime guidance for the NetSuite AI Service Connector.",
+    "description": "Develop NetSuite SuiteCloud solutions with SuiteScript, SDF, and best practices: SuiteScript records and upgrades, SDF objects, roles and permissions, UIF single-page apps, OWASP secure coding, project documentation, and the SAFE Guide.",
     "domains": [
       "general"
     ],
     "signals": [],
     "official": true,
     "category": "development",
-    "homepage": "https://github.com/oracle/netsuite-suitecloud-sdk",
+    "homepage": "https://github.com/oracle/netsuite-suitecloud-sdk/tree/ai-plugins-dist/anthropic/netsuite-suitecloud",
     "install": {
       "type": "plugin",
       "marketplace": "claude-plugins-official",
@@ -5022,6 +5066,28 @@
     }
   },
   {
+    "id": "scandit-sdk",
+    "tier": "official",
+    "type": "skill",
+    "name": "Scandit SDK",
+    "description": "AI agent skills for integrating the Scandit Data Capture SDK — product selection, documentation, and implementation guides for barcode scanning, ID capture, and smart label capture.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "development",
+    "homepage": "https://www.scandit.com",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "scandit-sdk",
+      "commands": [
+        "/plugin install scandit-sdk@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "security-guidance",
     "tier": "official",
     "type": "skill",
@@ -5769,6 +5835,28 @@
     }
   },
   {
+    "id": "unity",
+    "tier": "official",
+    "type": "skill",
+    "name": "Unity",
+    "description": "Unity's official plugin for Claude Code, with curated skills for game development, monetization, and performance optimization.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "development",
+    "homepage": "https://unity.com",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "unity",
+      "commands": [
+        "/plugin install unity@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "unreal-engine-skills-for-claude-code",
     "tier": "official",
     "type": "skill",
@@ -6204,6 +6292,28 @@
       "plugin": "zyte-web-data",
       "commands": [
         "/plugin install zyte-web-data@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "activecampaign",
+    "tier": "official",
+    "type": "skill",
+    "name": "ActiveCampaign",
+    "description": "Marketing automation, CRM, and email marketing powered by ActiveCampaign. Manage contacts, campaigns, automations, deals, and get AI-powered marketing insights — all from Claude.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://www.activecampaign.com",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "activecampaign",
+      "commands": [
+        "/plugin install activecampaign@claude-plugins-official"
       ]
     }
   }

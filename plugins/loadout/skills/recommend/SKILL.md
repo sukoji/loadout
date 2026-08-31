@@ -1,24 +1,27 @@
 ---
 name: recommend
-description: Profile the current project and recommend a domain-matched loadout of Claude Code extensions (MCP servers, hooks, settings, skills), then apply the ones the user picks. Use when the user wants to set up, gear up, or optimize Claude Code for this repo, asks "what skills/MCP should I use here", runs /loadout, or opens a fresh project and wants the right tooling configured.
+description: Profile the current project and recommend a domain-matched loadout of Codex or Claude Code extensions, then apply compatible items the user picks. Use when the user wants to set up or optimize an agent for a repo, asks which skills, hooks, or MCP servers fit, invokes Loadout, or opens a fresh project that needs tooling.
 allowed-tools: Read, Glob, Grep, Bash, Edit, Write, AskUserQuestion, WebFetch
 ---
 
-# Loadout — recommend & apply
+# Loadout — recommend and apply
 
 Your job: look at THIS project, figure out what it is, and hand the user a short, ranked
-**loadout** of Claude Code extensions worth adding — then apply exactly the ones they choose.
+**loadout** of agent extensions worth adding — then apply exactly the ones they choose.
 You are a recommender and installer, not a list-dumper. Never paste the whole catalog.
 
 ## Step 0 — Load the catalog (3 tiers)
 
+Resolve the plugin root first. Use `PLUGIN_ROOT` in Codex, `CLAUDE_PLUGIN_ROOT` in Claude Code, or the
+directory two levels above this `SKILL.md` when authoring locally. Refer to it as `<plugin-root>` below.
+
 Read the curated (Tier 1) files fully — they're small and hand-verified:
 
-- `${CLAUDE_PLUGIN_ROOT}/catalog/mcp.json`
-- `${CLAUDE_PLUGIN_ROOT}/catalog/skills.json`
-- `${CLAUDE_PLUGIN_ROOT}/catalog/hooks.json`
-- `${CLAUDE_PLUGIN_ROOT}/catalog/domains.json`
-- `${CLAUDE_PLUGIN_ROOT}/catalog/community.json` (Tier 3, small)
+- `<plugin-root>/catalog/mcp.json`
+- `<plugin-root>/catalog/skills.json`
+- `<plugin-root>/catalog/hooks.json`
+- `<plugin-root>/catalog/domains.json`
+- `<plugin-root>/catalog/community.json` (Tier 3, small)
 
 Each item has `id`, `name`, `description`, `domains`, `signals`. MCP items carry a `config`, hook/setting
 items a `settings` object, skill items an `install` block.
@@ -45,7 +48,8 @@ Detect what the repo is. Be fast and evidence-based — do not ask the user thin
 - **Research / academic**: `*.tex`, `*.bib`, `papers/` dir, `arxiv` in deps.
 - **Security surface**: auth/payment/crypto libs, presence of `.env`.
 - **What's already set up**: read existing `.mcp.json`, `.claude/settings.json`,
-  `.claude/settings.local.json`, and any `CLAUDE.md`. **Never recommend something already installed.**
+  `.claude/settings.local.json`, `.codex/config.toml`, `.codex/hooks.json`, `CLAUDE.md`, and `AGENTS.md`.
+  **Never recommend something already installed.**
 
 Use Glob/Grep/Read. Keep it to a handful of targeted checks. Summarize the profile in 2–3 lines.
 
@@ -70,7 +74,8 @@ First show a tight table so the user can decide informed — one row per item wi
 | :-- | :-- | :-- | :-- |
 | name | MCP · official/community, hook, or skill | one plain-language line | a token / login, or "—" |
 
-Group by kind (MCP / Hooks & settings / Skills). Then call `AskUserQuestion` with `multiSelect: true`.
+Group by kind (MCP / Hooks & settings / Skills). Then use the host's available user-input UI with
+multi-select. If it has no multi-select UI, present a numbered list and ask for comma-separated numbers.
 **Every option must be self-explanatory** — a user should never have to guess what a checkbox means:
 
 - **label** = the item name.
@@ -100,16 +105,21 @@ project's domain before recommending — don't guess wildly.
 
 ## Step 4 — Apply what they picked
 
-Apply each selected item by its kind. **Always show the exact change and confirm before writing.**
+Apply each selected item by its kind. **Always show the exact change and confirm before writing.** Determine
+the active host from the plugin environment and configuration; if it is ambiguous, ask one concise question.
 Merge; never overwrite an existing file wholesale. Prefer project scope unless the user says otherwise.
 
-- **MCP items** → merge `config` into `./.mcp.json` under `mcpServers.<id>`. Create the file if absent.
+- **MCP items** → for Claude Code, merge `config` into `./.mcp.json` under `mcpServers.<id>`. For Codex,
+  merge into `./.codex/config.toml` under `[mcp_servers.<id>]`: use `command`/`args`/`env` for stdio and
+  `url` for Streamable HTTP. Create the file if absent.
   If the item has `"auth": true` or an `env` placeholder like `<your-...-token>`, tell the user exactly
   which token to fill in and where to get it — write the entry but flag the placeholder.
-- **Hook / setting items** → deep-merge `settings` into `./.claude/settings.json` (create if absent).
+- **Hook / setting items** → in Claude Code, deep-merge `settings` into `./.claude/settings.json`. In
+  Codex, merge hook entries into `./.codex/hooks.json`; skip Claude-only settings such as `statusLine`.
   For hooks, append to the matching event array rather than replacing it. Surface each item's `note`
   (dependencies like `jq`, or platform caveats) so the user isn't surprised.
-- **Skill items**:
+- **Skill items**: catalog install commands are Claude Code-specific unless the entry explicitly says
+  otherwise. Do not offer or run them in Codex merely because the Loadout plugin itself works there.
   - `install.type: "builtin"` → nothing to install; tell the user the command to run (e.g. `/init`,
     `/code-review`) and what it does.
   - `install.type: "plugin"` → show the `install.commands` (e.g. `/plugin marketplace add …` then
@@ -120,15 +130,15 @@ Merge; never overwrite an existing file wholesale. Prefer project scope unless t
 
 After applying, print a short receipt: what was written to which file, what tokens still need filling,
 and the exact next commands to run. Suggest `npx claude-loadout doctor` if any auth placeholders were
-written. Remind the user to restart Claude Code (or `/reload-plugins`) so new MCP servers and plugins load.
+written. Remind the user to restart the active host so new MCP servers and hooks load.
 
-## Other agents (Codex, Cursor, opencode, Gemini, OpenClaw)
+## Other agents (Cursor, opencode, Gemini, OpenClaw)
 
-This skill configures **Claude Code**. MCP servers are portable to other agents; skills and hooks are not.
+MCP servers are portable to these agents; skills and hooks are not currently applied to them.
 If the user wants the same MCP servers set up for another agent, tell them to run
-`npx claude-loadout --target <codex|cursor|opencode|gemini|openclaw|all>` in the project — or, if asked,
+`npx claude-loadout --target <cursor|opencode|gemini|openclaw|all>` in the project — or, if asked,
 write that agent's config directly from the catalog's MCP `config` fields, using the correct file and shape:
-Codex `.codex/config.toml` (`[mcp_servers.NAME]`), Cursor `.cursor/mcp.json` (`mcpServers`), Gemini
+Cursor `.cursor/mcp.json` (`mcpServers`), Gemini
 `.gemini/settings.json` (`mcpServers`), opencode `opencode.json` (`mcp.NAME`, `type: local`, `command` array,
 `environment`), OpenClaw `~/.openclaw/openclaw.json` (`mcp.servers.NAME`). Never write skills/hooks to these.
 

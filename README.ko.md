@@ -10,7 +10,7 @@
 설치합니다. 설정 파일도 대신 작성해주고요. 500개짜리 "awesome" 리스트를 읽고 설치 명령을 손으로 복붙할 필요가
 없어집니다.
 
-다른 에이전트에서도 씁니다. Claude Code는 풀 세팅, Codex·Cursor·opencode·Gemini CLI·OpenClaw에는 MCP 서버를 적용해요.
+다른 에이전트에서도 씁니다. Claude Code는 풀 세팅, Codex는 MCP 서버와 호환 훅, Cursor·opencode·Gemini CLI·OpenClaw에는 MCP 서버를 적용해요. Loadout 자체 스킬은 Claude Code와 Codex 플러그인 형식을 모두 제공합니다.
 
 [English](README.md) · [한국어](README.ko.md)
 
@@ -116,7 +116,7 @@ npx claude-loadout --help     # 플래그 전체 목록
 | `export` / `export --json` | 팀 manifest 작성 또는 JSON 출력 |
 | `apply -f` / `--ids` / `--suggestions` | 공유 loadout·특정 id·상위 추천 (`--mcp-only`, `--limit` 지원) |
 | `--discover` | 미검증 커뮤니티 스킬 추가 노출 |
-| `--target <id>` | `cursor`, `codex`, `gemini` 등 에이전트별 MCP 설정 작성 |
+| `--target <id>` | `cursor`, `codex`, `gemini` 등 에이전트별 호환 설정 작성 (Codex는 MCP + 훅) |
 | `--list-targets` | 지원 에이전트·설정 파일 경로 목록 |
 
 ### 자동 적용 vs 직접 실행
@@ -124,7 +124,7 @@ npx claude-loadout --help     # 플래그 전체 목록
 | 종류 | Loadout이 쓰나? | 사용자가 할 일 |
 | :-- | :-- | :-- |
 | MCP 서버 | ✅ `.mcp.json`(또는 에이전트 MCP 파일)에 병합 | API 키 입력; 호스팅 MCP는 첫 사용 시 OAuth |
-| 훅·설정 | ✅ `.claude/settings.json`에 병합 | `jq`, `ruff` 등 설치; **Windows는 Git Bash/WSL**에서 Claude Code 실행 |
+| 훅·설정 | ✅ `.claude/settings.json`; Codex 훅은 `.codex/hooks.json` | `jq`, `ruff` 등 설치; **Windows는 Git Bash/WSL** 사용 |
 | 내장 스킬 (`/init` 등) | ❌ 이미 Claude Code에 포함 | 필요할 때 슬래시 명령 실행 |
 | 마켓플레이스 플러그인 | ❌ `/plugin install …` 안내만 | Claude Code에서 명령 직접 실행 |
 
@@ -143,10 +143,10 @@ GitHub Actions 예제: [examples/ci-doctor.yml](examples/ci-doctor.yml).
 ## 내 에이전트에서 작동 — Claude Code 전용이 아님
 
 MCP 서버는 요즘 에이전트 전반에 이식 가능하고, 설정 파일과 형식만 다릅니다. Loadout이 각각에 맞는 걸 써줍니다.
-스킬·훅은 Claude Code 전용이라, 다른 에이전트에는 MCP 서버만 적용하고 Claude 전용인 건 알려줍니다.
+Codex에는 호환 lifecycle 훅도 `.codex/hooks.json`에 적용합니다. 카탈로그의 스킬 설치 명령은 별도 표시가 없는 한 Claude 전용이지만, Loadout의 `recommend`·`browse` 스킬 자체는 Claude Code와 Codex 모두에 패키징됩니다.
 
 ```bash
-npx claude-loadout --target codex        # .codex/config.toml 작성
+npx claude-loadout --target codex        # .codex/config.toml + .codex/hooks.json 작성
 npx claude-loadout --target cursor        # .cursor/mcp.json 작성
 npx claude-loadout --target claude,cursor # 여러 개 동시 적용
 npx claude-loadout --target all           # 지원하는 모든 에이전트
@@ -159,7 +159,7 @@ npx claude-loadout --list-targets         # 전체 목록 보기
 | `cursor` | Cursor | `.cursor/mcp.json` | `mcpServers` |
 | `gemini` | Gemini CLI | `.gemini/settings.json` | `mcpServers` |
 | `opencode` | opencode | `opencode.json` | `mcp` (`type: local`) |
-| `codex` | Codex CLI | `.codex/config.toml` | `[mcp_servers.*]` (TOML) |
+| `codex` | Codex | `.codex/config.toml` + `.codex/hooks.json` | `[mcp_servers.*]` (stdio/HTTP) + lifecycle 훅 |
 | `openclaw` | OpenClaw | `~/.openclaw/openclaw.json` | `mcp.servers` |
 
 `--target`를 안 주면 Claude Code를 대상으로 하고, 프로젝트에서 감지된 다른 에이전트가 있으면 알려줍니다.
@@ -180,7 +180,7 @@ npx claude-loadout --list-targets         # 전체 목록 보기
 Loadout은 3티어에서 끌어와서, **검증 안 된 걸 무턱대고 적용하는 일 없이** 생태계 전체에 닿습니다:
 
 - **큐레이션 (38)** — 손검증한 MCP·훅·스킬. 자동적용 안전, npx 패키지는 전부 npm 실존 확인.
-- **공식 마켓 (~240)** — Anthropic 공식 플러그인 디렉터리를 자동 흡수. 내 스택에 맞으면 노출, `/plugin`으로 설치.
+- **공식 마켓 (278)** — Anthropic 공식 플러그인 디렉터리를 자동 흡수. 내 스택에 맞으면 노출, `/plugin`으로 설치.
 - **커뮤니티 (`--discover`)** — [caveman](https://github.com/JuliusBrussee/caveman)(토큰 절약) 같은 유명 커뮤니티 스킬. 요청할 때만 뜨고, **⚠ 미검증** 라벨, **자동적용 절대 안 함**.
 
 ```bash

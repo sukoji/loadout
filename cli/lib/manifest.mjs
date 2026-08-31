@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { scanProject } from "./scan.mjs";
 import { recommend } from "./recommend.mjs";
 import { apply } from "./apply.mjs";
-import { applyToTarget, TARGETS } from "./targets.mjs";
+import { applyToTarget, supportedItems, TARGETS } from "./targets.mjs";
 
 // Build a shareable team loadout manifest from the current project profile.
 export function buildManifest(catalog, root = process.cwd(), opts = {}) {
@@ -92,6 +92,10 @@ export function previewItemsApply(catalog, ids, opts = {}) {
     items: items.map((i) => ({ id: i.id, name: i.name, type: i.type, tier: i.tier || "curated" })),
     skipped,
     claudeOnly: items.filter((i) => i.type !== "mcp").map((i) => i.id),
+    targetUnsupported: Object.fromEntries(targets.map((target) => [
+      target,
+      items.filter((item) => !TARGETS[target]?.types.includes(item.type)).map((item) => item.id),
+    ])),
   };
 }
 
@@ -103,22 +107,21 @@ export function applyItems(catalog, ids, root = process.cwd(), opts = {}) {
   const { items, skipped } = resolveManifestItems(catalog, ids);
   const targets = normalizeTargets(opts.targets);
   const receipts = [];
-  const mcpItems = items.filter((i) => i.type === "mcp");
   const claudeNative = items.filter((i) => i.type !== "mcp");
 
   for (const t of targets) {
     if (t === "claude") {
       receipts.push({ type: "claude", receipt: apply(items, root) });
     } else {
-      receipts.push({ type: "target", target: t, receipt: applyToTarget(t, mcpItems, root) });
+      receipts.push({ type: "target", target: t, receipt: applyToTarget(t, supportedItems(t, items), root) });
     }
   }
 
   if (claudeNative.length && !targets.includes("claude")) {
     const skills = claudeNative.filter((i) => i.type === "skill" || i.type === "reference");
     if (skills.length) receipts.push({ type: "commands", receipt: apply(skills, root) });
-    for (const item of claudeNative.filter((i) => i.type === "hook" || i.type === "setting")) {
-      skipped.push(`${item.id} (Claude Code-only — add --target claude to apply hooks)`);
+    for (const item of claudeNative.filter((i) => !targets.some((target) => TARGETS[target]?.types.includes(i.type)))) {
+      skipped.push(`${item.id} (not supported by selected target(s))`);
     }
   }
 

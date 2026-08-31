@@ -4,7 +4,17 @@ All notable changes to Loadout are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/); versions follow [SemVer](https://semver.org/).
 
 ## [Unreleased]
-- See [LOOP.md](LOOP.md).
+### Added
+- Codex plugin packaging for the existing `recommend` and `browse` skills.
+- Codex lifecycle-hook application and installed-hook detection through `.codex/hooks.json`.
+
+### Changed
+- Refreshed the official Anthropic marketplace snapshot from 242 to 278 entries.
+- Made Loadout skills host-aware while keeping catalog plugin install commands Claude-specific.
+
+### Fixed
+- Codex Streamable HTTP MCP servers now write `url` entries instead of being skipped as experimental.
+- Agent packaging versions and skill frontmatter are checked by `npm run validate`.
 
 ## [0.5.2] — 2026-07-10
 ### Fixed
