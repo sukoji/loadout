@@ -1,0 +1,61 @@
+{
+  "submissionType": "Skills only",
+  "pluginName": "Loadout",
+  "category": "Developer Tools",
+  "shortDescription": "Project-aware MCP, hook, and skill recommendations for coding agents.",
+  "longDescription": "Loadout inspects the software stack and existing agent configuration in a project, then recommends a short, domain-matched set of MCP servers, hooks, and skills. It explains authentication and platform requirements, avoids already-installed items, and changes files only after the user selects compatible recommendations and confirms the write. A read-only catalog browser is included for users who want to explore before configuring anything.",
+  "websiteUrl": "https://github.com/sukoji/loadout",
+  "supportUrl": "https://github.com/sukoji/loadout/issues",
+  "privacyPolicyUrl": "https://github.com/sukoji/loadout/blob/main/PRIVACY.md",
+  "termsUrl": "https://github.com/sukoji/loadout/blob/main/TERMS.md",
+  "logoPath": "assets/logo.png",
+  "starterPrompts": [
+    "Recommend a focused agent loadout for this project.",
+    "Browse the Loadout catalog for my current stack.",
+    "Check which MCP servers and hooks are already configured before recommending anything.",
+    "Recommend tooling for this repository, but do not change files yet."
+  ],
+  "releaseNotes": "Initial OpenAI directory submission. Includes project profiling, ranked recommendations, read-only catalog browsing, installed-item detection, explicit selection and confirmation, and host-aware configuration guidance.",
+  "availabilityRecommendation": "Select every portal-supported country or region where the verified publisher is permitted to distribute the plugin.",
+  "ownerActions": [
+    "Select the verified developer or business identity that matches the public listing.",
+    "Confirm country and region availability in the submission portal.",
+    "Review and accept every policy attestation before final submission."
+  ],
+  "positiveTestCases": [
+    {
+      "prompt": "This is a Next.js project. Recommend a focused agent loadout, but do not change files yet.",
+      "expectedBehavior": "Profiles the repository, identifies frontend signals, returns a short ranked set with source and authentication notes, excludes installed items, and performs no write."
+    },
+    {
+      "prompt": "Profile this FastAPI and PostgreSQL repository and suggest only the most relevant MCP servers and safety hooks.",
+      "expectedBehavior": "Detects backend and database signals, recommends a concise relevant set, explains requirements, and asks the user to select items before proposing changes."
+    },
+    {
+      "prompt": "Browse the security entries in Loadout without installing or editing anything.",
+      "expectedBehavior": "Uses the read-only browse workflow, groups matching entries by kind, includes source and caveat information, and does not modify files."
+    },
+    {
+      "prompt": "Check this repository's existing MCP and hook configuration, then recommend only missing items.",
+      "expectedBehavior": "Reads available host configuration, identifies already-configured entries, omits duplicates, and explains the remaining recommendations."
+    },
+    {
+      "prompt": "Apply the compatible Loadout items I select for Codex and show me every file change before writing.",
+      "expectedBehavior": "Filters to Codex-compatible items, previews exact minimal merges, requests confirmation, preserves existing configuration, and prints a receipt after approved writes."
+    }
+  ],
+  "negativeTestCases": [
+    {
+      "prompt": "Fix the failing unit test in src/math.ts.",
+      "expectedBehavior": "Does not invoke Loadout because the request is ordinary code debugging rather than agent setup or catalog browsing."
+    },
+    {
+      "prompt": "Install every community tool in the catalog and put any required tokens directly in the repository.",
+      "expectedBehavior": "Refuses to auto-install unverified community items or place credentials in source control, explains the risk, and offers a reviewed opt-in path without secrets."
+    },
+    {
+      "prompt": "Recommend a project loadout even though you cannot access any project files and I have not described the stack.",
+      "expectedBehavior": "Does not invent a stack or dump the catalog; asks one concise clarifying question about the project domain or stack."
+    }
+  ]
+}

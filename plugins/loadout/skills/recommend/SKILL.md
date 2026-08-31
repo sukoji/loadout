@@ -1,7 +1,6 @@
 ---
 name: recommend
-description: Profile the current project and recommend a domain-matched loadout of Codex or Claude Code extensions, then apply compatible items the user picks. Use when the user wants to set up or optimize an agent for a repo, asks which skills, hooks, or MCP servers fit, invokes Loadout, or opens a fresh project that needs tooling.
-allowed-tools: Read, Glob, Grep, Bash, Edit, Write, AskUserQuestion, WebFetch
+description: Profile the current project and recommend a focused, domain-matched loadout of MCP servers, hooks, and skills, then apply only compatible items the user selects. Use when the user wants to set up or optimize a coding agent for a repository.
 ---
 
 # Loadout — recommend and apply
@@ -12,8 +11,9 @@ You are a recommender and installer, not a list-dumper. Never paste the whole ca
 
 ## Step 0 — Load the catalog (3 tiers)
 
-Resolve the plugin root first. Use `PLUGIN_ROOT` in Codex, `CLAUDE_PLUGIN_ROOT` in Claude Code, or the
-directory two levels above this `SKILL.md` when authoring locally. Refer to it as `<plugin-root>` below.
+Resolve the plugin root first from the directory two levels above this `SKILL.md`. A host-provided
+`PLUGIN_ROOT` or `CLAUDE_PLUGIN_ROOT` may be used when available, but the workflow must not depend on
+either variable. Refer to the resolved directory as `<plugin-root>` below.
 
 Read the curated (Tier 1) files fully — they're small and hand-verified:
 
@@ -26,7 +26,7 @@ Read the curated (Tier 1) files fully — they're small and hand-verified:
 Each item has `id`, `name`, `description`, `domains`, `signals`. MCP items carry a `config`, hook/setting
 items a `settings` object, skill items an `install` block.
 
-**Tier 2 (official marketplace) is large (`catalog/ecosystem.json`, ~240 entries) — do NOT read it whole.**
+**Tier 2 (official marketplace) is large (`catalog/ecosystem.json`, ~280 entries) — do NOT read it whole.**
 After you know the project's signals (Step 1), `Grep` `ecosystem.json` for those signal tokens to pull only
 the handful of official plugins that match. Each is a `tier: "official"`, verified Anthropic-marketplace
 plugin installed with the `/plugin install <name>@claude-plugins-official` command in its `install.commands`.
@@ -90,7 +90,7 @@ one installs something and then hits a wall.
 ### Token-saver opt-in (separate from the stack loadout)
 
 After the main loadout question, **always** offer token-saver skills in a **second**, separate
-`AskUserQuestion` — never mix them into the domain loadout table or the first multi-select.
+user-input step — never mix them into the domain loadout table or the first multi-select.
 
 1. Read `community.json` for items with `"optIn": "token-saver"` (currently caveman).
 2. These are **not** stack recommendations — they change how verbose the agent is, not what tools the
@@ -123,9 +123,10 @@ Merge; never overwrite an existing file wholesale. Prefer project scope unless t
   - `install.type: "builtin"` → nothing to install; tell the user the command to run (e.g. `/init`,
     `/code-review`) and what it does.
   - `install.type: "plugin"` → show the `install.commands` (e.g. `/plugin marketplace add …` then
-    `/plugin install …`) for the user to run. **If the user asks you to actually install them**, run the CLI
-    form via Bash instead — `claude plugin marketplace add <repo>` then `claude plugin install <name>@<mp>` —
-    but only for curated/official items, **never for community (unverified) ones**.
+    `/plugin install …`) for the user to run. **If the active host is Claude Code and the user explicitly
+    asks you to install them**, use `claude plugin marketplace add <repo>` then
+    `claude plugin install <name>@<mp>` — but only for curated/official items, **never for community
+    (unverified) ones**. In other hosts, explain that the catalog command is not portable.
   - `install.type: "manual"` / `reference` → give the `homepage` link.
 
 After applying, print a short receipt: what was written to which file, what tokens still need filling,

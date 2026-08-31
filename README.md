@@ -298,3 +298,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the entry schema.
 
 MIT © sukoji. The catalog links to third-party tools owned by their respective authors; Loadout only curates
 and configures them.
+
+[Privacy](PRIVACY.md) · [Terms](TERMS.md) · [Support](SUPPORT.md)

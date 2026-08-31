@@ -256,3 +256,5 @@ npm run build:docs   # 카탈로그로부터 docs/domains/ 재생성
 ## 라이선스
 
 MIT © sukoji. 카탈로그가 링크하는 서드파티 도구는 각 저작자의 소유이며, Loadout은 이를 큐레이션·설정만 합니다.
+
+[개인정보 처리방침](PRIVACY.md) · [이용약관](TERMS.md) · [지원](SUPPORT.md)

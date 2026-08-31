@@ -1,7 +1,7 @@
 {
   "name": "loadout",
   "version": "0.5.2",
-  "description": "Profile a project and recommend a focused loadout of MCP servers, lifecycle hooks, and skills.",
+  "description": "Profile a software project and recommend a focused loadout of MCP servers, hooks, and skills for the active coding agent.",
   "author": {
     "name": "sukoji",
     "url": "https://github.com/sukoji"
@@ -13,8 +13,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Loadout",
-    "shortDescription": "Project-aware agent setup",
-    "longDescription": "Scan a project, recommend a small domain-matched set of MCP servers, hooks, and skills, then apply only the selected compatible items.",
+    "shortDescription": "Project-aware coding-agent setup",
+    "longDescription": "Inspect a software project, recommend a small domain-matched set of MCP servers, hooks, and skills, then apply only the compatible items the user selects.",
     "developerName": "sukoji",
     "category": "Developer Tools",
     "capabilities": ["Read", "Write"],

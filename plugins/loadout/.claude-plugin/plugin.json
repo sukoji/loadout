@@ -3,7 +3,7 @@
   "name": "loadout",
   "displayName": "Loadout",
   "version": "0.5.2",
-  "description": "Profile your project and gear up Claude Code with the right skills, MCP servers, and hooks.",
+  "description": "Profile a software project and recommend a focused loadout of MCP servers, hooks, and skills for the active coding agent.",
   "author": {
     "name": "sukoji"
   },

@@ -7,10 +7,13 @@ All notable changes to Loadout are documented here. Format loosely follows
 ### Added
 - Codex plugin packaging for the existing `recommend` and `browse` skills.
 - Codex lifecycle-hook application and installed-hook detection through `.codex/hooks.json`.
+- OpenAI Plugin Directory submission metadata, policy/support pages, a 512px logo, golden test cases,
+  validation, and a reproducible skills-only archive builder.
 
 ### Changed
 - Refreshed the official Anthropic marketplace snapshot from 242 to 278 entries.
 - Made Loadout skills host-aware while keeping catalog plugin install commands Claude-specific.
+- Removed host-specific skill frontmatter and UI-tool assumptions from the public submission path.
 
 ### Fixed
 - Codex Streamable HTTP MCP servers now write `url` entries instead of being skipped as experimental.
