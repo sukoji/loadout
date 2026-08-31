@@ -7,7 +7,7 @@ Loadout development without the original chat context. If a session dies mid-tas
 - **Local path:** `D:\Projects\loadout`
 - **What it is:** A cross-agent **plugin + recommender** with Claude Code and Codex packaging. It profiles a project and
   *applies* a domain-matched loadout of MCP servers / hooks / skills — instead of being one more list to read.
-- **Last updated:** 2026-08-31 (Codex packaging and target-capability refresh; package v0.5.2)
+- **Last updated:** 2026-08-31 (OpenAI Plugin Directory submission package prepared; package v0.5.2)
 - **Owner GitHub account:** `sukoji` (a *user*, not an org — `gh api user` returns `sukoji`, even though
   `gh auth status` shows the label `jskh-201910840`). Token scopes: `repo`, `workflow`, `gist`, `read:org`.
 
@@ -22,6 +22,7 @@ Core status below was re-verified on 2026-08-31. Re-verify anytime with the comm
 | First release shipped & pushed | ✅ on `origin/main`; tagged `v0.1.0` |
 | Published to npm | ✅ `claude-loadout@0.5.1` live. Local `npm publish` uses `~/.npmrc` token. **`prepublishOnly` runs `npm test`.** GitHub Actions `publish` workflow needs repo secret `NPM_TOKEN` — without it the job warns and skips. See CONTRIBUTING § Release. CI: `loadout-doctor.yml` uses `doctor --json --require-healthy`. Scan: full domain coverage across all 10 domains. |
 | Plugin marketplace | ✅ **end-to-end verified from GitHub**: `/plugin marketplace add sukoji/loadout` → `/plugin install loadout@loadout` → `claude plugin details` lists Skills (2): browse, recommend. (Install-blocking bug fixed — see gotcha #8.) |
+| OpenAI Plugin Directory | 🟡 **submission-ready, not submitted**: skills-only ZIP builder, listing metadata, policies, 512px logo, and 5 positive + 3 negative tests are committed. The verified publisher must finish identity selection, attestations, portal import testing, and final submit. |
 | `/loadout:recommend` + `/loadout:browse` skills | ✅ authored, frontmatter valid |
 | Catalog | ✅ **3 tiers, 319 items**: 38 curated + 278 official + 3 community across **10 domains**. `npm run test:recommend` guards ranking quality. |
 | CLI (`node cli/index.js`) | ✅ `doctor` / `doctor --fix`, browse (`domains`/`show`/`search`/`stats`), `apply --suggestions`, `--help`; `npm test` covers validate + recommend + scan + doctor + manifest + verify:mcp. |
@@ -36,7 +37,8 @@ Core status below was re-verified on 2026-08-31. Re-verify anytime with the comm
 - `npm run test:mcps` is optional/slow (network); CI skips runtime smoke — uses `verify:mcp` instead.
 - Windows POSIX hooks still need Git Bash/WSL; PowerShell-native variants not yet in catalog.
 - `assets/demo.svg` exists and is embedded in README; an animated asciinema/GIF is still not recorded.
-- Codex marketplace/directory submission and a clean installed-plugin smoke test are not completed yet.
+- OpenAI Plugin Directory final submission and portal-import smoke test require the verified publisher's
+  Platform session; local archive extraction and clean-package validation are complete.
 
 ---
 
@@ -175,6 +177,9 @@ lists were generated into this repo's planning; the one-line resume pointer is e
       Discord now → HN (weekday AM ET, once a few stars) → Reddit + GeekNews; space 1–2 days, reply fast.
 - [ ] **`submit-to-claude-marketplaces` [S]** — list on claudemarketplaces.com and any official directory.
       Depends: publish-npm, improve-readme-discoverability.
+- [~] **`submit-openai-plugin-directory` [S]** — PREPARED 2026-08-31 in `ec68116`. Run
+      `npm run submission:build`, upload the generated ZIP as **Skills only**, copy fields from
+      `submission/openai/listing.json`, test the portal import, complete publisher attestations, and submit.
 
 > **Promo kit (draft location):** all six channel drafts + exact submission fields live in a session
 > scratchpad file `promo-kit.md` (not committed — it's marketing copy, not repo content). Regenerate from
@@ -204,3 +209,16 @@ If you're about to run low on tokens or end a session:
 - **Feature commit:** `57402ee` (`feat: add native Codex plugin and hook support`).
 - **Blockers / follow-up:** Codex marketplace/directory submission and an installed-plugin smoke test were
   not performed. Pre-existing local `.codex/` configuration remains intentionally untracked and untouched.
+
+### 2026-08-31 — OpenAI Plugin Directory submission preparation
+
+- **Work:** Added provider-neutral skill metadata, public privacy/terms/support pages, a square logo,
+  portal listing copy, starter prompts, five positive and three negative golden tests, submission validation,
+  and a reproducible skills-only ZIP builder.
+- **Verification:** `npm test`; `npm run build:docs`; `npm pack --dry-run`; Claude and Codex plugin validators;
+  both skill validators; `npm run submission:build`; extracted-archive validation and catalog parsing.
+- **Feature commit:** `ec68116` (`feat: prepare OpenAI plugin directory submission`).
+- **Artifact:** `dist/loadout-openai-submission-v0.5.2.zip` (ignored, reproducible), SHA-256
+  `BF250A00F856A732577DB4F63821D6A3300790B27A4851CCE9E812FA69A1F7EC`.
+- **Blocker:** Final submission requires a verified OpenAI Platform identity, Apps Management write access,
+  country/region selection, policy attestations, and portal-side imported-skill testing.
