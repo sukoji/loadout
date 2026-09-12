@@ -289,5 +289,19 @@
         "FIRECRAWL_API_KEY": "<your-firecrawl-api-key>"
       }
     }
+  },
+  {
+    "id": "zambo",
+    "type": "mcp",
+    "name": "Zambo",
+    "description": "Give your AI hands: 120 native MCP tools across 17 products (code audit, lead research, strategy, onchain scoring, verification) behind one zero-auth endpoint. Type a job, get a receipt.",
+    "domains": ["general"],
+    "signals": ["always"],
+    "auth": false,
+    "homepage": "https://github.com/zambodotdev/zambo-mcp",
+    "config": {
+      "type": "http",
+      "url": "https://zambo.dev/api/mcp"
+    }
   }
 ]
