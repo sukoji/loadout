@@ -941,6 +941,28 @@
     }
   },
   {
+    "id": "blackrock-advisor-center-plugin",
+    "tier": "official",
+    "type": "skill",
+    "name": "blackrock-advisor-center-plugin",
+    "description": "BlackRock Advisor Center 360° skills for financial advisors: portfolio review, opportunity and fund-health checks, guided benchmark selection, guided portfolio building, wealth projections, and routing to Advisor Center web workflows. Requires the BlackRock Advisor Center connector and an Advisor Center account.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://github.com/blackrock/advisor-center-agent-skills",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "blackrock-advisor-center-plugin",
+      "commands": [
+        "/plugin install blackrock-advisor-center-plugin@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "box",
     "tier": "official",
     "type": "skill",
@@ -952,7 +974,7 @@
     "signals": [],
     "official": true,
     "category": "productivity",
-    "homepage": "https://github.com/box/box-for-ai",
+    "homepage": "https://github.com/box/skills",
     "install": {
       "type": "plugin",
       "marketplace": "claude-plugins-official",
@@ -2520,6 +2542,28 @@
     }
   },
   {
+    "id": "gc-ai",
+    "tier": "official",
+    "type": "skill",
+    "name": "GC AI",
+    "description": "Work in your GC AI legal knowledge base from Claude: upload documents, run review playbooks, and ask questions grounded in your own files, all as you.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://docs.gc.ai/api-reference/mcp/overview",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "gc-ai",
+      "commands": [
+        "/plugin install gc-ai@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "gitkraken",
     "tier": "official",
     "type": "skill",
@@ -2688,14 +2732,17 @@
     "tier": "official",
     "type": "skill",
     "name": "greptile",
-    "description": "AI-powered codebase search and understanding. Query your repositories using natural language to find relevant code, understand dependencies, and get contextual answers about your codebase architecture.",
+    "description": "AI code review agent for GitHub and GitLab. View and resolve Greptile's PR review comments, run reviews on your working branch, and search your organization's knowledge base and coding patterns, directly from Claude Code.",
     "domains": [
       "general"
     ],
-    "signals": [],
+    "signals": [
+      ".github",
+      "gitlab"
+    ],
     "official": true,
     "category": "development",
-    "homepage": "https://github.com/anthropics/claude-plugins-public/tree/main/external_plugins/greptile",
+    "homepage": "https://www.greptile.com/docs/mcp-v2/overview",
     "install": {
       "type": "plugin",
       "marketplace": "claude-plugins-official",
@@ -4506,7 +4553,7 @@
     "tier": "official",
     "type": "skill",
     "name": "Qodo",
-    "description": "Qodo Skills provides a curated library of reusable AI agent capabilities that extend Claude's functionality for software development workflows. Each skill is designed to integrate seamlessly into your development process, enabling tasks like code quality checks, automated testing, security scanning, and compliance validation. Skills operate across your entire SDLC—from IDE to CI/CD—ensuring consistent standards and catching issues early.",
+    "description": "Qodo setup, code intelligence, and review workflows.",
     "domains": [
       "general"
     ],
@@ -4520,6 +4567,28 @@
       "plugin": "qodo",
       "commands": [
         "/plugin install qodo@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "qodo-standards",
+    "tier": "official",
+    "type": "skill",
+    "name": "Qodo Standards",
+    "description": "Optional Qodo rules discovery and standards administration workflows.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "development",
+    "homepage": "https://github.com/qodo-ai/qodo-skills.git",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "qodo-standards",
+      "commands": [
+        "/plugin install qodo-standards@claude-plugins-official"
       ]
     }
   },
@@ -6312,6 +6381,50 @@
       "plugin": "activecampaign",
       "commands": [
         "/plugin install activecampaign@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "hubspot-sales",
+    "tier": "official",
+    "type": "skill",
+    "name": "HubSpot Sales",
+    "description": "Run your HubSpot sales workflow directly from Claude. Adds skills that cover the full sales day: import contacts and deals into HubSpot, get a prioritised morning brief, prep for any call with full CRM context, draft personalised follow-ups grounded in deal history, log calls and update records by describing what happened, and review your pipeline to surface stalling deals. Everything writes back to HubSpot.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://www.hubspot.com",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "hubspot-sales",
+      "commands": [
+        "/plugin install hubspot-sales@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "dynatrace",
+    "tier": "official",
+    "type": "skill",
+    "name": "Dynatrace",
+    "description": "Dynatrace observability skills: DQL query patterns, application and infrastructure monitoring, log analysis, problem investigation, and incident response workflows, with the Dynatrace MCP server for live platform access.",
+    "domains": [
+      "devops"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "monitoring",
+    "homepage": "https://www.dynatrace.com/hub/detail/claude-code-cli/",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "dynatrace",
+      "commands": [
+        "/plugin install dynatrace@claude-plugins-official"
       ]
     }
   }
