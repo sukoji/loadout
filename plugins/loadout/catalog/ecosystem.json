@@ -160,7 +160,7 @@
     "id": "airwallex-agentos",
     "tier": "official",
     "type": "skill",
-    "name": "airwallex-agentos",
+    "name": "Airwallex",
     "description": "Bring Airwallex's global financial infrastructure to Claude. Orchestrate actions across your account in plain language, e.g., set up invoices from a PO, onboard suppliers from invoices, and check current cash position across currencies. AgentOS bundles pre-built finance Skills with MCP servers. A public CLI connects your agent to Airwallex's capabilities.",
     "domains": [
       "general"
@@ -1230,6 +1230,52 @@
     }
   },
   {
+    "id": "chronograph-gp",
+    "tier": "official",
+    "type": "skill",
+    "name": "chronograph-gp",
+    "description": "Portfolio monitoring, valuations and analytics for private-capital GP teams using the Chronograph connector: portfolio-company one-pagers, fund quarterly review packs, markup/markdown briefs, TVPI attribution and budget-vs-actuals. Requires a Chronograph account and the Chronograph connector.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://www.chronograph.pe/",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "chronograph-gp",
+      "commands": [
+        "/plugin install chronograph-gp@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "chronograph-lp",
+    "tier": "official",
+    "type": "skill",
+    "name": "chronograph-lp",
+    "description": "Portfolio monitoring and analytics for private-capital LP teams using the Chronograph connector: cashflow forecasting, commitment pacing, look-through exposure scans and GP-meeting prep. Requires a Chronograph account and the Chronograph connector.",
+    "domains": [
+      "general"
+    ],
+    "signals": [
+      "expo"
+    ],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://www.chronograph.pe/",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "chronograph-lp",
+      "commands": [
+        "/plugin install chronograph-lp@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "circle-skills",
     "tier": "official",
     "type": "skill",
@@ -1380,6 +1426,28 @@
       "plugin": "claude-security",
       "commands": [
         "/plugin install claude-security@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "clay",
+    "tier": "official",
+    "type": "skill",
+    "name": "clay",
+    "description": "Work with Clay from Claude Code: set up and sign in to the clay CLI, query and analyze Clay tables, search Clay's GTM database for people and companies, manage audiences, signals, routines and workflows, and draft and review Sequencer campaigns. Includes hooks that auto-approve the plugin's own clay CLI calls and Clay skills; requires a Clay account.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://github.com/clay-run/agent-plugins/tree/main/clay",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "clay",
+      "commands": [
+        "/plugin install clay@claude-plugins-official"
       ]
     }
   },
@@ -2954,6 +3022,51 @@
     }
   },
   {
+    "id": "incident-io",
+    "tier": "official",
+    "type": "skill",
+    "name": "incident-io",
+    "description": "Work with incident.io from Claude: respond to and investigate incidents, check on-call schedules and escalations, and author the runbooks, skills and architecture docs that incident.io investigations draw on. Bundles the official incident.io MCP server (OAuth on first use).",
+    "domains": [
+      "devops"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "monitoring",
+    "homepage": "https://incident.io",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "incident-io",
+      "commands": [
+        "/plugin install incident-io@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "informatica-for-claude-platform",
+    "tier": "official",
+    "type": "skill",
+    "name": "informatica-for-claude-platform",
+    "description": "Governed catalog discovery for Informatica Intelligent Data Management Cloud (CDGC): find tables, columns, files, glossary terms and policies across the enterprise catalog, check ownership, certification, sensitivity and applicable policy, and get safe-usage guidance grounded in catalog metadata before querying any data. Requires an Informatica IDMC tenant and the Informatica Catalog Discovery connector.",
+    "domains": [
+      "backend-api",
+      "data-ml"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "database",
+    "homepage": "https://github.com/forcedotcom/informatica-claude-plugins/tree/main/informatica-for-claude-platform",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "informatica-for-claude-platform",
+      "commands": [
+        "/plugin install informatica-for-claude-platform@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "intercom",
     "tier": "official",
     "type": "skill",
@@ -2972,6 +3085,28 @@
       "plugin": "intercom",
       "commands": [
         "/plugin install intercom@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "intuit-quickbooks",
+    "tier": "official",
+    "type": "skill",
+    "name": "intuit-quickbooks",
+    "description": "QuickBooks business insights and actions: financial health briefings across P&L, cash flow, balance sheet and A/R, industry benchmarking, payroll cost analysis, overdue-invoice reminders, estimate/invoice drafting from email, payroll onboarding and base-pay changes (with confirmation), and QuickBooks Capital lending guidance. Requires the Intuit QuickBooks connector.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://github.com/intuit/quickbooks-claude-plugin",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "intuit-quickbooks",
+      "commands": [
+        "/plugin install intuit-quickbooks@claude-plugins-official"
       ]
     }
   },
@@ -3111,6 +3246,28 @@
       "plugin": "laravel-boost",
       "commands": [
         "/plugin install laravel-boost@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "leadfeeder",
+    "tier": "official",
+    "type": "skill",
+    "name": "leadfeeder",
+    "description": "Turn website visitor signals into pipeline with Leadfeeder: daily visitor briefs, visitor company research, buyer and contact discovery, personalised outreach drafts, and adding companies to your Leadfeeder lists, via the Leadfeeder connector. Requires a Leadfeeder account.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://www.leadfeeder.com",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "leadfeeder",
+      "commands": [
+        "/plugin install leadfeeder@claude-plugins-official"
       ]
     }
   },
@@ -4162,6 +4319,72 @@
     }
   },
   {
+    "id": "pendo-analytics",
+    "tier": "official",
+    "type": "skill",
+    "name": "pendo-analytics",
+    "description": "Bring Pendo product analytics into Claude Code: account health, feature adoption, session replay lookup and triage, feedback analysis, and data-informed planning grounded in real usage data. Requires the Pendo connector and a Pendo subscription.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://github.com/pendo-io/claude-pendo-plugin/tree/main/plugins/pendo-analytics",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "pendo-analytics",
+      "commands": [
+        "/plugin install pendo-analytics@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "pendo-guides",
+    "tier": "official",
+    "type": "skill",
+    "name": "pendo-guides",
+    "description": "Create production-ready Pendo in-app guides (walkthroughs, announcements, alerts, polls, promotions) as HTML/CSS/JS from a short intake conversation, using Pendo's guide components.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://github.com/pendo-io/claude-pendo-plugin/tree/main/plugins/pendo-guides",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "pendo-guides",
+      "commands": [
+        "/plugin install pendo-guides@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "pendo-orchestrate",
+    "tier": "official",
+    "type": "skill",
+    "name": "pendo-orchestrate",
+    "description": "Create, configure and edit draft Pendo Orchestrate email journeys, including multi-email and conditional split flows, via the Pendo connector. Journeys stay in draft; activation happens in the Orchestrate UI.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://github.com/pendo-io/claude-pendo-plugin/tree/main/plugins/pendo-orchestrate",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "pendo-orchestrate",
+      "commands": [
+        "/plugin install pendo-orchestrate@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "php-lsp",
     "tier": "official",
     "type": "skill",
@@ -4553,7 +4776,7 @@
     "tier": "official",
     "type": "skill",
     "name": "Qodo",
-    "description": "Qodo setup, code intelligence, and review workflows.",
+    "description": "Bring Qodo's codebase intelligence, coding standards, and code review into your coding agent.",
     "domains": [
       "general"
     ],
@@ -5285,6 +5508,54 @@
       "plugin": "session-report",
       "commands": [
         "/plugin install session-report@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "setup-agent-analytics",
+    "tier": "official",
+    "type": "skill",
+    "name": "setup-agent-analytics",
+    "description": "Detect AI agents in your codebase and instrument them with Pendo Agent Analytics via the best-fit path: Python SDK, TypeScript SDK, client-side trackAgent(), or the Conversations API.",
+    "domains": [
+      "general"
+    ],
+    "signals": [
+      "python"
+    ],
+    "official": true,
+    "category": "development",
+    "homepage": "https://github.com/pendo-io/claude-pendo-plugin/tree/main/plugins/setup-agent-analytics",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "setup-agent-analytics",
+      "commands": [
+        "/plugin install setup-agent-analytics@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "setup-mcp-agent-analytics",
+    "tier": "official",
+    "type": "skill",
+    "name": "setup-mcp-agent-analytics",
+    "description": "Detect an MCP server's language (Python, TypeScript or Go) and instrument it with the matching Pendo SDK so MCP tool calls flow into Pendo Agent Analytics.",
+    "domains": [
+      "general"
+    ],
+    "signals": [
+      "python"
+    ],
+    "official": true,
+    "category": "development",
+    "homepage": "https://github.com/pendo-io/claude-pendo-plugin/tree/main/plugins/setup-mcp-agent-analytics",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "setup-mcp-agent-analytics",
+      "commands": [
+        "/plugin install setup-mcp-agent-analytics@claude-plugins-official"
       ]
     }
   },
@@ -6252,6 +6523,28 @@
     }
   },
   {
+    "id": "zocks-advisor",
+    "tier": "official",
+    "type": "skill",
+    "name": "zocks-advisor",
+    "description": "Seven skills for financial advisors built on Zocks meeting intelligence: client behavioral profiles, attrition-risk ranking, held-away asset radar, client journey dossiers, household review packs, next-best-action analysis and a tax opportunity scan. Requires the Zocks connector and a Zocks account.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://github.com/zocks-communications/zocks-agent-plugins",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "zocks-advisor",
+      "commands": [
+        "/plugin install zocks-advisor@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "zoom-plugin",
     "tier": "official",
     "type": "skill",
@@ -6425,6 +6718,28 @@
       "plugin": "dynatrace",
       "commands": [
         "/plugin install dynatrace@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "wingspan",
+    "tier": "official",
+    "type": "skill",
+    "name": "Wingspan",
+    "description": "Ask Claude about the contractors you pay through Wingspan, what you owe them, and what is holding up a payment, then onboard contractors and log payments as drafts, with a preview before anything is written. Requires a Wingspan account; bundles the Wingspan MCP server (OAuth on first use).",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://github.com/wingspanHQ/mcp-claude-plugin",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "wingspan",
+      "commands": [
+        "/plugin install wingspan@claude-plugins-official"
       ]
     }
   }
