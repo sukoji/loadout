@@ -736,14 +736,17 @@
     "tier": "official",
     "type": "skill",
     "name": "aws-startup-advisor",
-    "description": "Personalized architecture, cost, security, and migration guidance for startups. From day-one account setup and security baselines to production-ready infrastructure, cost optimization, and beyond. Includes AWS Activate Credits eligibility, 60+ exclusive startup offers, and multi-account multi-region support. Built on expertise from AWS Startup Solutions Architects and patterns from 350,000+ startups.",
+    "description": "Personalized AWS guidance built on patterns from 350,000+ startups. Get architecture, cost, and security recommendations matched to your stage, from day-one account setup to production-ready infrastructure. Migrate to AWS from Azure, GCP, or Heroku with resource discovery, cost estimates, and generated Terraform. Move OpenAI, Azure OpenAI, and Gemini code to Amazon Bedrock, and plan and prototype AI agents on AgentCore and other AWS runtimes. Includes AWS Activate credits eligibility, 60+ exclusive startup offers, and multi-account, multi-region support. Built by AWS Startup Solutions Architects.",
     "domains": [
       "general"
     ],
-    "signals": [],
+    "signals": [
+      "terraform",
+      "openai"
+    ],
     "official": true,
     "category": "development",
-    "homepage": "https://github.com/awslabs/startups",
+    "homepage": "https://github.com/aws/agent-toolkit-for-aws",
     "install": {
       "type": "plugin",
       "marketplace": "claude-plugins-official",
@@ -3659,6 +3662,28 @@
     }
   },
   {
+    "id": "math-proof",
+    "tier": "official",
+    "type": "skill",
+    "name": "math-proof",
+    "description": "Two skills for hard mathematics problems, each ending in a self-contained proof.md: /math-proof:solo has the session work the problem itself in stages with a notes file; /math-proof:siege works on it for hours in rounds of judge and worker sub-agents and says plainly what is and is not proved.",
+    "domains": [
+      "data-ml"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "math",
+    "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/math-proof",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "math-proof",
+      "commands": [
+        "/plugin install math-proof@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "mattpocock-skills",
     "tier": "official",
     "type": "skill",
@@ -4635,14 +4660,14 @@
     "tier": "official",
     "type": "skill",
     "name": "postman",
-    "description": "Full API lifecycle management for Claude Code. Sync collections, generate client code, discover APIs, run tests, create mocks, publish docs, and audit security. Powered by the Postman MCP Server.",
+    "description": "Work with Postman from your agent: bootstrap a repo's Postman setup, mock an API before it's implemented, run collection and governance checks in CI, monitor a live endpoint, deploy and debug Postman Flows, and publish generated API documentation.",
     "domains": [
       "general"
     ],
     "signals": [],
     "official": true,
     "category": "development",
-    "homepage": "https://learning.postman.com/docs/developer/postman-mcp-server/",
+    "homepage": "https://github.com/postmanlabs/postman-plugin",
     "install": {
       "type": "plugin",
       "marketplace": "claude-plugins-official",
