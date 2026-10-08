@@ -289,5 +289,20 @@
         "FIRECRAWL_API_KEY": "<your-firecrawl-api-key>"
       }
     }
+  },
+  {
+    "id": "arcmira",
+    "type": "mcp",
+    "name": "Arcmira: YouTube Transcript Search",
+    "description": "Search indexed YouTube transcripts for timestamped passages and source links. An account is required; free access is limited.",
+    "domains": ["research"],
+    "signals": ["youtube", "transcript", "youtube-transcript-api", "arcmira"],
+    "auth": true,
+    "homepage": "https://arcmira.com",
+    "note": "Setup and authentication: https://arcmira.com/docs/mcp-server",
+    "config": {
+      "type": "http",
+      "url": "https://mcp.arcmira.com/mcp"
+    }
   }
 ]

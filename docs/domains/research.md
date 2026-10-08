@@ -11,6 +11,7 @@ _Signals that map here: `.ipynb`, `jupyter`, `latex`, `.bib`, `arxiv`, `wandb`, 
 - **Brave Search** — Web and local search via the Brave Search API — give Claude fresh results without a full browser. Good default when you just need to look something up. — [source](https://github.com/modelcontextprotocol/servers/tree/main/src/brave-search) · 🔑 needs auth
 - **Sequential Thinking** — A scratchpad tool that lets the model plan and revise multi-step reasoning explicitly. Helps on complex, branching problems. — [source](https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking)
 - **Context7 (up-to-date docs)** — Pulls version-accurate, up-to-date documentation and code examples for thousands of libraries straight into context — kills 'hallucinated API' bugs. Add 'use context7' to a prompt. — [source](https://github.com/upstash/context7)
+- **Arcmira: YouTube Transcript Search** — Search indexed YouTube transcripts for timestamped passages and source links. An account is required; free access is limited. — [source](https://arcmira.com) · 🔑 needs auth
 
 ## Hooks & settings
 
