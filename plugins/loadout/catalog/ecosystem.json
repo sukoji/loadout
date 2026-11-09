@@ -1211,6 +1211,28 @@
     }
   },
   {
+    "id": "champion-kit",
+    "tier": "official",
+    "type": "skill",
+    "name": "champion-kit",
+    "description": "Help Claude Code champions run hackathons and office hours, find patterns worth sharing, help teammates climb the steps of AI adoption, and write a shareable AI maturity report.",
+    "domains": [
+      "general"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "productivity",
+    "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/champion-kit",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "champion-kit",
+      "commands": [
+        "/plugin install champion-kit@claude-plugins-official"
+      ]
+    }
+  },
+  {
     "id": "chrome-devtools-mcp",
     "tier": "official",
     "type": "skill",
@@ -6543,6 +6565,30 @@
       "plugin": "workos",
       "commands": [
         "/plugin install workos@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "xcode",
+    "tier": "official",
+    "type": "skill",
+    "name": "Xcode",
+    "description": "Work with Xcode projects from Claude Code: build, run, and test schemes, render SwiftUI previews, drive simulators and devices, read build logs and diagnostics, and search Apple developer documentation.",
+    "domains": [
+      "general"
+    ],
+    "signals": [
+      "swift"
+    ],
+    "official": true,
+    "category": "development",
+    "homepage": "https://developer.apple.com/xcode/",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "xcode",
+      "commands": [
+        "/plugin install xcode@claude-plugins-official"
       ]
     }
   },
