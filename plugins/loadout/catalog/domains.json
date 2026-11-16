@@ -29,7 +29,7 @@
     "title_ko": "연구 / 학술",
     "blurb": "Literature review, notebooks, papers, and experiment repos — when discovery and writing matter as much as code.",
     "signals": [".ipynb", "jupyter", "latex", ".bib", "arxiv", "wandb", "mlflow", "papers"],
-    "loadout": ["exa-research", "tavily-research", "fetch", "firecrawl", "brave-search", "sequential-thinking", "context7", "office-docs", "lint-python-on-edit", "init-claude-md"]
+    "loadout": ["exa-research", "tavily-research", "fetch", "firecrawl", "brave-search", "sequential-thinking", "context7", "office-docs", "lint-python-on-edit", "init-claude-md", "arcmira"]
   },
   {
     "id": "devops",
