@@ -179,28 +179,6 @@
     }
   },
   {
-    "id": "airwallex-dev",
-    "tier": "official",
-    "type": "skill",
-    "name": "airwallex-dev",
-    "description": "Build Airwallex payment integrations in your own codebase. Generates the checkout, card-element, onboarding, and subscription-billing code for an Airwallex integration and wires it into your project: Hosted Payment Page, Drop-in and Split Card elements, connected-account KYC onboarding, and Billing Hosted Checkout for subscriptions and card-saving. Also plans card-on-file merchant-initiated flows for AI providers such as top-ups and auto-recharge.",
-    "domains": [
-      "general"
-    ],
-    "signals": [],
-    "official": true,
-    "category": "development",
-    "homepage": "https://www.airwallex.com/docs",
-    "install": {
-      "type": "plugin",
-      "marketplace": "claude-plugins-official",
-      "plugin": "airwallex-dev",
-      "commands": [
-        "/plugin install airwallex-dev@claude-plugins-official"
-      ]
-    }
-  },
-  {
     "id": "aiven",
     "tier": "official",
     "type": "skill",
@@ -5359,24 +5337,24 @@
     }
   },
   {
-    "id": "sap-fiori-mcp-server",
+    "id": "sap-ux-fiori-tools",
     "tier": "official",
     "type": "skill",
-    "name": "sap-fiori-mcp-server",
-    "description": "MCP server for SAP Fiori development tools for Claude Code. Build and modify SAP Fiori applications with AI assistance.",
+    "name": "sap-ux-fiori-tools",
+    "description": "MCP server and skills for SAP Fiori development. Build, modify, and test SAP Fiori Elements applications with AI assistance.",
     "domains": [
       "general"
     ],
     "signals": [],
     "official": true,
     "category": "development",
-    "homepage": "https://github.com/SAP/open-ux-tools/tree/main/packages/fiori-mcp-server",
+    "homepage": "https://github.com/SAP/open-ux-tools/tree/main/plugins-coding-agents/fiori",
     "install": {
       "type": "plugin",
       "marketplace": "claude-plugins-official",
-      "plugin": "sap-fiori-mcp-server",
+      "plugin": "sap-ux-fiori-tools",
       "commands": [
-        "/plugin install sap-fiori-mcp-server@claude-plugins-official"
+        "/plugin install sap-ux-fiori-tools@claude-plugins-official"
       ]
     }
   },
@@ -6107,6 +6085,28 @@
       "plugin": "terraform",
       "commands": [
         "/plugin install terraform@claude-plugins-official"
+      ]
+    }
+  },
+  {
+    "id": "theme-examples",
+    "tier": "official",
+    "type": "skill",
+    "name": "theme-examples",
+    "description": "An example plugin to read, copy and change: twenty animated backdrops behind the chat in the Claude desktop app, with frosted-glass panels, one per project or per session. Needs a version of Claude Desktop that draws a plugin's backdrop.",
+    "domains": [
+      "frontend"
+    ],
+    "signals": [],
+    "official": true,
+    "category": "design",
+    "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/theme-examples",
+    "install": {
+      "type": "plugin",
+      "marketplace": "claude-plugins-official",
+      "plugin": "theme-examples",
+      "commands": [
+        "/plugin install theme-examples@claude-plugins-official"
       ]
     }
   },
