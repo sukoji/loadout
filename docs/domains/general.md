@@ -8,6 +8,7 @@ _Signals that map here: baseline (always)_
 
 - **Context7 (up-to-date docs)** — Pulls version-accurate, up-to-date documentation and code examples for thousands of libraries straight into context — kills 'hallucinated API' bugs. Add 'use context7' to a prompt. — [source](https://github.com/upstash/context7)
 - **Git** — Structured git operations (status, log, diff, blame, branch) as first-class tools instead of shell parsing. Handy for history-heavy tasks and safer diffs. — [source](https://github.com/modelcontextprotocol/servers/tree/main/src/git)
+- **Zambo** — Give your AI hands: 120 native MCP tools across 17 products (code audit, lead research, strategy, onchain scoring, verification) behind one zero-auth endpoint. Type a job, get a receipt. — [source](https://github.com/zambodotdev/zambo-mcp)
 
 ## Hooks & settings
 
